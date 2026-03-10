@@ -1,0 +1,116 @@
+# ============================================================================
+# SARTriage – Centralised Configuration
+# All thresholds, hyper-parameters, and budget limits live here.
+# ============================================================================
+
+# ---------------------------------------------------------------------------
+# 1. Video Ingestion
+# ---------------------------------------------------------------------------
+video:
+  target_fps: 5                    # down-sample input to this FPS before processing
+  clip_length: 16                  # frames per clip fed to I3D / action classifier
+  clip_stride: 8                   # sliding-window stride (frames) between clips
+  max_resolution: [1280, 720]      # resize longest edge; keeps aspect ratio
+
+# ---------------------------------------------------------------------------
+# 2. YOLO Front-End (Ultralytics YOLOv8-nano)
+# ---------------------------------------------------------------------------
+yolo:
+  model_path: "yolov8n.pt"        # nano weights (auto-downloaded by Ultralytics)
+  confidence_threshold: 0.35       # minimum box confidence
+  iou_threshold: 0.45             # NMS IoU overlap
+  target_classes: [0]             # COCO class IDs to keep  (0 = person)
+  device: "auto"                  # "cpu", "cuda:0", or "auto"
+
+# ---------------------------------------------------------------------------
+# 3. Stream 1 – Action Classifier (I3D / SlowFast stub)
+# ---------------------------------------------------------------------------
+action:
+  enabled: true
+  model_variant: "r3d_18"          # R3D-18 fine-tuned on SAR subset
+  model_path: "models/action_r3d18_sar.pt"  # trained checkpoint
+  clip_size: 112                   # spatial input size (H=W)
+  top_k: 3                        # return top-k action labels per clip
+  confidence_gate: 0.30           # discard predictions below this softmax score
+  sar_action_labels:              # SAR classes (order matches training label_to_idx)
+    - "falling"
+    - "crawling"
+    - "lying_down"
+    - "running"
+    - "waving_hand"
+    - "climbing"
+    - "stumbling"
+    - "pushing"
+    - "pulling"
+  z_score_threshold: 2.0          # flag clip if action z-score exceeds this
+
+# ---------------------------------------------------------------------------
+# 4. Stream 2 – Motion Detector (Farneback Optical Flow)
+# ---------------------------------------------------------------------------
+motion:
+  enabled: true
+  flow_params:                    # cv2.calcOpticalFlowFarneback kwargs
+    pyr_scale: 0.5
+    levels: 3
+    winsize: 15
+    iterations: 3
+    poly_n: 5
+    poly_sigma: 1.2
+  ego_compensation:
+    enabled: true                 # subtract dominant (camera) motion via affine
+    ransac_reproj_threshold: 3.0
+  magnitude_percentile: 95       # use this percentile of residual magnitudes
+  z_score_threshold: 2.5         # flag frame if motion z-score exceeds this
+
+# ---------------------------------------------------------------------------
+# 5. Stream 3 – Tracking Events (ByteTrack)
+# ---------------------------------------------------------------------------
+tracking:
+  enabled: true
+  bytetrack:
+    track_thresh: 0.5             # high-confidence detection threshold
+    track_buffer: 30              # frames to keep lost track alive
+    match_thresh: 0.8             # IoU matching threshold
+  events:
+    gain_min_frames: 3            # new track must persist N frames to be "gain"
+    loss_grace_period: 15         # lost track triggers event after N absent frames
+  z_score_threshold: 2.0         # flag frame on anomalous gain/loss count
+
+# ---------------------------------------------------------------------------
+# 6. Priority Ranker – Multi-Stream Fusion
+# ---------------------------------------------------------------------------
+ranker:
+  aggregation: "max"              # per-timestamp fusion: "max" | "mean" | "sum"
+  cross_stream_boost: 1.2        # multiply score when ≥2 streams agree
+  cross_stream_min_streams: 2    # minimum agreeing streams to trigger boost
+  temporal_persistence:
+    enabled: true
+    window_seconds: 2.0           # time window for persistence bonus
+    bonus: 0.15                   # additive bonus for sustained events
+
+# ---------------------------------------------------------------------------
+# 7. Timeline Builder – Budget-Constrained Selection
+# ---------------------------------------------------------------------------
+timeline:
+  budget_seconds: 120             # maximum total highlight duration (seconds)
+  min_event_gap: 1.0              # merge events closer than this (seconds)
+  min_event_duration: 0.5         # discard events shorter than this (seconds)
+  max_event_duration: 15.0        # cap any single event at this length
+  score_cutoff: 0.30              # discard events below this normalised score
+  context_padding: 0.5            # seconds of context before/after each event
+
+# ---------------------------------------------------------------------------
+# 8. Flask / Web Application
+# ---------------------------------------------------------------------------
+flask:
+  upload_folder: "uploads"
+  allowed_extensions: [".mp4", ".avi", ".mov", ".mkv"]
+  max_content_mb: 2048            # max upload size in megabytes
+  poll_interval_ms: 1000          # client-side status poll interval
+
+# ---------------------------------------------------------------------------
+# 9. Concurrency / Hardware
+# ---------------------------------------------------------------------------
+concurrency:
+  gpu_workers: 1                  # threads for GPU-bound tasks (YOLO, I3D)
+  cpu_workers: 2                  # threads for CPU-bound tasks (optical flow)

@@ -1,0 +1,54 @@
+# ============================================================================
+# SARTriage .gitignore
+# ============================================================================
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Virtual environment ──────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+
+# ── Training data (downloaded Kinetics-400 videos + annotations) ─────────────
+sartriage/training/data/
+training/data/
+
+# ── Trained model weights & checkpoints ──────────────────────────────────────
+sartriage/models/*.pt
+sartriage/models/checkpoints/
+sartriage/models/training_log.json
+models/*.pt
+models/checkpoints/
+models/training_log.json
+
+# ── Generated frames (annotated keyframes for event detail views) ────────────
+sartriage/static/frames/
+static/frames/
+
+# ── Uploads (user-uploaded videos for analysis) ──────────────────────────────
+sartriage/uploads/
+uploads/
+
+# ── OS files ─────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ── IDE ──────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.code-workspace
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+sartriage/training/training_output.log

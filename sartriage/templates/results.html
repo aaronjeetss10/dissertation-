@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SARTriage analysis results — ranked timeline of detected SAR events.">
+    <title>SARTriage — Results</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* ── Event Detail Modal ─────────────────────────────────────────── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #aaa;
+            font-size: 1.5rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .modal-frame-container {
+            padding: 1rem 1.5rem;
+            position: relative;
+        }
+
+        .modal-frame-container img {
+            width: 100%;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-frame-placeholder {
+            width: 100%;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.9rem;
+        }
+
+        .modal-details {
+            padding: 1rem 1.5rem 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .detail-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .detail-card-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .detail-card-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.05rem;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .detail-card-value.severity-critical {
+            color: #ef4444;
+        }
+
+        .detail-card-value.severity-high {
+            color: #f97316;
+        }
+
+        .detail-card-value.severity-medium {
+            color: #eab308;
+        }
+
+        .detail-card-value.severity-low {
+            color: #22c55e;
+        }
+
+        .detail-card-full {
+            grid-column: 1 / -1;
+        }
+
+        .stream-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stream-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stream-tag .tag-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .stream-tag.stream-action .tag-dot {
+            background: #a855f7;
+        }
+
+        .stream-tag.stream-motion .tag-dot {
+            background: #06b6d4;
+        }
+
+        .stream-tag.stream-tracking .tag-dot {
+            background: #f97316;
+        }
+
+        .why-flagged {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .why-flagged strong {
+            color: #fff;
+        }
+
+        /* ── Clickable event cards ──────────────────────────────────────── */
+        .event-card {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+
+        .event-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 20px rgba(249, 115, 22, 0.15);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+
+        .event-card::after {
+            content: '▶';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .event-card:hover::after {
+            color: rgba(249, 115, 22, 0.6);
+        }
+
+        .event-card {
+            position: relative;
+        }
+    </style>
+</head>
+
+<body class="results-page">
+    <div id="ambient-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <main id="app">
+        <header id="site-header">
+            <div class="logo-group">
+                <a href="/" class="logo-link">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 40 40" fill="none">
+                            <circle cx="20" cy="20" r="18" stroke="url(#lg)" stroke-width="2.5" fill="none" />
+                            <path d="M20 6L20 14M20 26L20 34M6 20L14 20M26 20L34 20" stroke="url(#lg)" stroke-width="2"
+                                stroke-linecap="round" />
+                            <circle cx="20" cy="20" r="6" fill="url(#lg)" opacity=".3" />
+                            <circle cx="20" cy="20" r="3" fill="url(#lg)" />
+                            <defs>
+                                <linearGradient id="lg" x1="0" y1="0" x2="40" y2="40">
+                                    <stop offset="0%" stop-color="#f97316" />
+                                    <stop offset="100%" stop-color="#ef4444" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1>SAR<span class="accent">Triage</span></h1>
+                    </div>
+                </a>
+            </div>
+            <a href="/" class="btn-secondary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" style="width:16px;height:16px">
+                    <polyline points="15,18 9,12 15,6" />
+                </svg> New Analysis</a>
+        </header>
+
+        <section id="summary-section">
+            <h2 class="section-title">Analysis Complete<span class="section-subtitle">{{ filename }}</span></h2>
+            <div class="summary-grid">
+                <div class="summary-card card-total">
+                    <div class="summary-value">{{ summary.total_events }}</div>
+                    <div class="summary-label">Events Detected</div>
+                </div>
+                <div class="summary-card card-critical">
+                    <div class="summary-value">{{ summary.critical }}</div>
+                    <div class="summary-label">Critical</div>
+                </div>
+                <div class="summary-card card-high">
+                    <div class="summary-value">{{ summary.high }}</div>
+                    <div class="summary-label">High</div>
+                </div>
+                <div class="summary-card card-medium">
+                    <div class="summary-value">{{ summary.medium }}</div>
+                    <div class="summary-label">Medium</div>
+                </div>
+                <div class="summary-card card-low">
+                    <div class="summary-value">{{ summary.low }}</div>
+                    <div class="summary-label">Low</div>
+                </div>
+                <div class="summary-card card-timeline">
+                    <div class="summary-value">{{ "%.1f"|format(summary.timeline_duration) }}s</div>
+                    <div class="summary-label">of {{ "%.0f"|format(summary.video_duration) }}s footage</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="timeline-section">
+            <h2 class="section-title">Event Timeline</h2>
+            <div class="timeline-bar-container">
+                <div class="timeline-bar" id="timeline-bar">
+                    {% for event in events %}
+                    <div class="timeline-marker severity-{{ event.severity }}"
+                        style="left:{{ (event.start_time / summary.video_duration * 100) }}%;width:{{ ((event.end_time - event.start_time) / summary.video_duration * 100) }}%"
+                        title="{{ event.label }} ({{ event.severity }}) @ {{ '%.1f'|format(event.start_time) }}s"
+                        data-event-idx="{{ loop.index0 }}"></div>
+                    {% endfor %}
+                </div>
+                <div class="timeline-labels"><span>0:00</span><span>{{ "%d:%02d"|format(summary.video_duration // 60,
+                        summary.video_duration % 60) }}</span></div>
+            </div>
+        </section>
+
+        <section id="events-section">
+            <h2 class="section-title">Ranked Events<span class="section-subtitle"
+                    style="font-size:0.85rem;opacity:0.5;margin-left:0.75rem">Click an event to see the annotated
+                    frame</span></h2>
+            <div class="event-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="critical">Critical</button>
+                <button class="filter-btn" data-filter="high">High</button>
+                <button class="filter-btn" data-filter="medium">Medium</button>
+                <button class="filter-btn" data-filter="low">Low</button>
+            </div>
+            <div class="events-list" id="events-list">
+                {% for event in events %}
+                <article class="event-card severity-{{ event.severity }}" data-severity="{{ event.severity }}"
+                    data-event-idx="{{ loop.index0 }}">
+                    <div class="event-rank">#{{ loop.index }}</div>
+                    <div class="event-badge badge-{{ event.severity }}">{{ event.severity | upper }}</div>
+                    <div class="event-body">
+                        <h3 class="event-label">{{ event.label }}</h3>
+                        <div class="event-meta">
+                            <span class="meta-chip stream-{{ event.stream }}"><span class="chip-dot"></span>{{
+                                event.stream | capitalize }}</span>
+                            <span class="meta-chip">{{ "%.1f"|format(event.start_time) }}s – {{
+                                "%.1f"|format(event.end_time) }}s</span>
+                            <span class="meta-chip">{{ "%.1f"|format(event.duration) }}s</span>
+                        </div>
+                    </div>
+                    <div class="event-scores">
+                        <div class="score-item"><span class="score-label">Conf</span><span class="score-value">{{
+                                "%.0f"|format(event.confidence * 100) }}%</span></div>
+                        <div class="score-item"><span class="score-label">Z</span><span class="score-value">{{
+                                "%.1f"|format(event.z_score) }}σ</span></div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section id="export-section">
+            <a href="/results/{{ task_id }}/json" target="_blank" class="btn-secondary" id="export-json-btn">Export
+                JSON</a>
+        </section>
+
+        <footer id="site-footer">
+            <p>SARTriage v0.1 · All processing is performed locally · No data leaves this machine</p>
+        </footer>
+    </main>
+
+    <!-- Event Detail Modal -->
+    <div class="modal-overlay" id="event-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Event Details</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-frame-container" id="modal-frame-container">
+                <!-- Annotated frame image or placeholder -->
+            </div>
+            <div class="modal-details" id="modal-details">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Event data from the server
+        const EVENTS = {{ events | tojson }};
+
+        // ── Filter buttons ───────────────────────────────────────────────
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const f = btn.dataset.filter;
+                document.querySelectorAll('.event-card').forEach(c => {
+                    c.style.display = (f === 'all' || c.dataset.severity === f) ? '' : 'none';
+                });
+            });
+        });
+
+        // ── Timeline hover → highlight event card ────────────────────────
+        document.querySelectorAll('.timeline-marker').forEach(m => {
+            m.addEventListener('click', () => {
+                const idx = parseInt(m.dataset.eventIdx);
+                openEventModal(idx);
+            });
+            m.style.cursor = 'pointer';
+            m.addEventListener('mouseenter', () => {
+                const idx = m.dataset.eventIdx;
+                const card = document.querySelector(`.event-card[data-event-idx="${idx}"]`);
+                if (card) {
+                    card.classList.add('highlight');
+                    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+            m.addEventListener('mouseleave', () => {
+                document.querySelectorAll('.event-card').forEach(c => c.classList.remove('highlight'));
+            });
+        });
+
+        // ── Event card click → open modal ────────────────────────────────
+        document.querySelectorAll('.event-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const idx = parseInt(card.dataset.eventIdx);
+                openEventModal(idx);
+            });
+        });
+
+        // ── Modal logic ──────────────────────────────────────────────────
+        const modal = document.getElementById('event-modal');
+        const modalClose = document.getElementById('modal-close');
+
+        function openEventModal(idx) {
+            const evt = EVENTS[idx];
+            if (!evt) return;
+
+            // Title
+            document.getElementById('modal-title').textContent =
+                `#${idx + 1} — ${evt.label}`;
+
+            // Frame image
+            const frameContainer = document.getElementById('modal-frame-container');
+            if (evt.frame_url) {
+                frameContainer.innerHTML = `<img src="${evt.frame_url}" alt="Annotated frame for ${evt.label}" loading="lazy">`;
+            } else {
+                frameContainer.innerHTML = `<div class="modal-frame-placeholder">No annotated frame available for this event</div>`;
+            }
+
+            // Details grid
+            const sevClass = `severity-${evt.severity}`;
+            const streams = (evt.contributing_streams || [evt.stream]).join(', ');
+            const boost = evt.cross_stream_boost || 1.0;
+            const persist = evt.persistence_bonus || 0.0;
+            const finalScore = evt.final_score || 0.0;
+
+            // Build "Why flagged" explanation
+            let whyFlagged = `<strong>${evt.label}</strong> was detected by the <strong>${evt.stream}</strong> stream `;
+            whyFlagged += `at <strong>${evt.start_time.toFixed(1)}s – ${evt.end_time.toFixed(1)}s</strong> `;
+            whyFlagged += `with <strong>${(evt.confidence * 100).toFixed(0)}%</strong> confidence `;
+            whyFlagged += `and a z-score of <strong>${evt.z_score.toFixed(1)}σ</strong>. `;
+
+            if (boost > 1.0) {
+                whyFlagged += `<br>🔗 <strong>Cross-stream validation:</strong> ${streams} fired in the same time window → ${boost.toFixed(1)}× boost applied. `;
+            }
+            if (persist > 0) {
+                whyFlagged += `<br>⏱ <strong>Temporal persistence:</strong> sustained activity detected → +${persist.toFixed(2)} bonus. `;
+            }
+            whyFlagged += `<br>📊 <strong>Final fusion score:</strong> ${finalScore.toFixed(2)}`;
+
+            document.getElementById('modal-details').innerHTML = `
+                <div class="detail-card">
+                    <div class="detail-card-title">Severity</div>
+                    <div class="detail-card-value ${sevClass}">${evt.severity.toUpperCase()}</div>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-title">Confidence</div>
+                    <div class="detail-card-value">${(evt.confidence * 100).toFixed(1)}%</div>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-title">Time Range</div>
+                    <div class="detail-card-value">${evt.start_time.toFixed(1)}s – ${evt.end_time.toFixed(1)}s</div>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-title">Z-Score</div>
+                    <div class="detail-card-value">${evt.z_score.toFixed(1)}σ</div>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-title">Final Score</div>
+                    <div class="detail-card-value">${finalScore.toFixed(2)}</div>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-title">Cross-Stream Boost</div>
+                    <div class="detail-card-value">${boost.toFixed(2)}×</div>
+                </div>
+                <div class="detail-card detail-card-full">
+                    <div class="detail-card-title">Contributing Streams</div>
+                    <div class="stream-tags">
+                        ${(evt.contributing_streams || [evt.stream]).map(s =>
+                            `<span class="stream-tag stream-${s}"><span class="tag-dot"></span>${s}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+                <div class="detail-card detail-card-full">
+                    <div class="detail-card-title">Why Was This Flagged?</div>
+                    <div class="why-flagged">${whyFlagged}</div>
+                </div>
+            `;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ── Scroll animations ────────────────────────────────────────────
+        const obs = new IntersectionObserver(es => {
+            es.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.style.animation = 'fadeSlideIn 0.4s ease forwards';
+                    obs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.event-card,.summary-card').forEach(el => obs.observe(el));
+    </script>
+</body>
+
+</html>

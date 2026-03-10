@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SARTriage — Priority-ranked event detection for post-mission UAV Search-and-Rescue footage. Upload drone video for automated triage analysis.">
+    <title>SARTriage — Upload SAR Footage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- ── Ambient Background ── -->
+    <div id="ambient-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- ── Main Container ── -->
+    <main id="app">
+        <!-- ── Header ── -->
+        <header id="site-header">
+            <div class="logo-group">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="18" stroke="url(#logo-grad)" stroke-width="2.5" fill="none"/>
+                        <path d="M20 6 L20 14 M20 26 L20 34 M6 20 L14 20 M26 20 L34 20" stroke="url(#logo-grad)" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="20" cy="20" r="6" fill="url(#logo-grad)" opacity="0.3"/>
+                        <circle cx="20" cy="20" r="3" fill="url(#logo-grad)"/>
+                        <defs>
+                            <linearGradient id="logo-grad" x1="0" y1="0" x2="40" y2="40">
+                                <stop offset="0%" stop-color="#f97316"/>
+                                <stop offset="100%" stop-color="#ef4444"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>SAR<span class="accent">Triage</span></h1>
+                    <p class="tagline">Priority-ranked event detection for UAV SAR footage</p>
+                </div>
+            </div>
+            <div class="header-badge">
+                <span class="badge-dot"></span>
+                Local Processing · GDPR Compliant
+            </div>
+        </header>
+
+        <!-- ── Upload Section ── -->
+        <section id="upload-section">
+            <div id="drop-zone" class="drop-zone" role="button" tabindex="0" aria-label="Drag and drop video file or click to browse">
+                <div class="drop-zone-inner">
+                    <div class="upload-icon-wrap">
+                        <svg class="upload-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="8" y="28" width="48" height="30" rx="4" stroke="currentColor" stroke-width="2.5" fill="none"/>
+                            <path d="M32 44 L32 10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M22 20 L32 10 L42 20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="32" cy="43" r="4" stroke="currentColor" stroke-width="2" fill="none" opacity="0.4"/>
+                        </svg>
+                    </div>
+                    <p class="drop-primary">Drag & drop SAR footage here</p>
+                    <p class="drop-secondary">or <span class="browse-link">browse files</span></p>
+                    <p class="drop-formats">Supports MP4, AVI, MOV, MKV · Max 2 GB</p>
+                </div>
+                <input type="file" id="file-input" accept=".mp4,.avi,.mov,.mkv" hidden>
+            </div>
+
+            <!-- ── Selected File Info ── -->
+            <div id="file-info" class="file-info hidden">
+                <div class="file-info-left">
+                    <svg class="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/>
+                        <polyline points="14,2 14,8 20,8"/>
+                        <path d="M10 13l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div>
+                        <p id="file-name" class="file-name"></p>
+                        <p id="file-size" class="file-size"></p>
+                    </div>
+                </div>
+                <button id="clear-file-btn" class="btn-icon" aria-label="Remove file" title="Remove file">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- ── Upload Button ── -->
+            <button id="upload-btn" class="btn-primary hidden" disabled>
+                <svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                    <polyline points="17,8 12,3 7,8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                Begin Analysis
+            </button>
+        </section>
+
+        <!-- ── Progress Section ── -->
+        <section id="progress-section" class="hidden">
+            <div class="progress-card">
+                <div class="progress-header">
+                    <h2>Analysing Footage</h2>
+                    <p id="progress-filename" class="progress-filename"></p>
+                </div>
+
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar-track">
+                        <div id="progress-bar" class="progress-bar-fill"></div>
+                    </div>
+                    <span id="progress-percent" class="progress-percent">0%</span>
+                </div>
+
+                <div class="progress-stage-wrap">
+                    <div class="stage-indicator">
+                        <div class="pulse-dot"></div>
+                        <span id="progress-stage">Queued</span>
+                    </div>
+                </div>
+
+                <!-- ── Pipeline Stages List ── -->
+                <div class="pipeline-stages">
+                    <div class="stage-item" data-stage="Decoding video">
+                        <div class="stage-icon pending">
+                            <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="4" fill="currentColor"/></svg>
+                        </div>
+                        <span>Decoding video</span>
+                    </div>
+                    <div class="stage-item" data-stage="Running YOLO front-end">
+                        <div class="stage-icon pending">
+                            <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="4" fill="currentColor"/></svg>
+                        </div>
+                        <span>Running YOLO front-end</span>
+                    </div>
+                    <div class="stage-item" data-stage="Stream 1 – Action classification">
+                        <div class="stage-icon pending">
+                            <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="4" fill="currentColor"/></svg>
+                        </div>
+                        <span>Stream 1 – Action classification</span>
+                    </div>
+                    <div class="stage-item" data-stage="Stream 2 – Motion detection">
+                        <div class="stage-icon pending">
+                            <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="4" fill="currentColor"/></svg>
+                        </div>
+                        <span>Stream 2 – Motion detection</span>
+                    </div>
+                    <div class="stage-item" data-stage="Stream 3 – Tracking events">
+                        <div class="stage-icon pending">
+                            <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="4" fill="currentColor"/></svg>
+                        </div>
+                        <span>Stream 3 – Tracking events</span>
+                    </div>
+                    <div class="stage-item" data-stage="Fusing & ranking events">
+                        <div class="stage-icon pending">
+                            <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="4" fill="currentColor"/></svg>
+                        </div>
+                        <span>Fusing & ranking events</span>
+                    </div>
+                    <div class="stage-item" data-stage="Building timeline">
+                        <div class="stage-icon pending">
+                            <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="4" fill="currentColor"/></svg>
+                        </div>
+                        <span>Building timeline</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Footer ── -->
+        <footer id="site-footer">
+            <p>SARTriage v0.1 · All processing is performed locally · No data leaves this machine</p>
+        </footer>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
