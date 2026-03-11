@@ -1,7 +1,7 @@
 """
 training/train_action_classifier.py
 ====================================
-Fine-tune R3D-18 on SAR-relevant action classes from Kinetics-400.
+Fine-tune MViTv2-S (SOTA, 81% top-1 on K400) on SAR-relevant action classes.
 
 This script:
   1. Downloads the Kinetics-400 annotation CSVs from DeepMind.
@@ -77,7 +77,7 @@ for sar_label, kinetics_names in SAR_TO_KINETICS.items():
 
 # Training hyper-parameters
 CLIP_FRAMES = 16
-CLIP_SIZE = 112
+CLIP_SIZE = 224               # MViTv2 expects 224×224 input (was 112 for R3D-18)
 BATCH_SIZE = 4            # smaller batch for overnight stability
 EPOCHS = 30               # more epochs for real data
 LEARNING_RATE = 1e-3
@@ -92,7 +92,7 @@ CLIPS_DIR = DATA_DIR / "clips"
 ANNOTATIONS_DIR = DATA_DIR / "annotations"
 MODELS_DIR = BASE_DIR.parent / "models"
 CHECKPOINT_DIR = MODELS_DIR / "checkpoints"
-BEST_MODEL_PATH = MODELS_DIR / "action_r3d18_sar.pt"
+BEST_MODEL_PATH = MODELS_DIR / "action_mvit2_sar.pt"
 TRAINING_LOG_PATH = MODELS_DIR / "training_log.json"
 
 # Kinetics-400 annotation URLs (from cvdfoundation/kinetics-dataset)
@@ -382,27 +382,34 @@ class SyntheticSARClipDataset(Dataset):
 # ── 6. Model ────────────────────────────────────────────────────────────
 
 def build_model(num_classes: int, freeze_backbone: bool = True) -> nn.Module:
-    """Load pre-trained R3D-18 and replace final FC."""
-    print("  Loading pre-trained R3D-18 (Kinetics-400 weights)...")
-    weights = video_models.R3D_18_Weights.KINETICS400_V1
-    model = video_models.r3d_18(weights=weights)
+    """Load pre-trained MViTv2-S and replace classifier head.
+
+    MViTv2-S (Multiscale Vision Transformer v2 - Small) achieves
+    81.0% top-1 on Kinetics-400, making it SOTA for video
+    action recognition.  The head is:
+        Sequential(Dropout(0.5), Linear(768, 400))
+    We replace the Linear layer with one mapping to num_classes.
+    """
+    print("  Loading pre-trained MViTv2-S (Kinetics-400 weights)...")
+    weights = video_models.MViT_V2_S_Weights.KINETICS400_V1
+    model = video_models.mvit_v2_s(weights=weights)
 
     if freeze_backbone:
         print("  Freezing backbone (transfer learning)...")
         for param in model.parameters():
             param.requires_grad = False
 
-    in_features = model.fc.in_features
-    model.fc = nn.Sequential(
-        nn.Dropout(0.3),
-        nn.Linear(in_features, num_classes),
-    )
-    for param in model.fc.parameters():
+    # Head structure: Sequential(Dropout(0.5), Linear(768, 400))
+    in_features = model.head[1].in_features  # 768
+    model.head[1] = nn.Linear(in_features, num_classes)
+
+    for param in model.head.parameters():
         param.requires_grad = True
 
     total = sum(p.numel() for p in model.parameters())
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"  Params: {total:,} total, {trainable:,} trainable ({trainable/total*100:.1f}%)")
+    print(f"  Head: {model.head}")
     return model
 
 
@@ -528,7 +535,8 @@ def main():
 
     print("=" * 60)
     print("  SARTriage — Action Classifier Training")
-    print("  Model:  R3D-18 (pre-trained Kinetics-400)")
+    print("  Model:  MViTv2-S (SOTA, 81% top-1 on K400)")
+    print(f"  Input:   {CLIP_FRAMES} frames × {CLIP_SIZE}×{CLIP_SIZE}")
     print(f"  Classes: {NUM_CLASSES} ({', '.join(SAR_LABELS)})")
     print(f"  Epochs:  {args.epochs}")
     print(f"  Data:    {'Synthetic' if args.synthetic else 'Kinetics-400 (real)'}")
@@ -631,7 +639,7 @@ def main():
     model = model.to(device)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.fc.parameters(), lr=args.lr)
+    optimizer = optim.Adam(model.head.parameters(), lr=args.lr)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs)
 
     # ── Resume ───────────────────────────────────────────────────────

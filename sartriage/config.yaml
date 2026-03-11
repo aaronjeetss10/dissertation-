@@ -13,23 +13,26 @@ video:
   max_resolution: [1280, 720]      # resize longest edge; keeps aspect ratio
 
 # ---------------------------------------------------------------------------
-# 2. YOLO Front-End (Ultralytics YOLOv8-nano)
+# 2. YOLO Front-End (YOLOv8 + SAHI for small persons)
 # ---------------------------------------------------------------------------
 yolo:
   model_path: "yolov8n.pt"        # nano weights (auto-downloaded by Ultralytics)
-  confidence_threshold: 0.35       # minimum box confidence
+  confidence_threshold: 0.25       # lowered for small person detection
   iou_threshold: 0.45             # NMS IoU overlap
   target_classes: [0]             # COCO class IDs to keep  (0 = person)
   device: "auto"                  # "cpu", "cuda:0", or "auto"
+  use_sahi: true                  # SAHI tiled inference for small objects (SOTA)
+  sahi_slice_size: 320            # tile size in pixels
+  sahi_overlap_ratio: 0.2         # 20% overlap between tiles
 
 # ---------------------------------------------------------------------------
-# 3. Stream 1 – Action Classifier (I3D / SlowFast stub)
+# 3. Stream 1 – Action Classifier (MViTv2-S, SOTA)
 # ---------------------------------------------------------------------------
 action:
   enabled: true
-  model_variant: "r3d_18"          # R3D-18 fine-tuned on SAR subset
-  model_path: "models/action_r3d18_sar.pt"  # trained checkpoint
-  clip_size: 112                   # spatial input size (H=W)
+  model_variant: "mvit_v2_s"        # MViTv2-S (SOTA, 81% top-1 on K400)
+  model_path: "models/action_mvit2_sar.pt"  # trained checkpoint
+  clip_size: 224                   # MViTv2 expects 224×224 (was 112 for R3D-18)
   top_k: 3                        # return top-k action labels per clip
   confidence_gate: 0.30           # discard predictions below this softmax score
   sar_action_labels:              # SAR classes (order matches training label_to_idx)
@@ -43,6 +46,21 @@ action:
     - "pushing"
     - "pulling"
   z_score_threshold: 2.0          # flag clip if action z-score exceeds this
+  person_centric: true             # crop around each detected person (critical for drone SAR)
+  min_person_pixels: 12            # skip detections smaller than this (width or height)
+
+# ---------------------------------------------------------------------------
+# 3b. Stream 4 – Pose Estimator (BBox Geometry)
+# ---------------------------------------------------------------------------
+pose:
+  enabled: true
+  confidence_gate: 0.50            # minimum confidence for posture events
+  z_score_threshold: 1.8           # flag if z-score exceeds this
+  lying_aspect_ratio_max: 0.6      # bbox aspect < this → lying down
+  fall_velocity_threshold: 30.0    # vertical px/s → falling
+  crawl_height_ratio: 0.7          # relative Y position > this → near ground
+  run_horizontal_threshold: 15.0   # horizontal px/s → running
+  min_track_frames: 5              # minimum frames to form a track
 
 # ---------------------------------------------------------------------------
 # 4. Stream 2 – Motion Detector (Farneback Optical Flow)

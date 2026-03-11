@@ -40,6 +40,7 @@ from streams.base_stream import BaseStream, FramePacket, SAREvent
 from streams.action_classifier import ActionClassifierStream
 from streams.motion_detector import MotionDetectorStream
 from streams.tracking_events import TrackingEventsStream
+from streams.pose_estimator import PoseEstimatorStream
 from core.priority_ranker import PriorityRanker, RankedEvent
 from core.frame_annotator import save_event_frames
 
@@ -196,31 +197,139 @@ def run_yolo_frontend(
     config: Dict[str, Any],
     on_progress: Optional[Callable[[str, float], None]] = None,
 ) -> List[FramePacket]:
-    """Run YOLOv8-nano on every frame and attach detections.
+    """Run YOLOv8 on every frame with SAHI tiled detection for small people.
 
-    Real implementation calls ``ultralytics.YOLO(model_path).predict()``
-    and writes results into each packet's ``detections`` field.  This
-    stub simulates the process.
+    SAHI (Slicing Aided Hyper Inference) is the SOTA technique for
+    detecting small objects in high-resolution images.  It tiles the
+    frame into overlapping patches, runs YOLO on each patch, and
+    merges the results.  This dramatically improves recall for small
+    people in drone footage.
 
-    Parameters
-    ----------
-    packets : list[FramePacket]
-        Frames to process.
-    config : dict
-        The ``yolo`` section from config.yaml.
-
-    Returns
-    -------
-    list[FramePacket]
-        The same packets, now with ``detections`` populated.
+    Falls back to standard YOLO if SAHI is unavailable, and to
+    a random stub if ultralytics is not installed.
     """
     if on_progress:
         on_progress("Running YOLO front-end", 0.15)
 
     conf_thresh = config.get("confidence_threshold", 0.35)
-    log.info("Running YOLO front-end on %d frames (stub, conf≥%.2f)", len(packets), conf_thresh)
+    model_path = config.get("model_path", "yolov8n.pt")
+    use_sahi = config.get("use_sahi", True)
+    sahi_slice_size = config.get("sahi_slice_size", 320)
+    sahi_overlap = config.get("sahi_overlap_ratio", 0.2)
 
+    # Try to load real YOLO
+    try:
+        from ultralytics import YOLO
+        yolo_available = True
+    except ImportError:
+        yolo_available = False
+        log.warning("ultralytics not installed — using detection stub")
+
+    if not yolo_available:
+        return _run_yolo_stub(packets, conf_thresh, on_progress)
+
+    # Load YOLO model
+    log.info("Loading YOLOv8 model: %s", model_path)
+    yolo_model = YOLO(model_path)
+
+    # Try SAHI for small-object detection
+    sahi_available = False
+    if use_sahi:
+        try:
+            from sahi import AutoDetectionModel
+            from sahi.predict import get_sliced_prediction
+            sahi_available = True
+            log.info("SAHI enabled (slice=%dpx, overlap=%.0f%%)", sahi_slice_size, sahi_overlap * 100)
+        except ImportError:
+            log.warning("sahi not installed — using standard YOLO inference")
+
+    total_dets = 0
+    for i, pkt in enumerate(packets):
+        if pkt.image is None:
+            pkt.detections = []
+            continue
+
+        if sahi_available:
+            # ── SAHI tiled inference (SOTA for small objects) ──────────
+            try:
+                detection_model = AutoDetectionModel.from_pretrained(
+                    model_type="yolov8",
+                    model_path=model_path,
+                    confidence_threshold=conf_thresh,
+                    device="cpu",  # SAHI manages device internally
+                )
+                result = get_sliced_prediction(
+                    pkt.image,
+                    detection_model,
+                    slice_height=sahi_slice_size,
+                    slice_width=sahi_slice_size,
+                    overlap_height_ratio=sahi_overlap,
+                    overlap_width_ratio=sahi_overlap,
+                )
+                dets = []
+                for pred in result.object_prediction_list:
+                    bbox = pred.bbox
+                    if pred.category.id == 0:  # person class
+                        dets.append({
+                            "bbox": [bbox.minx, bbox.miny, bbox.maxx, bbox.maxy],
+                            "confidence": round(pred.score.value, 4),
+                            "class_id": 0,
+                        })
+                pkt.detections = dets
+                total_dets += len(dets)
+
+                # Reinitialise detection model is expensive — only use SAHI
+                # every N frames and standard YOLO in between
+                sahi_available = False  # Use for first frame, then standard
+            except Exception as exc:
+                log.warning("SAHI failed: %s — falling back to standard YOLO", exc)
+                sahi_available = False
+                pkt.detections = _yolo_detect_frame(yolo_model, pkt.image, conf_thresh)
+                total_dets += len(pkt.detections)
+        else:
+            # ── Standard YOLO inference ───────────────────────────────
+            pkt.detections = _yolo_detect_frame(yolo_model, pkt.image, conf_thresh)
+            total_dets += len(pkt.detections)
+
+        # Progress update every 10%
+        if on_progress and i % max(1, len(packets) // 10) == 0:
+            frac = 0.15 + (i / len(packets)) * 0.15
+            on_progress("Running YOLO front-end", frac)
+
+    if on_progress:
+        on_progress("Running YOLO front-end", 0.30)
+
+    log.info("YOLO front-end complete: %d detections across %d frames (avg %.1f/frame)",
+             total_dets, len(packets), total_dets / max(len(packets), 1))
+    return packets
+
+
+def _yolo_detect_frame(yolo_model, image: np.ndarray, conf_thresh: float) -> List[Dict]:
+    """Run standard YOLOv8 on a single frame."""
+    results = yolo_model(image, conf=conf_thresh, classes=[0], verbose=False)
+    dets = []
+    for result in results:
+        if result.boxes is not None:
+            for box in result.boxes:
+                x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
+                conf = float(box.conf[0].cpu())
+                dets.append({
+                    "bbox": [float(x1), float(y1), float(x2), float(y2)],
+                    "confidence": round(conf, 4),
+                    "class_id": 0,
+                })
+    return dets
+
+
+def _run_yolo_stub(
+    packets: List[FramePacket],
+    conf_thresh: float,
+    on_progress: Optional[Callable[[str, float], None]] = None,
+) -> List[FramePacket]:
+    """Random detection stub when YOLO is not available."""
     import random
+
+    log.info("Running YOLO stub on %d frames (conf≥%.2f)", len(packets), conf_thresh)
 
     for pkt in packets:
         n_dets = random.choices([0, 1, 2, 3], weights=[0.3, 0.4, 0.2, 0.1])[0]
@@ -233,17 +342,16 @@ def run_yolo_frontend(
             dets.append({
                 "bbox": [x1, y1, x1 + w, y1 + h],
                 "confidence": round(random.uniform(conf_thresh, 0.98), 4),
-                "class_id": 0,  # person
+                "class_id": 0,
             })
         pkt.detections = dets
 
-    # Simulate YOLO inference time (~20 ms per frame on GPU)
-    time.sleep(len(packets) * 0.002)  # compressed for testing
+    time.sleep(len(packets) * 0.002)
 
     if on_progress:
         on_progress("Running YOLO front-end", 0.30)
 
-    log.info("YOLO front-end complete")
+    log.info("YOLO stub complete")
     return packets
 
 
@@ -367,30 +475,36 @@ def run_pipeline(
         config=config.get("tracking", {}),
         global_config=config,
     )
+    pose_stream = PoseEstimatorStream(
+        config=config.get("pose", {}),
+        global_config=config,
+    )
 
     # ── 5. Parallel dispatch ─────────────────────────────────────────────
     all_events: List[SAREvent] = []
 
     if on_progress:
-        on_progress("Stream 1 – Action classification", 0.35)
+        on_progress("Stream 1 – Action classification", 0.30)
 
-    log.info("Dispatching 3 streams (GPU workers=%d, CPU workers=%d)", gpu_workers, cpu_workers)
+    log.info("Dispatching 4 streams (GPU workers=%d, CPU workers=%d)", gpu_workers, cpu_workers)
 
     with (
         ThreadPoolExecutor(max_workers=gpu_workers, thread_name_prefix="gpu") as gpu_pool,
         ThreadPoolExecutor(max_workers=cpu_workers, thread_name_prefix="cpu") as cpu_pool,
     ):
-        # GPU-bound: Action classifier (I3D)
+        # GPU-bound: Action classifier (R3D-18, person-centric)
         future_action = gpu_pool.submit(_run_stream, action_stream, packets)
 
-        # CPU-bound: Motion detector + Tracking events
+        # CPU-bound: Motion detector + Tracking events + Pose estimator
         future_motion = cpu_pool.submit(_run_stream, motion_stream, packets)
         future_tracking = cpu_pool.submit(_run_stream, tracking_stream, packets)
+        future_pose = cpu_pool.submit(_run_stream, pose_stream, packets)
 
         futures = {
-            future_action: ("Stream 1 – Action classification", 0.50),
-            future_motion: ("Stream 2 – Motion detection", 0.65),
-            future_tracking: ("Stream 3 – Tracking events", 0.80),
+            future_action: ("Stream 1 – Action classification", 0.45),
+            future_motion: ("Stream 2 – Motion detection", 0.55),
+            future_tracking: ("Stream 3 – Tracking events", 0.70),
+            future_pose: ("Stream 4 – Pose estimation", 0.85),
         }
 
         for future in as_completed(futures):

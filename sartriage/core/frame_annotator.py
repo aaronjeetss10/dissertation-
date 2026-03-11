@@ -30,6 +30,7 @@ STREAM_COLORS = {
     "action":   (180, 105, 255),  # pink/magenta
     "motion":   (0, 255, 200),    # teal
     "tracking": (255, 180, 0),    # blue/cyan
+    "pose":     (100, 255, 100),  # green
 }
 
 BOX_COLOR = (0, 255, 100)  # green for YOLO boxes
@@ -151,7 +152,37 @@ def save_event_frames(
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                                     (255, 180, 0), 1, cv2.LINE_AA)
 
-        # ── Severity border ───────────────────────────────────────────
+        elif stream == "pose":
+            # Highlight the person bbox with posture annotation
+            meta = evt.get("metadata", {})
+            person_bbox = meta.get("bbox_midpoint")
+            posture = meta.get("posture", "unknown")
+            aspect = meta.get("aspect_ratio_mean", 0)
+            v_vel = meta.get("vertical_velocity", 0)
+            h_vel = meta.get("horizontal_velocity", 0)
+
+            if person_bbox and len(person_bbox) == 4:
+                px1, py1, px2, py2 = [int(v) for v in person_bbox]
+                # Draw highlighted bbox
+                cv2.rectangle(frame, (px1, py1), (px2, py2), (100, 255, 100), 3)
+                # Posture label
+                plabel = f"{posture} (AR:{aspect:.2f})"
+                cv2.putText(frame, plabel, (px1, py1 - 8),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 255, 100), 1, cv2.LINE_AA)
+                # Velocity indicators
+                if abs(v_vel) > 5:
+                    arrow_len = min(int(abs(v_vel)), 50)
+                    direction = 1 if v_vel > 0 else -1
+                    acx = (px1 + px2) // 2
+                    acy = (py1 + py2) // 2
+                    cv2.arrowedLine(frame, (acx, acy), (acx, acy + arrow_len * direction),
+                                    (0, 0, 255), 2, tipLength=0.3)
+                if abs(h_vel) > 5:
+                    arrow_len = min(int(abs(h_vel)), 50)
+                    acx = (px1 + px2) // 2
+                    acy = (py1 + py2) // 2
+                    cv2.arrowedLine(frame, (acx, acy), (acx + arrow_len, acy),
+                                    (255, 255, 0), 2, tipLength=0.3)
         cv2.rectangle(frame, (0, 0), (w - 1, h - 1), sev_color, 3)
 
         # ── Save ──────────────────────────────────────────────────────

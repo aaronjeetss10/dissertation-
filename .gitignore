@@ -29,6 +29,10 @@ models/*.pt
 models/checkpoints/
 models/training_log.json
 
+# ── YOLO weights (auto-downloaded) ───────────────────────────────────────
+*.pt
+!sartriage/**/*.py
+
 # ── Generated frames (annotated keyframes for event detail views) ────────────
 sartriage/static/frames/
 static/frames/
