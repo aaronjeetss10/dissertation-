@@ -368,16 +368,50 @@ class ActionClassifierStream(BaseStream):
                         "mode": "full_frame",
                     })
 
-        # Emit events exceeding gate + z-threshold
+        # ── SAR-critical actions: emit on confidence alone ────────────
+        # These actions are the primary SAR targets — a person falling,
+        # lying motionless, or crawling is always worth flagging.
+        SAR_CRITICAL_ACTIONS = {"falling", "lying_down", "crawling", "stumbling"}
+        SAR_HIGH_ACTIONS = {"waving_hand", "running"}  # distress signals
+        CRITICAL_CONFIDENCE = 0.40  # lower gate for SAR-critical
+        HIGH_CONFIDENCE = 0.50  # gate for high-priority actions
+
+        # Log the predictions for debugging
+        if clip_data:
+            action_counts: Dict[str, int] = {}
+            for cd in clip_data:
+                lbl = self._get_label(cd["class_idx"])
+                action_counts[lbl] = action_counts.get(lbl, 0) + 1
+            log.info("Action predictions: %s", action_counts)
+
         for idx, cd in enumerate(clip_data):
-            if cd["score"] < self._confidence_gate:
-                continue
-            z = self.compute_z_score(cd["score"], clip_scores)
-            if z < self._z_threshold:
+            label = self._get_label(cd["class_idx"])
+            score = cd["score"]
+            z = self.compute_z_score(score, clip_scores)
+
+            emit = False
+
+            if label in SAR_CRITICAL_ACTIONS and score >= CRITICAL_CONFIDENCE:
+                # SAR-critical: always emit above confidence gate
+                emit = True
+                if z < 1.0:
+                    z = max(z, 1.5)  # minimum z for severity mapping
+            elif label in SAR_HIGH_ACTIONS and score >= HIGH_CONFIDENCE:
+                # High-priority: emit with moderate confidence
+                emit = True
+                if z < 1.0:
+                    z = max(z, 1.0)
+            elif score >= self._confidence_gate and z >= self._z_threshold:
+                # Standard path: both confidence AND z-score must pass
+                emit = True
+
+            if not emit:
                 continue
 
-            label = self._get_label(cd["class_idx"])
             severity = self.severity_from_z(z)
+            # Boost severity for SAR-critical detections
+            if label in SAR_CRITICAL_ACTIONS and severity.value in ("low", "medium"):
+                severity = EventSeverity.HIGH
 
             # Build metadata
             meta: Dict[str, Any] = {
@@ -385,6 +419,8 @@ class ActionClassifierStream(BaseStream):
                 "clip_index": idx,
                 "top_k": cd["top_k"],
                 "mode": cd.get("mode", "unknown"),
+                "sar_critical": label in SAR_CRITICAL_ACTIONS,
+                "sar_high": label in SAR_HIGH_ACTIONS,
             }
             if "track_id" in cd:
                 meta["track_id"] = cd["track_id"]
@@ -397,7 +433,7 @@ class ActionClassifierStream(BaseStream):
                 end_frame=cd["end_pkt"].index,
                 start_time=cd["start_pkt"].timestamp,
                 end_time=cd["end_pkt"].timestamp,
-                confidence=round(cd["score"], 4),
+                confidence=round(score, 4),
                 z_score=round(z, 4),
                 label=f"Action: {label}",
                 severity=severity,

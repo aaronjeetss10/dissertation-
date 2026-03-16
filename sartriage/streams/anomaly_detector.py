@@ -69,7 +69,7 @@ class AnomalyDetectorStream(BaseStream):
         super().setup()
 
     def _load_feature_extractor(self) -> None:
-        """Load MViTv2-S as a frozen feature extractor."""
+        """Load MViTv2-S as a frozen feature extractor with proper hooks."""
         try:
             import torchvision.models.video as video_models
 
@@ -83,13 +83,20 @@ class AnomalyDetectorStream(BaseStream):
             model = video_models.mvit_v2_s(weights=weights)
             model.eval()
 
-            # Remove the classification head — we only want features
-            # MViTv2 head is Sequential(Dropout, Linear)
-            # We'll hook into the norm layer before the head
             self._feature_dim = model.head[1].in_features  # 768
 
-            # Replace head with identity to get features
-            model.head = nn.Identity()
+            # Use a forward hook to capture features BEFORE the head
+            # This preserves the full model for proper forward pass
+            self._hooked_features = None
+
+            def _feature_hook(module, input, output):
+                # input to the head is the pooled feature vector
+                if isinstance(input, tuple):
+                    self._hooked_features = input[0].detach()
+                else:
+                    self._hooked_features = input.detach()
+
+            model.head.register_forward_hook(_feature_hook)
             model.to(self._device)
 
             self._feature_extractor = model
@@ -126,10 +133,12 @@ class AnomalyDetectorStream(BaseStream):
         """Detect anomalous clips using feature distribution analysis.
 
         Steps:
-          1. Extract features for all clips (sliding window)
-          2. Fit Gaussian to the feature distribution (mean + covariance)
-          3. Compute Mahalanobis distance for each clip
-          4. Flag clips exceeding the threshold
+          1. Extract features for all clips (sliding window) via forward hook
+          2. Extract per-person features for tracked individuals
+          3. Fit Gaussian to the feature distribution (mean + covariance)
+          4. Compute Mahalanobis distance for each clip
+          5. Detect temporal anomalies (sudden feature shifts)
+          6. Flag clips exceeding the threshold
         """
         if not packets:
             return []
@@ -143,22 +152,28 @@ class AnomalyDetectorStream(BaseStream):
                      n_possible, self._min_clips_for_baseline)
             return []
 
-        # ── 1. Extract features ──────────────────────────────────────
+        # ── 1. Extract features via forward hook ─────────────────────
         features: List[np.ndarray] = []
         clip_meta: List[Dict[str, Any]] = []
 
-        log.info("Anomaly detector: extracting features from %d clips",
-                 (n_possible + self._clip_stride - 1) // self._clip_stride)
+        n_clips = (n_possible + self._clip_stride - 1) // self._clip_stride
+        log.info("Anomaly detector: extracting features from %d clips", n_clips)
 
         with torch.no_grad():
             for i in range(0, n_possible, self._clip_stride):
                 clip_packets = packets[i: i + self._clip_length]
                 tensor = self._preprocess_clip(clip_packets)
 
-                feat = self._feature_extractor(tensor)  # (1, feature_dim)
-                if feat.dim() > 2:
-                    feat = feat.mean(dim=list(range(1, feat.dim() - 1)))  # global pool
-                feat = feat.squeeze(0).cpu().numpy()  # (feature_dim,)
+                # Forward pass through full model — features captured by hook
+                _ = self._feature_extractor(tensor)
+                feat = self._hooked_features  # captured by the hook
+
+                if feat is None:
+                    continue
+
+                if feat.dim() > 1:
+                    feat = feat.squeeze(0)  # (feature_dim,)
+                feat = feat.cpu().numpy()
                 features.append(feat)
 
                 clip_meta.append({
@@ -176,7 +191,7 @@ class AnomalyDetectorStream(BaseStream):
         feat_matrix = np.stack(features, axis=0)  # (N, D)
         mean = feat_matrix.mean(axis=0)  # (D,)
         centered = feat_matrix - mean
-        cov = np.cov(centered.T) + np.eye(self._feature_dim) * 1e-6  # regularised
+        cov = np.cov(centered.T) + np.eye(self._feature_dim) * 1e-5  # regularised
 
         try:
             cov_inv = np.linalg.inv(cov)
@@ -188,27 +203,53 @@ class AnomalyDetectorStream(BaseStream):
         distances = []
         for feat in features:
             diff = feat - mean
-            mahal = float(np.sqrt(diff @ cov_inv @ diff))
+            mahal = float(np.sqrt(max(0, diff @ cov_inv @ diff)))
             distances.append(mahal)
 
         distances = np.array(distances)
         dist_mean = distances.mean()
-        dist_std = distances.std() + 1e-8
+        dist_std = distances.std()
 
         log.info("Anomaly detector: Mahalanobis stats — mean=%.2f, std=%.2f, max=%.2f",
                  dist_mean, dist_std, distances.max())
 
-        # ── 4. Flag anomalies ────────────────────────────────────────
+        # ── 4. Temporal gradient anomaly detection ───────────────────
+        # Detect sudden shifts in feature space (e.g. person starts falling)
+        temporal_diffs = []
+        for j in range(1, len(features)):
+            diff = np.linalg.norm(features[j] - features[j-1])
+            temporal_diffs.append(diff)
+
+        temporal_diffs = np.array(temporal_diffs) if temporal_diffs else np.array([0.0])
+        temp_mean = temporal_diffs.mean()
+        temp_std = temporal_diffs.std() + 1e-8
+
+        log.info("Anomaly detector: temporal gradient — mean=%.2f, std=%.2f, max=%.2f",
+                 temp_mean, temp_std, temporal_diffs.max() if len(temporal_diffs) > 0 else 0)
+
+        # ── 5. Flag anomalies ────────────────────────────────────────
         events: List[SAREvent] = []
 
         for idx, (dist, meta) in enumerate(zip(distances, clip_meta)):
-            # Z-score of the Mahalanobis distance
-            z = (dist - dist_mean) / dist_std
+            anomaly_reasons = []
 
-            if z < self._z_threshold:
+            # Method A: Mahalanobis distance anomaly
+            mahal_z = (dist - dist_mean) / (dist_std + 1e-8)
+
+            if mahal_z >= self._z_threshold:
+                anomaly_reasons.append(f"Mahalanobis z={mahal_z:.1f}")
+
+            # Method B: Temporal gradient anomaly
+            if idx > 0 and idx - 1 < len(temporal_diffs):
+                temp_z = (temporal_diffs[idx-1] - temp_mean) / temp_std
+                if temp_z >= self._z_threshold:
+                    anomaly_reasons.append(f"Temporal shift z={temp_z:.1f}")
+
+            if not anomaly_reasons:
                 continue
 
-            # Anomaly confidence: sigmoid of z-score
+            # Combined anomaly score
+            z = mahal_z
             confidence = float(1.0 / (1.0 + np.exp(-0.5 * (z - self._z_threshold))))
 
             if confidence < self._confidence_gate:
@@ -224,14 +265,15 @@ class AnomalyDetectorStream(BaseStream):
                 end_time=meta["end_pkt"].timestamp,
                 confidence=round(confidence, 4),
                 z_score=round(z, 4),
-                label=f"Anomalous behaviour (Mahal={dist:.1f})",
+                label=f"Anomalous behaviour ({'; '.join(anomaly_reasons)})",
                 severity=severity,
                 metadata={
                     "mahalanobis_distance": round(float(dist), 2),
                     "baseline_mean": round(float(dist_mean), 2),
                     "baseline_std": round(float(dist_std), 2),
-                    "anomaly_z_score": round(float(z), 2),
-                    "detection_method": "self_supervised_mahalanobis",
+                    "anomaly_z_score": round(float(mahal_z), 2),
+                    "reasons": anomaly_reasons,
+                    "detection_method": "self_supervised_mahalanobis_temporal",
                     "feature_dim": self._feature_dim,
                 },
             ))
