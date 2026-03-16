@@ -60,3 +60,4 @@ sartriage/training/training_output.log
 # ── Evaluation results (generated) ───────────────────────────────────────
 sartriage/evaluation/results/
 evaluation/results/
+sartriage/evaluation/test_videos/
