@@ -63,6 +63,17 @@ pose:
   min_track_frames: 5              # minimum frames to form a track
 
 # ---------------------------------------------------------------------------
+# 3c. Stream 5 – Self-Supervised Anomaly Detection (Novel)
+# ---------------------------------------------------------------------------
+anomaly:
+  enabled: true
+  clip_size: 224                   # must match MViTv2-S input
+  mahalanobis_threshold: 3.0       # flag clip if Mahalanobis distance > this
+  min_clips_for_baseline: 10       # minimum clips to build distribution
+  confidence_gate: 0.40            # minimum anomaly confidence
+  z_score_threshold: 2.0           # z-score of Mahalanobis distance
+
+# ---------------------------------------------------------------------------
 # 4. Stream 2 – Motion Detector (Farneback Optical Flow)
 # ---------------------------------------------------------------------------
 motion:

@@ -31,6 +31,7 @@ STREAM_COLORS = {
     "motion":   (0, 255, 200),    # teal
     "tracking": (255, 180, 0),    # blue/cyan
     "pose":     (100, 255, 100),  # green
+    "anomaly":  (200, 100, 255),  # purple/violet
 }
 
 BOX_COLOR = (0, 255, 100)  # green for YOLO boxes

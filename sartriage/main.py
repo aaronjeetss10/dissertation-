@@ -41,6 +41,7 @@ from streams.action_classifier import ActionClassifierStream
 from streams.motion_detector import MotionDetectorStream
 from streams.tracking_events import TrackingEventsStream
 from streams.pose_estimator import PoseEstimatorStream
+from streams.anomaly_detector import AnomalyDetectorStream
 from core.priority_ranker import PriorityRanker, RankedEvent
 from core.frame_annotator import save_event_frames
 
@@ -479,21 +480,26 @@ def run_pipeline(
         config=config.get("pose", {}),
         global_config=config,
     )
+    anomaly_stream = AnomalyDetectorStream(
+        config=config.get("anomaly", {}),
+        global_config=config,
+    )
 
     # ── 5. Parallel dispatch ─────────────────────────────────────────────
     all_events: List[SAREvent] = []
 
     if on_progress:
-        on_progress("Stream 1 – Action classification", 0.30)
+        on_progress("Stream 1 – Action classification", 0.25)
 
-    log.info("Dispatching 4 streams (GPU workers=%d, CPU workers=%d)", gpu_workers, cpu_workers)
+    log.info("Dispatching 5 streams (GPU workers=%d, CPU workers=%d)", gpu_workers, cpu_workers)
 
     with (
         ThreadPoolExecutor(max_workers=gpu_workers, thread_name_prefix="gpu") as gpu_pool,
         ThreadPoolExecutor(max_workers=cpu_workers, thread_name_prefix="cpu") as cpu_pool,
     ):
-        # GPU-bound: Action classifier (R3D-18, person-centric)
+        # GPU-bound: Action classifier + Anomaly detector (both use MViTv2-S)
         future_action = gpu_pool.submit(_run_stream, action_stream, packets)
+        future_anomaly = gpu_pool.submit(_run_stream, anomaly_stream, packets)
 
         # CPU-bound: Motion detector + Tracking events + Pose estimator
         future_motion = cpu_pool.submit(_run_stream, motion_stream, packets)
@@ -501,10 +507,11 @@ def run_pipeline(
         future_pose = cpu_pool.submit(_run_stream, pose_stream, packets)
 
         futures = {
-            future_action: ("Stream 1 – Action classification", 0.45),
-            future_motion: ("Stream 2 – Motion detection", 0.55),
-            future_tracking: ("Stream 3 – Tracking events", 0.70),
-            future_pose: ("Stream 4 – Pose estimation", 0.85),
+            future_action: ("Stream 1 – Action classification", 0.40),
+            future_motion: ("Stream 2 – Motion detection", 0.50),
+            future_tracking: ("Stream 3 – Tracking events", 0.60),
+            future_pose: ("Stream 4 – Pose estimation", 0.70),
+            future_anomaly: ("Stream 5 – Anomaly detection", 0.85),
         }
 
         for future in as_completed(futures):
