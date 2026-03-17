@@ -1,0 +1,10 @@
+{
+  "total_annotations": 3073,
+  "mean_px": 14.4,
+  "median_px": 13.5,
+  "min_px": 5.0,
+  "max_px": 40.5,
+  "pct_under_20px": 87.8,
+  "pct_under_30px": 98.4,
+  "pct_under_50px": 100.0
+}

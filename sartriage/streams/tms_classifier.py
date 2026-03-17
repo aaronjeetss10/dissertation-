@@ -66,6 +66,10 @@ class TrajectoryFeatures:
 
     All features are resolution-normalised (divided by frame dimensions)
     to make them altitude/resolution invariant.
+
+    Supports ego-motion compensation: when `ego_displacements` is provided,
+    camera motion is subtracted from each person's trajectory so that
+    stationary persons are not misclassified as moving.
     """
 
     def __init__(
@@ -75,6 +79,7 @@ class TrajectoryFeatures:
         aspects: List[float],
         frame_dims: Tuple[int, int],
         bbox_sizes: List[float],
+        ego_displacements: Optional[List[Tuple[float, float]]] = None,
     ):
         self.centroids = centroids
         self.timestamps = timestamps
@@ -87,8 +92,51 @@ class TrajectoryFeatures:
         self.norm_cx = [cx / max(self.frame_w, 1) for cx, cy in centroids]
         self.norm_cy = [cy / max(self.frame_h, 1) for cx, cy in centroids]
 
+        # Apply ego-motion compensation if provided
+        if ego_displacements and len(ego_displacements) == self.n - 1:
+            cum_ego_x, cum_ego_y = 0.0, 0.0
+            for i in range(len(ego_displacements)):
+                cum_ego_x += ego_displacements[i][0] / max(self.frame_w, 1)
+                cum_ego_y += ego_displacements[i][1] / max(self.frame_h, 1)
+                self.norm_cx[i + 1] -= cum_ego_x
+                self.norm_cy[i + 1] -= cum_ego_y
+
         self._compute_velocities()
         self._compute_features()
+
+    @staticmethod
+    def estimate_ego_motion(
+        all_tracks: Dict[int, List[Tuple[float, float]]],
+        frame_range: Tuple[int, int],
+    ) -> List[Tuple[float, float]]:
+        """Estimate per-frame camera ego-motion from median displacement.
+
+        Given multiple tracks visible in the same frame window,
+        the camera motion is estimated as the median displacement
+        across all visible tracks for each frame transition.
+
+        Args:
+            all_tracks: dict of track_id → list of (cx, cy) centroids
+            frame_range: (start_frame, end_frame) inclusive
+
+        Returns:
+            List of (dx, dy) ego displacements for each frame transition
+        """
+        n_frames = frame_range[1] - frame_range[0]
+        ego = []
+        for f in range(n_frames):
+            dxs, dys = [], []
+            for tid, positions in all_tracks.items():
+                if f + 1 < len(positions):
+                    dx = positions[f + 1][0] - positions[f][0]
+                    dy = positions[f + 1][1] - positions[f][1]
+                    dxs.append(dx)
+                    dys.append(dy)
+            if dxs:
+                ego.append((float(np.median(dxs)), float(np.median(dys))))
+            else:
+                ego.append((0.0, 0.0))
+        return ego
 
     def _compute_velocities(self):
         """Compute per-frame velocities and accelerations."""
