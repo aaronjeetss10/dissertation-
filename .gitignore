@@ -61,3 +61,4 @@ sartriage/training/training_output.log
 sartriage/evaluation/results/
 evaluation/results/
 sartriage/evaluation/test_videos/
+sartriage/evaluation/datasets/
