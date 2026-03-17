@@ -191,6 +191,58 @@ def _decode_synthetic(
     return packets
 
 
+# ── SAR Preprocessing (CLAHE + dehazing + gamma correction) ─────────────────
+
+def _sar_preprocess(image: np.ndarray) -> np.ndarray:
+    """Enhance drone footage for adverse SAR conditions.
+
+    Applies adaptive CLAHE, gamma correction, dehazing, and sharpening
+    to improve detection in fog, darkness, rain, and overexposure.
+    """
+    result = image.copy()
+
+    # 1. CLAHE on LAB lightness channel (adaptive contrast)
+    lab = cv2.cvtColor(result, cv2.COLOR_BGR2LAB)
+    l_ch = lab[:, :, 0]
+    brightness = l_ch.mean()
+
+    if brightness < 80:
+        clip = 4.0     # dark → aggressive enhancement
+    elif brightness > 200:
+        clip = 1.5     # overexposed → mild
+    else:
+        clip = 2.5     # normal
+
+    clahe = cv2.createCLAHE(clipLimit=clip, tileGridSize=(8, 8))
+    lab[:, :, 0] = clahe.apply(l_ch)
+    result = cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
+
+    # 2. Adaptive gamma for dark images
+    if brightness < 100:
+        gamma = 0.6
+        table = np.array([((i / 255.0) ** (1.0 / gamma)) * 255
+                         for i in range(256)]).astype("uint8")
+        result = cv2.LUT(result, table)
+
+    # 3. Mild dehazing (Dark Channel Prior)
+    dark = np.min(result, axis=2)
+    dark = cv2.erode(dark, cv2.getStructuringElement(cv2.MORPH_RECT, (15, 15)))
+    if dark.mean() > 50:  # haze present
+        A = float(result.max())
+        t = 1.0 - 0.6 * (dark.astype(float) / max(A, 1))
+        t = np.clip(t, 0.2, 1.0)
+        for c in range(3):
+            result[:, :, c] = np.clip(
+                (result[:, :, c].astype(float) - A) / t + A, 0, 255
+            ).astype(np.uint8)
+
+    # 4. Mild sharpening for distant objects
+    blur = cv2.GaussianBlur(result, (0, 0), 2)
+    result = cv2.addWeighted(result, 1.3, blur, -0.3, 0)
+
+    return result
+
+
 # ── YOLO Front-End (stub) ───────────────────────────────────────────────────
 
 def run_yolo_frontend(
@@ -198,13 +250,16 @@ def run_yolo_frontend(
     config: Dict[str, Any],
     on_progress: Optional[Callable[[str, float], None]] = None,
 ) -> List[FramePacket]:
-    """Run YOLOv8 on every frame with SAHI tiled detection for small people.
+    """Run YOLO11 on every frame with SAHI + SAR preprocessing.
 
     SAHI (Slicing Aided Hyper Inference) is the SOTA technique for
     detecting small objects in high-resolution images.  It tiles the
     frame into overlapping patches, runs YOLO on each patch, and
     merges the results.  This dramatically improves recall for small
     people in drone footage.
+
+    SAR Preprocessing applies CLAHE, dehazing, and adaptive gamma
+    correction to handle adverse conditions (fog, darkness, rain).
 
     Falls back to standard YOLO if SAHI is unavailable, and to
     a random stub if ultralytics is not installed.
@@ -213,10 +268,11 @@ def run_yolo_frontend(
         on_progress("Running YOLO front-end", 0.15)
 
     conf_thresh = config.get("confidence_threshold", 0.35)
-    model_path = config.get("model_path", "yolov8n.pt")
+    model_path = config.get("model_path", "yolo11n.pt")
     use_sahi = config.get("use_sahi", True)
     sahi_slice_size = config.get("sahi_slice_size", 320)
     sahi_overlap = config.get("sahi_overlap_ratio", 0.2)
+    use_sar_preproc = config.get("sar_preprocess", True)
 
     # Try to load real YOLO
     try:
@@ -230,7 +286,7 @@ def run_yolo_frontend(
         return _run_yolo_stub(packets, conf_thresh, on_progress)
 
     # Load YOLO model
-    log.info("Loading YOLOv8 model: %s", model_path)
+    log.info("Loading YOLO model: %s (SAR preproc=%s)", model_path, use_sar_preproc)
     yolo_model = YOLO(model_path)
 
     # Try SAHI for small-object detection
@@ -249,6 +305,11 @@ def run_yolo_frontend(
         if pkt.image is None:
             pkt.detections = []
             continue
+
+        # ── SAR Preprocessing (CLAHE + dehazing + gamma) ────────
+        frame = pkt.image
+        if use_sar_preproc and isinstance(frame, np.ndarray):
+            frame = _sar_preprocess(frame)
 
         if sahi_available:
             # ── SAHI tiled inference (SOTA for small objects) ──────────

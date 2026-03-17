@@ -13,10 +13,10 @@ video:
   max_resolution: [1280, 720]      # resize longest edge; keeps aspect ratio
 
 # ---------------------------------------------------------------------------
-# 2. YOLO Front-End (YOLOv8 + SAHI for small persons)
+# 2. YOLO Front-End (YOLO11 + SAHI for small persons)
 # ---------------------------------------------------------------------------
 yolo:
-  model_path: "yolov8n.pt"        # nano weights (auto-downloaded by Ultralytics)
+  model_path: "yolo11n.pt"         # YOLO11 nano (2024 SOTA, auto-downloaded)
   confidence_threshold: 0.25       # lowered for small person detection
   iou_threshold: 0.45             # NMS IoU overlap
   target_classes: [0]             # COCO class IDs to keep  (0 = person)
@@ -24,6 +24,7 @@ yolo:
   use_sahi: true                  # SAHI tiled inference for small objects (SOTA)
   sahi_slice_size: 320            # tile size in pixels
   sahi_overlap_ratio: 0.2         # 20% overlap between tiles
+  sar_preprocess: true            # SAR-specific image enhancement (CLAHE + dehazing)
 
 # ---------------------------------------------------------------------------
 # 3. Stream 1 – Action Classifier (MViTv2-S, SOTA)
