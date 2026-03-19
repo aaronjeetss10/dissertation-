@@ -52,6 +52,7 @@ import math
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
+import cv2
 import numpy as np
 
 from .base_stream import BaseStream, EventSeverity, FramePacket, SAREvent
@@ -138,6 +139,119 @@ class TrajectoryFeatures:
                 ego.append((0.0, 0.0))
         return ego
 
+    @staticmethod
+    def estimate_ego_motion_optical_flow(
+        frames: List[np.ndarray],
+    ) -> List[Tuple[float, float]]:
+        """Estimate camera ego-motion using sparse optical flow on background.
+
+        Uses Lucas-Kanade optical flow on Shi-Tomasi corners to estimate
+        the dominant (background) motion between consecutive frames.
+        This is more accurate than track-median because it uses static
+        background features rather than moving person centroids.
+
+        Args:
+            frames: list of consecutive video frames (BGR numpy arrays)
+
+        Returns:
+            List of (dx, dy) ego displacements for each frame transition
+        """
+        if len(frames) < 2:
+            return []
+
+        lk_params = dict(
+            winSize=(21, 21),
+            maxLevel=3,
+            criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 30, 0.01),
+        )
+        feature_params = dict(
+            maxCorners=200,
+            qualityLevel=0.01,
+            minDistance=30,
+            blockSize=7,
+        )
+
+        ego = []
+        prev_gray = cv2.cvtColor(frames[0], cv2.COLOR_BGR2GRAY)
+
+        for i in range(1, len(frames)):
+            curr_gray = cv2.cvtColor(frames[i], cv2.COLOR_BGR2GRAY)
+
+            # Detect corners in previous frame
+            corners = cv2.goodFeaturesToTrack(prev_gray, **feature_params)
+
+            if corners is None or len(corners) < 10:
+                ego.append((0.0, 0.0))
+                prev_gray = curr_gray
+                continue
+
+            # Track corners to current frame
+            tracked, status, _ = cv2.calcOpticalFlowPyrLK(
+                prev_gray, curr_gray, corners, None, **lk_params
+            )
+
+            if tracked is None:
+                ego.append((0.0, 0.0))
+                prev_gray = curr_gray
+                continue
+
+            # Filter good matches
+            good_mask = status.ravel() == 1
+            old_pts = corners[good_mask]
+            new_pts = tracked[good_mask]
+
+            if len(old_pts) < 5:
+                ego.append((0.0, 0.0))
+                prev_gray = curr_gray
+                continue
+
+            # Compute displacements
+            disps = new_pts - old_pts  # shape (N, 1, 2) or (N, 2)
+            disps = disps.reshape(-1, 2)
+
+            # Use median to robustly estimate background motion
+            # (outliers from moving persons are rejected by median)
+            ego_dx = float(np.median(disps[:, 0]))
+            ego_dy = float(np.median(disps[:, 1]))
+            ego.append((ego_dx, ego_dy))
+
+            prev_gray = curr_gray
+
+        return ego
+
+    @staticmethod
+    def smooth_trajectory(
+        norm_cx: List[float],
+        norm_cy: List[float],
+        window: int = 3,
+    ) -> Tuple[List[float], List[float]]:
+        """Apply moving-average smoothing to remove tracking jitter.
+
+        After ego-motion compensation, residual high-frequency noise
+        from detector bbox jitter causes stationary persons to appear
+        as if they're moving. Smoothing removes this.
+
+        Args:
+            norm_cx: normalised x positions
+            norm_cy: normalised y positions
+            window: smoothing window size (must be odd)
+
+        Returns:
+            Smoothed (cx, cy) lists
+        """
+        if len(norm_cx) < window:
+            return norm_cx, norm_cy
+
+        half_w = window // 2
+        smoothed_cx = list(norm_cx)  # copy
+        smoothed_cy = list(norm_cy)
+
+        for i in range(half_w, len(norm_cx) - half_w):
+            smoothed_cx[i] = float(np.mean(norm_cx[max(0, i - half_w):i + half_w + 1]))
+            smoothed_cy[i] = float(np.mean(norm_cy[max(0, i - half_w):i + half_w + 1]))
+
+        return smoothed_cx, smoothed_cy
+
     def _compute_velocities(self):
         """Compute per-frame velocities and accelerations."""
         self.vx, self.vy, self.speeds = [], [], []
@@ -192,7 +306,12 @@ class TrajectoryFeatures:
         dir_change_rate = dir_changes / max(len(self.vx) - 1, 1)
 
         # 7. Stationarity ratio — fraction of frames with near-zero speed
-        speed_threshold = 0.005  # normalised units
+        #    Adaptive threshold: accounts for detector bbox jitter and residual
+        #    ego-motion. In real aerial footage, even stationary persons have
+        #    apparent speed ~0.01-0.02 from these noise sources.
+        #    Base threshold 0.005, but augmented by noise floor estimate.
+        noise_floor = float(np.percentile(self.speeds, 15)) if len(self.speeds) >= 5 else 0.0
+        speed_threshold = max(0.005, noise_floor * 1.5)
         stationary_frames = sum(1 for s in self.speeds if s < speed_threshold)
         stationarity = stationary_frames / max(len(self.speeds), 1)
 

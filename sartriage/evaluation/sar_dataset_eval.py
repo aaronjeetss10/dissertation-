@@ -487,7 +487,7 @@ def run_okutama_tms():
             centroids_for_ego.append((cx, cy))
         frame_groups[start_frame][tid] = centroids_for_ego
 
-    # Estimate ego-motion per frame group
+    # Estimate ego-motion per frame group (track-median method)
     ego_per_group = {}
     for start_frame, group_tracks in frame_groups.items():
         max_len = max(len(v) for v in group_tracks.values())
@@ -496,10 +496,39 @@ def run_okutama_tms():
         )
         ego_per_group[start_frame] = ego
 
-    # ── Run TMS with and without ego compensation ──
-    all_results = {}  # "raw" and "ego_compensated"
+    # Estimate ego-motion using optical flow on video frames
+    ego_optical_flow = {}
+    if video_path.exists():
+        print("  Computing optical flow ego-motion...")
+        cap = cv2.VideoCapture(str(video_path))
+        # For each frame group, read frames and compute optical flow
+        for start_frame, group_tracks in frame_groups.items():
+            max_len = max(len(v) for v in group_tracks.values())
+            frames_for_flow = []
+            cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
+            for fi in range(max_len):
+                ret, frame = cap.read()
+                if not ret:
+                    break
+                # Downscale for speed (optical flow doesn't need full 4K)
+                h, w = frame.shape[:2]
+                scale = min(1.0, 960.0 / w)
+                if scale < 1.0:
+                    frame = cv2.resize(frame, (int(w * scale), int(h * scale)))
+                frames_for_flow.append(frame)
+            if len(frames_for_flow) >= 2:
+                ego_of = TrajectoryFeatures.estimate_ego_motion_optical_flow(frames_for_flow)
+                # Scale back to original resolution
+                if scale < 1.0:
+                    ego_of = [(dx / scale, dy / scale) for dx, dy in ego_of]
+                ego_optical_flow[start_frame] = ego_of
+        cap.release()
+        print(f"  Computed optical flow for {len(ego_optical_flow)} frame groups")
 
-    for mode in ["raw", "ego_compensated"]:
+    # ── Run TMS in three modes ──
+    all_results = {}
+
+    for mode in ["raw", "ego_compensated", "optical_flow"]:
         results = {"tracks": [], "confusion": defaultdict(lambda: defaultdict(int))}
         action_counts = defaultdict(int)
         tms_correct = 0
@@ -545,11 +574,24 @@ def run_okutama_tms():
                 ego_disp = ego_full[:len(centroids) - 1]
                 if len(ego_disp) != len(centroids) - 1:
                     ego_disp = None
+            elif mode == "optical_flow" and start_frame in ego_optical_flow:
+                ego_full = ego_optical_flow[start_frame]
+                ego_disp = ego_full[:len(centroids) - 1]
+                if len(ego_disp) != len(centroids) - 1:
+                    ego_disp = None
 
             tf = TrajectoryFeatures(
                 centroids, timestamps, aspects, frame_dims, bbox_sizes,
                 ego_displacements=ego_disp
             )
+
+            # Apply trajectory smoothing for optical flow mode
+            if mode == "optical_flow":
+                tf.norm_cx, tf.norm_cy = TrajectoryFeatures.smooth_trajectory(
+                    tf.norm_cx, tf.norm_cy, window=3
+                )
+                tf._compute_velocities()
+                tf._compute_features()
             best_label, best_score = "unknown", 0.0
             rule_scores = {}
             for rule in TMS_RULES:
@@ -614,20 +656,22 @@ def run_okutama_tms():
     with open(RESULTS_DIR / "okutama_tms.json", "w") as f:
         json.dump(serializable, f, indent=2)
 
-    # ── Plot: Compare raw vs ego-compensated ──
-    results_ego = all_results["ego_compensated"]
+    # ── Plot: Compare all three modes ──
     results_raw = all_results["raw"]
+    results_ego = all_results["ego_compensated"]
+    results_of = all_results.get("optical_flow", results_ego)  # fallback
 
     fig, axes = plt.subplots(1, 3, figsize=(20, 7))
 
-    # Panel 1: Raw vs Ego accuracy comparison
+    # Panel 1: Three-way accuracy comparison
     ax = axes[0]
     categories = ["Overall", "Movement\n(Walk/Run)", "Stationary\n(Stand/Sit)", "Lying"]
-    raw_accs = []
-    ego_accs = []
+    raw_accs, ego_accs, of_accs = [], [], []
     for cat_actions in [None, ["Walking", "Running", "Carrying"],
                         ["Standing", "Sitting", "Reading"], ["Lying"]]:
-        for mode_results, acc_list in [(results_raw, raw_accs), (results_ego, ego_accs)]:
+        for mode_results, acc_list in [(results_raw, raw_accs),
+                                       (results_ego, ego_accs),
+                                       (results_of, of_accs)]:
             if cat_actions is None:
                 acc_list.append(mode_results["overall_accuracy"])
             else:
@@ -638,35 +682,36 @@ def run_okutama_tms():
                     acc_list.append(0.0)
 
     x = np.arange(len(categories))
-    w_bar = 0.35
-    bars1 = ax.bar(x - w_bar/2, raw_accs, w_bar, label="Raw TMS", color="#e74c3c", alpha=0.85)
-    bars2 = ax.bar(x + w_bar/2, ego_accs, w_bar, label="+ Ego Compensation", color="#2ecc71", alpha=0.85)
-    for bar, acc in zip(bars1, raw_accs):
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01,
-               f"{acc:.0%}", ha="center", fontsize=10, fontweight="bold")
-    for bar, acc in zip(bars2, ego_accs):
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01,
-               f"{acc:.0%}", ha="center", fontsize=10, fontweight="bold", color="#27ae60")
+    w_bar = 0.25
+    bars1 = ax.bar(x - w_bar, raw_accs, w_bar, label="Raw TMS", color="#e74c3c", alpha=0.85)
+    bars2 = ax.bar(x, ego_accs, w_bar, label="+ Track Ego Comp", color="#f39c12", alpha=0.85)
+    bars3 = ax.bar(x + w_bar, of_accs, w_bar, label="+ Optical Flow + Smooth", color="#2ecc71", alpha=0.85)
+    for bars, accs, color in [(bars1, raw_accs, "#c0392b"), (bars2, ego_accs, "#d35400"),
+                               (bars3, of_accs, "#27ae60")]:
+        for bar, acc in zip(bars, accs):
+            ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01,
+                   f"{acc:.0%}", ha="center", fontsize=9, fontweight="bold", color=color)
     ax.set_xticks(x)
     ax.set_xticklabels(categories, fontsize=9)
     ax.set_ylabel("Accuracy", fontsize=11)
-    ax.set_title("Ego-Motion Compensation Effect\nRaw vs Compensated TMS", fontsize=13, fontweight="bold")
-    ax.legend(fontsize=10)
+    ax.set_title("Ego-Motion Compensation Comparison\nRaw vs Track-Median vs Optical Flow", fontsize=12, fontweight="bold")
+    ax.legend(fontsize=9, loc="upper right")
     ax.grid(True, alpha=0.3, axis="y")
     ax.set_ylim(0, 1.15)
 
-    # Panel 2: Confusion matrix (ego-compensated)
+    # Panel 2: Confusion matrix (best mode: optical flow)
+    best_mode = results_of
     ax = axes[1]
-    action_counts_ego = results_ego["action_distribution"]
-    sorted_actions = sorted(action_counts_ego.items(), key=lambda x: x[1], reverse=True)
+    action_counts_best = best_mode["action_distribution"]
+    sorted_actions = sorted(action_counts_best.items(), key=lambda x: x[1], reverse=True)
     act_names = [a[0] for a in sorted_actions]
-    okutama_actions = [a for a in act_names if action_counts_ego.get(a, 0) >= 3]
-    tms_labels = sorted(set(t["tms_label"] for t in results_ego["tracks"]))
+    okutama_actions = [a for a in act_names if action_counts_best.get(a, 0) >= 3]
+    tms_labels = sorted(set(t["tms_label"] for t in best_mode["tracks"]))
 
     if okutama_actions and tms_labels:
         conf_matrix = np.zeros((len(okutama_actions), len(tms_labels)))
         for oa_idx, oa in enumerate(okutama_actions):
-            confusion_row = results_ego["confusion"].get(oa, {})
+            confusion_row = best_mode["confusion"].get(oa, {})
             for tl_idx, tl in enumerate(tms_labels):
                 conf_matrix[oa_idx, tl_idx] = confusion_row.get(tl, 0)
 
@@ -681,7 +726,7 @@ def run_okutama_tms():
         ax.set_yticklabels(okutama_actions, fontsize=9)
         ax.set_xlabel("TMS Prediction", fontsize=11)
         ax.set_ylabel("Okutama GT Action", fontsize=11)
-        ax.set_title("TMS + Ego Compensation\nCross-Domain Confusion", fontsize=13, fontweight="bold")
+        ax.set_title("TMS + Optical Flow\nCross-Domain Confusion", fontsize=12, fontweight="bold")
 
         for i in range(len(okutama_actions)):
             for j in range(len(tms_labels)):
@@ -696,18 +741,18 @@ def run_okutama_tms():
     ax = axes[2]
     raw_acc = results_raw["overall_accuracy"]
     ego_acc = results_ego["overall_accuracy"]
-    improvement = (ego_acc - raw_acc) * 100
+    of_acc = results_of["overall_accuracy"]
     stats_text = [
         f"Dataset: Okutama-Action",
         f"Source:  Real 4K drone footage",
         f"Video:  {vid_w}x{vid_h} @ {fps:.0f}fps",
-        f"Tracks: {results_ego['total_tracks']}",
+        f"Tracks: {results_of['total_tracks']}",
         f"",
         f"Raw TMS:         {raw_acc:.1%}",
-        f"+ Ego Comp:      {ego_acc:.1%}",
-        f"Improvement:     +{improvement:.1f}pp",
+        f"+ Track Ego:     {ego_acc:.1%}",
+        f"+ OptFlow+Smooth:{of_acc:.1%}",
         f"",
-        f"Actions: {len(action_counts_ego)} classes",
+        f"Actions: {len(action_counts_best)} classes",
         f"Cross-domain: Kinetics→Aerial",
     ]
     ax.text(0.1, 0.95, "\n".join(stats_text), transform=ax.transAxes,
@@ -716,9 +761,8 @@ def run_okutama_tms():
     ax.set_title("Okutama Results Summary", fontsize=13, fontweight="bold")
     ax.axis("off")
 
-    ego_acc_str = f"{ego_acc:.1%}" if ego_acc > raw_acc else f"{raw_acc:.1%}"
     plt.suptitle(f"SARTriage TMS on Okutama-Action (Real Drone Footage)\n"
-                 f"Ego-Motion Compensated: {ego_acc:.1%} (raw: {raw_acc:.1%})",
+                 f"Raw: {raw_acc:.1%} → Track Ego: {ego_acc:.1%} → OptFlow+Smooth: {of_acc:.1%}",
                  fontsize=15, fontweight="bold", y=1.02)
     plt.tight_layout()
     plt.savefig(FIGURES_DIR / "okutama_tms.png", dpi=150, bbox_inches="tight")
