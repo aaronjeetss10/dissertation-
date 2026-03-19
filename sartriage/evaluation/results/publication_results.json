@@ -1,0 +1,141 @@
+{
+  "classifiers": {
+    "Random Forest": {
+      "cv_accuracy": 0.995,
+      "cv_accuracy_std": 0.0036,
+      "cv_f1": 0.995,
+      "cv_f1_std": 0.0036,
+      "hard_accuracy": 0.9971,
+      "hard_f1": 0.9971
+    },
+    "SVM (RBF)": {
+      "cv_accuracy": 0.9843,
+      "cv_accuracy_std": 0.0092,
+      "cv_f1": 0.9842,
+      "cv_f1_std": 0.0092,
+      "hard_accuracy": 0.9143,
+      "hard_f1": 0.9141
+    },
+    "MLP": {
+      "cv_accuracy": 0.9429,
+      "cv_accuracy_std": 0.0093,
+      "cv_f1": 0.9423,
+      "cv_f1_std": 0.0099,
+      "hard_accuracy": 0.7686,
+      "hard_f1": 0.7661
+    },
+    "Gradient Boosting": {
+      "cv_accuracy": 0.9907,
+      "cv_accuracy_std": 0.0053,
+      "cv_f1": 0.9907,
+      "cv_f1_std": 0.0053,
+      "hard_accuracy": 0.9829,
+      "hard_f1": 0.9828
+    },
+    "Hand-crafted Rules": {
+      "cv_accuracy": 0.44,
+      "cv_accuracy_std": 0,
+      "cv_f1": 0.44,
+      "cv_f1_std": 0,
+      "hard_accuracy": 0.44,
+      "hard_f1": 0.44
+    }
+  },
+  "ablation": {
+    "full_accuracy": 0.9957,
+    "features": {
+      "net_displacement": {
+        "accuracy_without": 0.9964,
+        "accuracy_drop": -0.0007,
+        "relative_drop_pct": -0.07
+      },
+      "mean_speed": {
+        "accuracy_without": 0.9964,
+        "accuracy_drop": -0.0007,
+        "relative_drop_pct": -0.07
+      },
+      "speed_cv": {
+        "accuracy_without": 0.9964,
+        "accuracy_drop": -0.0007,
+        "relative_drop_pct": -0.07
+      },
+      "max_acceleration": {
+        "accuracy_without": 0.9957,
+        "accuracy_drop": 0.0,
+        "relative_drop_pct": 0.0
+      },
+      "vertical_dominance": {
+        "accuracy_without": 0.9957,
+        "accuracy_drop": 0.0,
+        "relative_drop_pct": 0.0
+      },
+      "direction_change_rate": {
+        "accuracy_without": 0.9964,
+        "accuracy_drop": -0.0007,
+        "relative_drop_pct": -0.07
+      },
+      "stationarity": {
+        "accuracy_without": 0.9957,
+        "accuracy_drop": 0.0,
+        "relative_drop_pct": 0.0
+      },
+      "aspect_change": {
+        "accuracy_without": 0.9936,
+        "accuracy_drop": 0.0021,
+        "relative_drop_pct": 0.22
+      },
+      "speed_decay": {
+        "accuracy_without": 0.9957,
+        "accuracy_drop": 0.0,
+        "relative_drop_pct": 0.0
+      },
+      "oscillation": {
+        "accuracy_without": 0.9957,
+        "accuracy_drop": 0.0,
+        "relative_drop_pct": 0.0
+      },
+      "mean_aspect": {
+        "accuracy_without": 0.9721,
+        "accuracy_drop": 0.0236,
+        "relative_drop_pct": 2.37
+      },
+      "mean_size_norm": {
+        "accuracy_without": 0.9943,
+        "accuracy_drop": 0.0014,
+        "relative_drop_pct": 0.14
+      }
+    }
+  },
+  "baselines": {
+    "TMS Features + RF": {
+      "accuracy": 0.9964,
+      "f1": 0.9964,
+      "input": "12 engineered features",
+      "params": "~5K"
+    },
+    "Raw Displacements + MLP": {
+      "accuracy": 0.6857,
+      "f1": 0.6799,
+      "input": "78-dim displacement vector",
+      "params": "~15K"
+    },
+    "Raw Coords + MLP": {
+      "accuracy": 0.3893,
+      "f1": 0.3514,
+      "input": "80-dim coordinate vector",
+      "params": "~15K"
+    },
+    "Raw Coords + LSTM": {
+      "accuracy": 0.2893,
+      "f1": 0.2452,
+      "input": "40\u00d72 coordinate sequence",
+      "params": "~35K"
+    },
+    "Raw Coords + 1D-CNN": {
+      "accuracy": 0.6679,
+      "f1": 0.6606,
+      "input": "40\u00d72 coordinate sequence",
+      "params": "~8K"
+    }
+  }
+}
