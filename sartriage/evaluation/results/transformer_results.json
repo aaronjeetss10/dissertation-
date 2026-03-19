@@ -1,0 +1,48 @@
+{
+  "comparison": {
+    "TMS Features + Random Forest": {
+      "test_acc": 1.0,
+      "test_f1": 1.0,
+      "hard_acc": 0.9946428571428572,
+      "hard_f1": 0.994642229262747,
+      "params": "~5K",
+      "input": "12 features"
+    },
+    "Trajectory Transformer": {
+      "test_acc": 0.9976190476190476,
+      "test_f1": 0.9976188822636493,
+      "hard_acc": 0.9964285714285714,
+      "hard_f1": 0.9964280133056505,
+      "params": "~103K",
+      "input": "raw (dx,dy,ar,sz) seq"
+    },
+    "Raw Sequence + LSTM": {
+      "test_acc": 0.4642857142857143,
+      "test_f1": 0.3547906138277349,
+      "hard_acc": 0.4446428571428571,
+      "hard_f1": 0.3429730426987742,
+      "params": "~53K",
+      "input": "raw (dx,dy,ar,sz) seq"
+    },
+    "Raw Sequence + 1D-CNN": {
+      "test_acc": 1.0,
+      "test_f1": 1.0,
+      "hard_acc": 0.9946428571428572,
+      "hard_f1": 0.9946409731099661,
+      "params": "~19K",
+      "input": "raw (dx,dy,ar,sz) seq"
+    },
+    "Hand-crafted TMS Rules": {
+      "test_acc": 0.430952380952381,
+      "test_f1": 0.430952380952381,
+      "hard_acc": 0.430952380952381,
+      "hard_f1": 0.430952380952381,
+      "params": "0",
+      "input": "12 features"
+    }
+  },
+  "okutama_rf": {
+    "rules_overall": 0.3939393939393939,
+    "rf_overall": 0.3333333333333333
+  }
+}
