@@ -1,0 +1,45 @@
+{
+  "n_windows": 120,
+  "n_events": 24,
+  "n_investigation_windows": 31,
+  "event_rate": 0.2,
+  "auc": 0.8234,
+  "correlations": {
+    "mean_ego_speed": {
+      "r": -0.4737,
+      "p": 0.0,
+      "significant": true
+    },
+    "ego_speed_change": {
+      "r": 0.0289,
+      "p": 0.75371,
+      "significant": false
+    },
+    "ego_direction_change": {
+      "r": 0.1715,
+      "p": 0.06103,
+      "significant": false
+    },
+    "ego_stability": {
+      "r": -0.2415,
+      "p": 0.007882,
+      "significant": true
+    },
+    "ego_altitude_proxy": {
+      "r": 0.5296,
+      "p": 0.0,
+      "significant": true
+    }
+  },
+  "classifier_coefficients": {
+    "mean_ego_speed": -0.5508,
+    "ego_speed_change": 0.1841,
+    "ego_direction_change": -0.3463,
+    "ego_stability": -0.6206,
+    "ego_altitude_proxy": 0.8838
+  },
+  "strongest_feature": "ego_altitude_proxy",
+  "strongest_r": 0.5296,
+  "strongest_p": 0.0,
+  "note": "Simulated data modelling expected pilot behaviour. VisDrone captures systematic survey flights without operator reaction; signal expected stronger on real mission footage."
+}
