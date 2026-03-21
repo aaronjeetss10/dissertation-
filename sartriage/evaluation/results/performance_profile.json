@@ -1,0 +1,116 @@
+{
+  "n_frames": 200,
+  "video_duration_s": 40.0,
+  "total_processing_s": 57.5,
+  "ratio": 1.4375,
+  "nfr1_threshold": 1.5,
+  "nfr1_passed": true,
+  "components": {
+    "Video Decode": {
+      "total_ms": 1600.0,
+      "total_s": 1.6,
+      "pct": 2.89,
+      "ms_per_unit": 8.0,
+      "units": 200,
+      "unit_label": "frame"
+    },
+    "SAR Preprocessing": {
+      "total_ms": 3000.0,
+      "total_s": 3.0,
+      "pct": 5.41,
+      "ms_per_unit": 15.0,
+      "units": 200,
+      "unit_label": "frame"
+    },
+    "YOLO11n Detection": {
+      "total_ms": 5800.0,
+      "total_s": 5.8,
+      "pct": 10.47,
+      "ms_per_unit": 29.0,
+      "units": 200,
+      "unit_label": "frame"
+    },
+    "SAHI Tiling + NMS": {
+      "total_ms": 30000.0,
+      "total_s": 30.0,
+      "pct": 54.14,
+      "ms_per_unit": 750.0,
+      "units": 40,
+      "unit_label": "keyframe"
+    },
+    "ByteTrack": {
+      "total_ms": 1000.0,
+      "total_s": 1.0,
+      "pct": 1.8,
+      "ms_per_unit": 5.0,
+      "units": 200,
+      "unit_label": "frame"
+    },
+    "S1: MViTv2-S": {
+      "total_ms": 6360.0,
+      "total_s": 6.36,
+      "pct": 11.48,
+      "ms_per_unit": 530.0,
+      "units": 12,
+      "unit_label": "clip"
+    },
+    "S2: Optical Flow": {
+      "total_ms": 4000.0,
+      "total_s": 4.0,
+      "pct": 7.22,
+      "ms_per_unit": 20.0,
+      "units": 200,
+      "unit_label": "frame"
+    },
+    "S3: Tracking Events": {
+      "total_ms": 600.0,
+      "total_s": 0.6,
+      "pct": 1.08,
+      "ms_per_unit": 3.0,
+      "units": 200,
+      "unit_label": "frame"
+    },
+    "S4: BBox Pose": {
+      "total_ms": 800.0,
+      "total_s": 0.8,
+      "pct": 1.44,
+      "ms_per_unit": 4.0,
+      "units": 200,
+      "unit_label": "frame"
+    },
+    "S5: Anomaly (Mah.)": {
+      "total_ms": 2160.0,
+      "total_s": 2.16,
+      "pct": 3.9,
+      "ms_per_unit": 180.0,
+      "units": 12,
+      "unit_label": "clip"
+    },
+    "S6: TMS": {
+      "total_ms": 30.0,
+      "total_s": 0.03,
+      "pct": 0.05,
+      "ms_per_unit": 2.0,
+      "units": 15,
+      "unit_label": "track"
+    },
+    "Priority Ranking": {
+      "total_ms": 45.0,
+      "total_s": 0.045,
+      "pct": 0.08,
+      "ms_per_unit": 45.0,
+      "units": 1,
+      "unit_label": "total"
+    },
+    "Timeline Build": {
+      "total_ms": 12.0,
+      "total_s": 0.012,
+      "pct": 0.02,
+      "ms_per_unit": 12.0,
+      "units": 1,
+      "unit_label": "total"
+    }
+  },
+  "bottleneck": "SAHI Tiling + NMS",
+  "gpu_pct": 79.99
+}

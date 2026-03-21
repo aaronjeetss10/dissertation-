@@ -199,6 +199,8 @@ def _sar_preprocess(image: np.ndarray) -> np.ndarray:
     Applies adaptive CLAHE, gamma correction, dehazing, and sharpening
     to improve detection in fog, darkness, rain, and overexposure.
     """
+    import cv2
+
     result = image.copy()
 
     # 1. CLAHE on LAB lightness channel (adaptive contrast)
