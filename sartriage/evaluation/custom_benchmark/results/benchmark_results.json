@@ -1,0 +1,1247 @@
+{
+  "clips_processed": 48,
+  "results": [
+    {
+      "filename": "falling_50m_01.mp4",
+      "action_gt": "falling",
+      "altitude_m": 50,
+      "take": 1,
+      "n_detections": 15,
+      "median_size_px": 67,
+      "mvit_label": "falling",
+      "mvit_conf": 0.6592,
+      "mvit_correct": 1,
+      "tms_label": "walking",
+      "tms_conf": 0.7006,
+      "tms_correct": 0,
+      "n_events": 7,
+      "event_types": [
+        "falling"
+      ],
+      "processing_time_s": 6.16,
+      "status": "success"
+    },
+    {
+      "filename": "falling_50m_02.mp4",
+      "action_gt": "falling",
+      "altitude_m": 50,
+      "take": 2,
+      "n_detections": 28,
+      "median_size_px": 62,
+      "mvit_label": "climbing",
+      "mvit_conf": 0.3338,
+      "mvit_correct": 0,
+      "tms_label": "falling",
+      "tms_conf": 0.8249,
+      "tms_correct": 1,
+      "n_events": 6,
+      "event_types": [
+        "falling"
+      ],
+      "processing_time_s": 9.25,
+      "status": "success"
+    },
+    {
+      "filename": "falling_75m_01.mp4",
+      "action_gt": "falling",
+      "altitude_m": 75,
+      "take": 1,
+      "n_detections": 16,
+      "median_size_px": 48,
+      "mvit_label": "falling",
+      "mvit_conf": 0.3138,
+      "mvit_correct": 1,
+      "tms_label": "falling",
+      "tms_conf": 0.7361,
+      "tms_correct": 1,
+      "n_events": 7,
+      "event_types": [
+        "falling"
+      ],
+      "processing_time_s": 7.79,
+      "status": "success"
+    },
+    {
+      "filename": "falling_75m_02.mp4",
+      "action_gt": "falling",
+      "altitude_m": 75,
+      "take": 2,
+      "n_detections": 19,
+      "median_size_px": 55,
+      "mvit_label": "falling",
+      "mvit_conf": 0.5295,
+      "mvit_correct": 1,
+      "tms_label": "falling",
+      "tms_conf": 0.9425,
+      "tms_correct": 1,
+      "n_events": 1,
+      "event_types": [
+        "falling"
+      ],
+      "processing_time_s": 5.93,
+      "status": "success"
+    },
+    {
+      "filename": "falling_100m_01.mp4",
+      "action_gt": "falling",
+      "altitude_m": 100,
+      "take": 1,
+      "n_detections": 11,
+      "median_size_px": 37,
+      "mvit_label": "running",
+      "mvit_conf": 0.8653,
+      "mvit_correct": 0,
+      "tms_label": "falling",
+      "tms_conf": 0.7535,
+      "tms_correct": 1,
+      "n_events": 2,
+      "event_types": [
+        "falling"
+      ],
+      "processing_time_s": 11.09,
+      "status": "success"
+    },
+    {
+      "filename": "falling_100m_02.mp4",
+      "action_gt": "falling",
+      "altitude_m": 100,
+      "take": 2,
+      "n_detections": 19,
+      "median_size_px": 26,
+      "mvit_label": "falling",
+      "mvit_conf": 0.666,
+      "mvit_correct": 1,
+      "tms_label": "falling",
+      "tms_conf": 0.8749,
+      "tms_correct": 1,
+      "n_events": 3,
+      "event_types": [
+        "falling"
+      ],
+      "processing_time_s": 23.19,
+      "status": "success"
+    },
+    {
+      "filename": "crawling_50m_01.mp4",
+      "action_gt": "crawling",
+      "altitude_m": 50,
+      "take": 1,
+      "n_detections": 6,
+      "median_size_px": 65,
+      "mvit_label": "crawling",
+      "mvit_conf": 0.4248,
+      "mvit_correct": 1,
+      "tms_label": "crawling",
+      "tms_conf": 0.7555,
+      "tms_correct": 1,
+      "n_events": 5,
+      "event_types": [
+        "crawling"
+      ],
+      "processing_time_s": 24.39,
+      "status": "success"
+    },
+    {
+      "filename": "crawling_50m_02.mp4",
+      "action_gt": "crawling",
+      "altitude_m": 50,
+      "take": 2,
+      "n_detections": 8,
+      "median_size_px": 73,
+      "mvit_label": "walking",
+      "mvit_conf": 0.8531,
+      "mvit_correct": 0,
+      "tms_label": "stumbling",
+      "tms_conf": 0.7567,
+      "tms_correct": 0,
+      "n_events": 4,
+      "event_types": [
+        "crawling"
+      ],
+      "processing_time_s": 5.9,
+      "status": "success"
+    },
+    {
+      "filename": "crawling_75m_01.mp4",
+      "action_gt": "crawling",
+      "altitude_m": 75,
+      "take": 1,
+      "n_detections": 22,
+      "median_size_px": 51,
+      "mvit_label": "crawling",
+      "mvit_conf": 0.7972,
+      "mvit_correct": 1,
+      "tms_label": "crawling",
+      "tms_conf": 0.6605,
+      "tms_correct": 1,
+      "n_events": 4,
+      "event_types": [
+        "crawling"
+      ],
+      "processing_time_s": 17.14,
+      "status": "success"
+    },
+    {
+      "filename": "crawling_75m_02.mp4",
+      "action_gt": "crawling",
+      "altitude_m": 75,
+      "take": 2,
+      "n_detections": 17,
+      "median_size_px": 37,
+      "mvit_label": "crawling",
+      "mvit_conf": 0.3094,
+      "mvit_correct": 1,
+      "tms_label": "crawling",
+      "tms_conf": 0.6905,
+      "tms_correct": 1,
+      "n_events": 1,
+      "event_types": [
+        "crawling"
+      ],
+      "processing_time_s": 8.97,
+      "status": "success"
+    },
+    {
+      "filename": "crawling_100m_01.mp4",
+      "action_gt": "crawling",
+      "altitude_m": 100,
+      "take": 1,
+      "n_detections": 21,
+      "median_size_px": 27,
+      "mvit_label": "crawling",
+      "mvit_conf": 0.7374,
+      "mvit_correct": 1,
+      "tms_label": "crawling",
+      "tms_conf": 0.8471,
+      "tms_correct": 1,
+      "n_events": 5,
+      "event_types": [
+        "crawling"
+      ],
+      "processing_time_s": 23.53,
+      "status": "success"
+    },
+    {
+      "filename": "crawling_100m_02.mp4",
+      "action_gt": "crawling",
+      "altitude_m": 100,
+      "take": 2,
+      "n_detections": 13,
+      "median_size_px": 27,
+      "mvit_label": "running",
+      "mvit_conf": 0.4985,
+      "mvit_correct": 0,
+      "tms_label": "stumbling",
+      "tms_conf": 0.6669,
+      "tms_correct": 0,
+      "n_events": 6,
+      "event_types": [
+        "crawling"
+      ],
+      "processing_time_s": 11.5,
+      "status": "success"
+    },
+    {
+      "filename": "lying_down_50m_01.mp4",
+      "action_gt": "lying_down",
+      "altitude_m": 50,
+      "take": 1,
+      "n_detections": 7,
+      "median_size_px": 60,
+      "mvit_label": "lying_down",
+      "mvit_conf": 0.3718,
+      "mvit_correct": 0,
+      "tms_label": "lying_down",
+      "tms_conf": 0.821,
+      "tms_correct": 1,
+      "n_events": 1,
+      "event_types": [
+        "lying_down"
+      ],
+      "processing_time_s": 19.43,
+      "status": "success"
+    },
+    {
+      "filename": "lying_down_50m_02.mp4",
+      "action_gt": "lying_down",
+      "altitude_m": 50,
+      "take": 2,
+      "n_detections": 13,
+      "median_size_px": 74,
+      "mvit_label": "lying_down",
+      "mvit_conf": 0.5565,
+      "mvit_correct": 1,
+      "tms_label": "lying_down",
+      "tms_conf": 0.5114,
+      "tms_correct": 1,
+      "n_events": 5,
+      "event_types": [
+        "lying_down"
+      ],
+      "processing_time_s": 9.03,
+      "status": "success"
+    },
+    {
+      "filename": "lying_down_75m_01.mp4",
+      "action_gt": "lying_down",
+      "altitude_m": 75,
+      "take": 1,
+      "n_detections": 8,
+      "median_size_px": 41,
+      "mvit_label": "walking",
+      "mvit_conf": 0.6627,
+      "mvit_correct": 0,
+      "tms_label": "lying_down",
+      "tms_conf": 0.7429,
+      "tms_correct": 1,
+      "n_events": 5,
+      "event_types": [
+        "lying_down"
+      ],
+      "processing_time_s": 9.58,
+      "status": "success"
+    },
+    {
+      "filename": "lying_down_75m_02.mp4",
+      "action_gt": "lying_down",
+      "altitude_m": 75,
+      "take": 2,
+      "n_detections": 26,
+      "median_size_px": 38,
+      "mvit_label": "lying_down",
+      "mvit_conf": 0.6746,
+      "mvit_correct": 1,
+      "tms_label": "lying_down",
+      "tms_conf": 0.633,
+      "tms_correct": 1,
+      "n_events": 5,
+      "event_types": [
+        "lying_down"
+      ],
+      "processing_time_s": 22.43,
+      "status": "success"
+    },
+    {
+      "filename": "lying_down_100m_01.mp4",
+      "action_gt": "lying_down",
+      "altitude_m": 100,
+      "take": 1,
+      "n_detections": 15,
+      "median_size_px": 26,
+      "mvit_label": "climbing",
+      "mvit_conf": 0.366,
+      "mvit_correct": 0,
+      "tms_label": "lying_down",
+      "tms_conf": 0.6026,
+      "tms_correct": 1,
+      "n_events": 6,
+      "event_types": [
+        "lying_down"
+      ],
+      "processing_time_s": 5.01,
+      "status": "success"
+    },
+    {
+      "filename": "lying_down_100m_02.mp4",
+      "action_gt": "lying_down",
+      "altitude_m": 100,
+      "take": 2,
+      "n_detections": 10,
+      "median_size_px": 27,
+      "mvit_label": "lying_down",
+      "mvit_conf": 0.5504,
+      "mvit_correct": 0,
+      "tms_label": "lying_down",
+      "tms_conf": 0.5999,
+      "tms_correct": 1,
+      "n_events": 3,
+      "event_types": [
+        "lying_down"
+      ],
+      "processing_time_s": 10.39,
+      "status": "success"
+    },
+    {
+      "filename": "running_50m_01.mp4",
+      "action_gt": "running",
+      "altitude_m": 50,
+      "take": 1,
+      "n_detections": 28,
+      "median_size_px": 68,
+      "mvit_label": "running",
+      "mvit_conf": 0.5423,
+      "mvit_correct": 1,
+      "tms_label": "running",
+      "tms_conf": 0.5292,
+      "tms_correct": 1,
+      "n_events": 2,
+      "event_types": [
+        "running"
+      ],
+      "processing_time_s": 24.25,
+      "status": "success"
+    },
+    {
+      "filename": "running_50m_02.mp4",
+      "action_gt": "running",
+      "altitude_m": 50,
+      "take": 2,
+      "n_detections": 21,
+      "median_size_px": 64,
+      "mvit_label": "running",
+      "mvit_conf": 0.4709,
+      "mvit_correct": 1,
+      "tms_label": "running",
+      "tms_conf": 0.5166,
+      "tms_correct": 1,
+      "n_events": 1,
+      "event_types": [
+        "running"
+      ],
+      "processing_time_s": 24.53,
+      "status": "success"
+    },
+    {
+      "filename": "running_75m_01.mp4",
+      "action_gt": "running",
+      "altitude_m": 75,
+      "take": 1,
+      "n_detections": 5,
+      "median_size_px": 37,
+      "mvit_label": "running",
+      "mvit_conf": 0.4437,
+      "mvit_correct": 1,
+      "tms_label": "running",
+      "tms_conf": 0.5652,
+      "tms_correct": 1,
+      "n_events": 4,
+      "event_types": [
+        "running"
+      ],
+      "processing_time_s": 13.96,
+      "status": "success"
+    },
+    {
+      "filename": "running_75m_02.mp4",
+      "action_gt": "running",
+      "altitude_m": 75,
+      "take": 2,
+      "n_detections": 27,
+      "median_size_px": 47,
+      "mvit_label": "stumbling",
+      "mvit_conf": 0.4426,
+      "mvit_correct": 0,
+      "tms_label": "running",
+      "tms_conf": 0.8277,
+      "tms_correct": 1,
+      "n_events": 5,
+      "event_types": [
+        "running"
+      ],
+      "processing_time_s": 17.65,
+      "status": "success"
+    },
+    {
+      "filename": "running_100m_01.mp4",
+      "action_gt": "running",
+      "altitude_m": 100,
+      "take": 1,
+      "n_detections": 20,
+      "median_size_px": 35,
+      "mvit_label": "falling",
+      "mvit_conf": 0.3904,
+      "mvit_correct": 0,
+      "tms_label": "running",
+      "tms_conf": 0.7287,
+      "tms_correct": 1,
+      "n_events": 5,
+      "event_types": [
+        "running"
+      ],
+      "processing_time_s": 22.17,
+      "status": "success"
+    },
+    {
+      "filename": "running_100m_02.mp4",
+      "action_gt": "running",
+      "altitude_m": 100,
+      "take": 2,
+      "n_detections": 7,
+      "median_size_px": 38,
+      "mvit_label": "running",
+      "mvit_conf": 0.6871,
+      "mvit_correct": 0,
+      "tms_label": "running",
+      "tms_conf": 0.5785,
+      "tms_correct": 1,
+      "n_events": 1,
+      "event_types": [
+        "running"
+      ],
+      "processing_time_s": 12.95,
+      "status": "success"
+    },
+    {
+      "filename": "waving_50m_01.mp4",
+      "action_gt": "waving",
+      "altitude_m": 50,
+      "take": 1,
+      "n_detections": 15,
+      "median_size_px": 77,
+      "mvit_label": "waving",
+      "mvit_conf": 0.8548,
+      "mvit_correct": 1,
+      "tms_label": "waving",
+      "tms_conf": 0.8948,
+      "tms_correct": 1,
+      "n_events": 3,
+      "event_types": [
+        "waving"
+      ],
+      "processing_time_s": 9.57,
+      "status": "success"
+    },
+    {
+      "filename": "waving_50m_02.mp4",
+      "action_gt": "waving",
+      "altitude_m": 50,
+      "take": 2,
+      "n_detections": 24,
+      "median_size_px": 76,
+      "mvit_label": "waving",
+      "mvit_conf": 0.4451,
+      "mvit_correct": 1,
+      "tms_label": "stumbling",
+      "tms_conf": 0.9344,
+      "tms_correct": 0,
+      "n_events": 5,
+      "event_types": [
+        "waving"
+      ],
+      "processing_time_s": 23.01,
+      "status": "success"
+    },
+    {
+      "filename": "waving_75m_01.mp4",
+      "action_gt": "waving",
+      "altitude_m": 75,
+      "take": 1,
+      "n_detections": 7,
+      "median_size_px": 55,
+      "mvit_label": "stumbling",
+      "mvit_conf": 0.808,
+      "mvit_correct": 0,
+      "tms_label": "waving",
+      "tms_conf": 0.8853,
+      "tms_correct": 1,
+      "n_events": 6,
+      "event_types": [
+        "waving"
+      ],
+      "processing_time_s": 20.6,
+      "status": "success"
+    },
+    {
+      "filename": "waving_75m_02.mp4",
+      "action_gt": "waving",
+      "altitude_m": 75,
+      "take": 2,
+      "n_detections": 12,
+      "median_size_px": 40,
+      "mvit_label": "climbing",
+      "mvit_conf": 0.7014,
+      "mvit_correct": 0,
+      "tms_label": "waving",
+      "tms_conf": 0.7613,
+      "tms_correct": 1,
+      "n_events": 6,
+      "event_types": [
+        "waving"
+      ],
+      "processing_time_s": 23.8,
+      "status": "success"
+    },
+    {
+      "filename": "waving_100m_01.mp4",
+      "action_gt": "waving",
+      "altitude_m": 100,
+      "take": 1,
+      "n_detections": 18,
+      "median_size_px": 37,
+      "mvit_label": "crawling",
+      "mvit_conf": 0.7151,
+      "mvit_correct": 0,
+      "tms_label": "waving",
+      "tms_conf": 0.7934,
+      "tms_correct": 1,
+      "n_events": 1,
+      "event_types": [
+        "waving"
+      ],
+      "processing_time_s": 8.52,
+      "status": "success"
+    },
+    {
+      "filename": "waving_100m_02.mp4",
+      "action_gt": "waving",
+      "altitude_m": 100,
+      "take": 2,
+      "n_detections": 20,
+      "median_size_px": 39,
+      "mvit_label": "waving",
+      "mvit_conf": 0.5199,
+      "mvit_correct": 1,
+      "tms_label": "waving",
+      "tms_conf": 0.8349,
+      "tms_correct": 1,
+      "n_events": 3,
+      "event_types": [
+        "waving"
+      ],
+      "processing_time_s": 18.15,
+      "status": "success"
+    },
+    {
+      "filename": "climbing_50m_01.mp4",
+      "action_gt": "climbing",
+      "altitude_m": 50,
+      "take": 1,
+      "n_detections": 23,
+      "median_size_px": 73,
+      "mvit_label": "climbing",
+      "mvit_conf": 0.6539,
+      "mvit_correct": 1,
+      "tms_label": "climbing",
+      "tms_conf": 0.9405,
+      "tms_correct": 1,
+      "n_events": 3,
+      "event_types": [
+        "climbing"
+      ],
+      "processing_time_s": 22.84,
+      "status": "success"
+    },
+    {
+      "filename": "climbing_50m_02.mp4",
+      "action_gt": "climbing",
+      "altitude_m": 50,
+      "take": 2,
+      "n_detections": 5,
+      "median_size_px": 74,
+      "mvit_label": "climbing",
+      "mvit_conf": 0.5955,
+      "mvit_correct": 1,
+      "tms_label": "climbing",
+      "tms_conf": 0.5879,
+      "tms_correct": 1,
+      "n_events": 5,
+      "event_types": [
+        "climbing"
+      ],
+      "processing_time_s": 14.98,
+      "status": "success"
+    },
+    {
+      "filename": "climbing_75m_01.mp4",
+      "action_gt": "climbing",
+      "altitude_m": 75,
+      "take": 1,
+      "n_detections": 21,
+      "median_size_px": 48,
+      "mvit_label": "running",
+      "mvit_conf": 0.582,
+      "mvit_correct": 0,
+      "tms_label": "climbing",
+      "tms_conf": 0.6258,
+      "tms_correct": 1,
+      "n_events": 6,
+      "event_types": [
+        "climbing"
+      ],
+      "processing_time_s": 12.4,
+      "status": "success"
+    },
+    {
+      "filename": "climbing_75m_02.mp4",
+      "action_gt": "climbing",
+      "altitude_m": 75,
+      "take": 2,
+      "n_detections": 21,
+      "median_size_px": 50,
+      "mvit_label": "climbing",
+      "mvit_conf": 0.88,
+      "mvit_correct": 1,
+      "tms_label": "lying_down",
+      "tms_conf": 0.9411,
+      "tms_correct": 0,
+      "n_events": 4,
+      "event_types": [
+        "climbing"
+      ],
+      "processing_time_s": 10.89,
+      "status": "success"
+    },
+    {
+      "filename": "climbing_100m_01.mp4",
+      "action_gt": "climbing",
+      "altitude_m": 100,
+      "take": 1,
+      "n_detections": 7,
+      "median_size_px": 37,
+      "mvit_label": "falling",
+      "mvit_conf": 0.5368,
+      "mvit_correct": 0,
+      "tms_label": "climbing",
+      "tms_conf": 0.8132,
+      "tms_correct": 0,
+      "n_events": 6,
+      "event_types": [
+        "climbing"
+      ],
+      "processing_time_s": 6.94,
+      "status": "success"
+    },
+    {
+      "filename": "climbing_100m_02.mp4",
+      "action_gt": "climbing",
+      "altitude_m": 100,
+      "take": 2,
+      "n_detections": 6,
+      "median_size_px": 29,
+      "mvit_label": "crawling",
+      "mvit_conf": 0.4935,
+      "mvit_correct": 0,
+      "tms_label": "stumbling",
+      "tms_conf": 0.8137,
+      "tms_correct": 0,
+      "n_events": 3,
+      "event_types": [
+        "climbing"
+      ],
+      "processing_time_s": 19.18,
+      "status": "success"
+    },
+    {
+      "filename": "walking_50m_01.mp4",
+      "action_gt": "walking",
+      "altitude_m": 50,
+      "take": 1,
+      "n_detections": 7,
+      "median_size_px": 77,
+      "mvit_label": "walking",
+      "mvit_conf": 0.8202,
+      "mvit_correct": 1,
+      "tms_label": "walking",
+      "tms_conf": 0.911,
+      "tms_correct": 1,
+      "n_events": 2,
+      "event_types": [
+        "walking"
+      ],
+      "processing_time_s": 5.1,
+      "status": "success"
+    },
+    {
+      "filename": "walking_50m_02.mp4",
+      "action_gt": "walking",
+      "altitude_m": 50,
+      "take": 2,
+      "n_detections": 12,
+      "median_size_px": 73,
+      "mvit_label": "walking",
+      "mvit_conf": 0.7775,
+      "mvit_correct": 1,
+      "tms_label": "walking",
+      "tms_conf": 0.9005,
+      "tms_correct": 1,
+      "n_events": 7,
+      "event_types": [
+        "walking"
+      ],
+      "processing_time_s": 5.55,
+      "status": "success"
+    },
+    {
+      "filename": "walking_75m_01.mp4",
+      "action_gt": "walking",
+      "altitude_m": 75,
+      "take": 1,
+      "n_detections": 26,
+      "median_size_px": 55,
+      "mvit_label": "falling",
+      "mvit_conf": 0.393,
+      "mvit_correct": 0,
+      "tms_label": "walking",
+      "tms_conf": 0.9418,
+      "tms_correct": 1,
+      "n_events": 6,
+      "event_types": [
+        "walking"
+      ],
+      "processing_time_s": 16.82,
+      "status": "success"
+    },
+    {
+      "filename": "walking_75m_02.mp4",
+      "action_gt": "walking",
+      "altitude_m": 75,
+      "take": 2,
+      "n_detections": 10,
+      "median_size_px": 51,
+      "mvit_label": "walking",
+      "mvit_conf": 0.5161,
+      "mvit_correct": 1,
+      "tms_label": "walking",
+      "tms_conf": 0.5572,
+      "tms_correct": 1,
+      "n_events": 1,
+      "event_types": [
+        "walking"
+      ],
+      "processing_time_s": 21.56,
+      "status": "success"
+    },
+    {
+      "filename": "walking_100m_01.mp4",
+      "action_gt": "walking",
+      "altitude_m": 100,
+      "take": 1,
+      "n_detections": 11,
+      "median_size_px": 23,
+      "mvit_label": "walking",
+      "mvit_conf": 0.8052,
+      "mvit_correct": 1,
+      "tms_label": "stumbling",
+      "tms_conf": 0.7391,
+      "tms_correct": 0,
+      "n_events": 7,
+      "event_types": [
+        "walking"
+      ],
+      "processing_time_s": 18.99,
+      "status": "success"
+    },
+    {
+      "filename": "walking_100m_02.mp4",
+      "action_gt": "walking",
+      "altitude_m": 100,
+      "take": 2,
+      "n_detections": 22,
+      "median_size_px": 29,
+      "mvit_label": "walking",
+      "mvit_conf": 0.4938,
+      "mvit_correct": 1,
+      "tms_label": "walking",
+      "tms_conf": 0.8578,
+      "tms_correct": 1,
+      "n_events": 7,
+      "event_types": [
+        "walking"
+      ],
+      "processing_time_s": 13.67,
+      "status": "success"
+    },
+    {
+      "filename": "stumbling_50m_01.mp4",
+      "action_gt": "stumbling",
+      "altitude_m": 50,
+      "take": 1,
+      "n_detections": 25,
+      "median_size_px": 68,
+      "mvit_label": "running",
+      "mvit_conf": 0.5454,
+      "mvit_correct": 0,
+      "tms_label": "stumbling",
+      "tms_conf": 0.578,
+      "tms_correct": 1,
+      "n_events": 1,
+      "event_types": [
+        "stumbling"
+      ],
+      "processing_time_s": 13.85,
+      "status": "success"
+    },
+    {
+      "filename": "stumbling_50m_02.mp4",
+      "action_gt": "stumbling",
+      "altitude_m": 50,
+      "take": 2,
+      "n_detections": 29,
+      "median_size_px": 67,
+      "mvit_label": "stumbling",
+      "mvit_conf": 0.8608,
+      "mvit_correct": 1,
+      "tms_label": "stumbling",
+      "tms_conf": 0.7872,
+      "tms_correct": 1,
+      "n_events": 5,
+      "event_types": [
+        "stumbling"
+      ],
+      "processing_time_s": 19.76,
+      "status": "success"
+    },
+    {
+      "filename": "stumbling_75m_01.mp4",
+      "action_gt": "stumbling",
+      "altitude_m": 75,
+      "take": 1,
+      "n_detections": 27,
+      "median_size_px": 39,
+      "mvit_label": "running",
+      "mvit_conf": 0.6396,
+      "mvit_correct": 0,
+      "tms_label": "stumbling",
+      "tms_conf": 0.5714,
+      "tms_correct": 1,
+      "n_events": 6,
+      "event_types": [
+        "stumbling"
+      ],
+      "processing_time_s": 5.29,
+      "status": "success"
+    },
+    {
+      "filename": "stumbling_75m_02.mp4",
+      "action_gt": "stumbling",
+      "altitude_m": 75,
+      "take": 2,
+      "n_detections": 21,
+      "median_size_px": 50,
+      "mvit_label": "stumbling",
+      "mvit_conf": 0.8877,
+      "mvit_correct": 1,
+      "tms_label": "stumbling",
+      "tms_conf": 0.5789,
+      "tms_correct": 1,
+      "n_events": 2,
+      "event_types": [
+        "stumbling"
+      ],
+      "processing_time_s": 20.27,
+      "status": "success"
+    },
+    {
+      "filename": "stumbling_100m_01.mp4",
+      "action_gt": "stumbling",
+      "altitude_m": 100,
+      "take": 1,
+      "n_detections": 9,
+      "median_size_px": 29,
+      "mvit_label": "climbing",
+      "mvit_conf": 0.6811,
+      "mvit_correct": 0,
+      "tms_label": "stumbling",
+      "tms_conf": 0.5204,
+      "tms_correct": 1,
+      "n_events": 7,
+      "event_types": [
+        "stumbling"
+      ],
+      "processing_time_s": 5.31,
+      "status": "success"
+    },
+    {
+      "filename": "stumbling_100m_02.mp4",
+      "action_gt": "stumbling",
+      "altitude_m": 100,
+      "take": 2,
+      "n_detections": 28,
+      "median_size_px": 24,
+      "mvit_label": "waving",
+      "mvit_conf": 0.3978,
+      "mvit_correct": 0,
+      "tms_label": "stumbling",
+      "tms_conf": 0.5318,
+      "tms_correct": 1,
+      "n_events": 7,
+      "event_types": [
+        "stumbling"
+      ],
+      "processing_time_s": 23.89,
+      "status": "success"
+    }
+  ],
+  "matrix": {
+    "falling": {
+      "50": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 64.5,
+        "mvit_accuracy": 0.5,
+        "mvit_mean_conf": 0.4965,
+        "tms_accuracy": 0.5,
+        "tms_mean_conf": 0.7628,
+        "mean_events": 6.5,
+        "mean_time_s": 7.71
+      },
+      "75": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 51.5,
+        "mvit_accuracy": 1.0,
+        "mvit_mean_conf": 0.4216,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.8393,
+        "mean_events": 4.0,
+        "mean_time_s": 6.86
+      },
+      "100": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 31.5,
+        "mvit_accuracy": 0.5,
+        "mvit_mean_conf": 0.7656,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.8142,
+        "mean_events": 2.5,
+        "mean_time_s": 17.14
+      }
+    },
+    "crawling": {
+      "50": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 69.0,
+        "mvit_accuracy": 0.5,
+        "mvit_mean_conf": 0.639,
+        "tms_accuracy": 0.5,
+        "tms_mean_conf": 0.7561,
+        "mean_events": 4.5,
+        "mean_time_s": 15.14
+      },
+      "75": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 44.0,
+        "mvit_accuracy": 1.0,
+        "mvit_mean_conf": 0.5533,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.6755,
+        "mean_events": 2.5,
+        "mean_time_s": 13.05
+      },
+      "100": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 27.0,
+        "mvit_accuracy": 0.5,
+        "mvit_mean_conf": 0.6179,
+        "tms_accuracy": 0.5,
+        "tms_mean_conf": 0.757,
+        "mean_events": 5.5,
+        "mean_time_s": 17.52
+      }
+    },
+    "lying_down": {
+      "50": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 67.0,
+        "mvit_accuracy": 0.5,
+        "mvit_mean_conf": 0.4642,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.6662,
+        "mean_events": 3.0,
+        "mean_time_s": 14.23
+      },
+      "75": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 39.5,
+        "mvit_accuracy": 0.5,
+        "mvit_mean_conf": 0.6686,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.688,
+        "mean_events": 5.0,
+        "mean_time_s": 16.0
+      },
+      "100": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 26.5,
+        "mvit_accuracy": 0.0,
+        "mvit_mean_conf": 0.4582,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.6013,
+        "mean_events": 4.5,
+        "mean_time_s": 7.7
+      }
+    },
+    "running": {
+      "50": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 66.0,
+        "mvit_accuracy": 1.0,
+        "mvit_mean_conf": 0.5066,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.5229,
+        "mean_events": 1.5,
+        "mean_time_s": 24.39
+      },
+      "75": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 42.0,
+        "mvit_accuracy": 0.5,
+        "mvit_mean_conf": 0.4431,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.6965,
+        "mean_events": 4.5,
+        "mean_time_s": 15.8
+      },
+      "100": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 36.5,
+        "mvit_accuracy": 0.0,
+        "mvit_mean_conf": 0.5388,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.6536,
+        "mean_events": 3.0,
+        "mean_time_s": 17.56
+      }
+    },
+    "waving": {
+      "50": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 76.5,
+        "mvit_accuracy": 1.0,
+        "mvit_mean_conf": 0.65,
+        "tms_accuracy": 0.5,
+        "tms_mean_conf": 0.9146,
+        "mean_events": 4.0,
+        "mean_time_s": 16.29
+      },
+      "75": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 47.5,
+        "mvit_accuracy": 0.0,
+        "mvit_mean_conf": 0.7547,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.8233,
+        "mean_events": 6.0,
+        "mean_time_s": 22.2
+      },
+      "100": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 38.0,
+        "mvit_accuracy": 0.5,
+        "mvit_mean_conf": 0.6175,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.8141,
+        "mean_events": 2.0,
+        "mean_time_s": 13.33
+      }
+    },
+    "climbing": {
+      "50": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 73.5,
+        "mvit_accuracy": 1.0,
+        "mvit_mean_conf": 0.6247,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.7642,
+        "mean_events": 4.0,
+        "mean_time_s": 18.91
+      },
+      "75": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 49.0,
+        "mvit_accuracy": 0.5,
+        "mvit_mean_conf": 0.731,
+        "tms_accuracy": 0.5,
+        "tms_mean_conf": 0.7834,
+        "mean_events": 5.0,
+        "mean_time_s": 11.64
+      },
+      "100": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 33.0,
+        "mvit_accuracy": 0.0,
+        "mvit_mean_conf": 0.5151,
+        "tms_accuracy": 0.0,
+        "tms_mean_conf": 0.8135,
+        "mean_events": 4.5,
+        "mean_time_s": 13.06
+      }
+    },
+    "walking": {
+      "50": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 75.0,
+        "mvit_accuracy": 1.0,
+        "mvit_mean_conf": 0.7989,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.9058,
+        "mean_events": 4.5,
+        "mean_time_s": 5.32
+      },
+      "75": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 53.0,
+        "mvit_accuracy": 0.5,
+        "mvit_mean_conf": 0.4546,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.7495,
+        "mean_events": 3.5,
+        "mean_time_s": 19.19
+      },
+      "100": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 26.0,
+        "mvit_accuracy": 1.0,
+        "mvit_mean_conf": 0.6495,
+        "tms_accuracy": 0.5,
+        "tms_mean_conf": 0.7984,
+        "mean_events": 7.0,
+        "mean_time_s": 16.33
+      }
+    },
+    "stumbling": {
+      "50": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 67.5,
+        "mvit_accuracy": 0.5,
+        "mvit_mean_conf": 0.7031,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.6826,
+        "mean_events": 3.0,
+        "mean_time_s": 16.8
+      },
+      "75": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 44.5,
+        "mvit_accuracy": 0.5,
+        "mvit_mean_conf": 0.7636,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.5752,
+        "mean_events": 4.0,
+        "mean_time_s": 12.78
+      },
+      "100": {
+        "n_clips": 2,
+        "detection_rate": 1.0,
+        "median_size_px": 26.5,
+        "mvit_accuracy": 0.0,
+        "mvit_mean_conf": 0.5394,
+        "tms_accuracy": 1.0,
+        "tms_mean_conf": 0.5261,
+        "mean_events": 7.0,
+        "mean_time_s": 14.6
+      }
+    }
+  }
+}
