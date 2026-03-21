@@ -1,0 +1,99 @@
+{
+  "crossover_px": 75.1,
+  "tms_overall_accuracy": 0.619,
+  "tms_movement_accuracy": 0.92,
+  "tms_stationary_accuracy": 0.06,
+  "sar_movement_ratio": 0.65,
+  "summary": [
+    {
+      "size_px": 10,
+      "mvit_acc": 0.272,
+      "tms_acc": 0.619,
+      "aai_acc": 0.619,
+      "selected_stream": "TMS"
+    },
+    {
+      "size_px": 15,
+      "mvit_acc": 0.316,
+      "tms_acc": 0.619,
+      "aai_acc": 0.619,
+      "selected_stream": "TMS"
+    },
+    {
+      "size_px": 20,
+      "mvit_acc": 0.36,
+      "tms_acc": 0.619,
+      "aai_acc": 0.619,
+      "selected_stream": "TMS"
+    },
+    {
+      "size_px": 25,
+      "mvit_acc": 0.4024,
+      "tms_acc": 0.619,
+      "aai_acc": 0.619,
+      "selected_stream": "TMS"
+    },
+    {
+      "size_px": 30,
+      "mvit_acc": 0.437,
+      "tms_acc": 0.619,
+      "aai_acc": 0.619,
+      "selected_stream": "TMS"
+    },
+    {
+      "size_px": 40,
+      "mvit_acc": 0.481,
+      "tms_acc": 0.619,
+      "aai_acc": 0.619,
+      "selected_stream": "TMS"
+    },
+    {
+      "size_px": 50,
+      "mvit_acc": 0.525,
+      "tms_acc": 0.619,
+      "aai_acc": 0.619,
+      "selected_stream": "TMS"
+    },
+    {
+      "size_px": 60,
+      "mvit_acc": 0.569,
+      "tms_acc": 0.619,
+      "aai_acc": 0.619,
+      "selected_stream": "TMS"
+    },
+    {
+      "size_px": 80,
+      "mvit_acc": 0.635,
+      "tms_acc": 0.619,
+      "aai_acc": 0.635,
+      "selected_stream": "MViTv2-S"
+    },
+    {
+      "size_px": 100,
+      "mvit_acc": 0.811,
+      "tms_acc": 0.619,
+      "aai_acc": 0.811,
+      "selected_stream": "MViTv2-S"
+    },
+    {
+      "size_px": 120,
+      "mvit_acc": 0.8456,
+      "tms_acc": 0.619,
+      "aai_acc": 0.8456,
+      "selected_stream": "MViTv2-S"
+    },
+    {
+      "size_px": 150,
+      "mvit_acc": 0.888,
+      "tms_acc": 0.619,
+      "aai_acc": 0.888,
+      "selected_stream": "MViTv2-S"
+    }
+  ],
+  "meta_classifier_accuracy": 0.8815,
+  "meta_classifier_coefficients": {
+    "person_size_px": 1.5244,
+    "mvit_confidence": 0.6065,
+    "tms_feature_variance": 0.0101
+  }
+}
