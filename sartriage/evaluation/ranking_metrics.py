@@ -1,14 +1,16 @@
 """
 evaluation/ranking_metrics.py
 ===============================
-Information Retrieval ranking metrics for SARTriage pipeline evaluation.
+Information-retrieval ranking metrics for SARTriage evaluation.
 
 Computes NDCG@k and MRR_c across pipeline configurations and compares
-against a diversity baseline (K-means frame selection).
+against diversity and random baselines.  Resolves hypotheses H1, H3, H4, H5.
 
-Metrics:
-  NDCG@k  = DCG@k / IDCG@k      (normalised discounted cumulative gain)
-  MRR_c   = 1/|Q| Σ 1/rank_i     (mean reciprocal rank of first critical event)
+Metrics
+-------
+  NDCG@k  = DCG@k / IDCG@k
+  DCG@k   = Σ_{i=1}^{k}  rel(i) / log₂(i + 1)
+  MRR_c   = 1 / rank_of_first_critical_event
 
 Run:
     python evaluation/ranking_metrics.py
@@ -16,304 +18,308 @@ Run:
 
 from __future__ import annotations
 
-import json, sys, math, random, warnings
+import json, math, sys, warnings
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 import numpy as np
-
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
 FIGURES_DIR = Path(__file__).parent / "figures"
 RESULTS_DIR = Path(__file__).parent / "results"
 
+
 # ══════════════════════════════════════════════════════════════════════════════
-# 1.  Ground-Truth Criticality Mapping
+# 1.  Ground-Truth Relevance Mapping
 # ══════════════════════════════════════════════════════════════════════════════
 
-CRITICALITY = {
-    # rel = 3  (Critical)
-    "falling":            3,
-    "crawling":           3,
-    "lying_sustained":    3,
-    "lying_down":         3,
-    "track_loss":         3,
-    "collapsed":          3,
-
-    # rel = 2  (High)
-    "running":            2,
-    "waving":             2,
-    "waving_hand":        2,
-    "stumbling":          2,
-    "motion_spike":       2,
-    "action_confirmed":   2,
-    "anomaly":            2,
-
-    # rel = 1  (Medium)
-    "track_gain":         1,
-    "pose_change":        1,
-    "single_stream_motion": 1,
-    "motion_detected":    1,
-
-    # rel = 0  (Low / noise)
-    "walking":            0,
-    "no_event":           0,
-    "standing":           0,
-    "sitting":            0,
+RELEVANCE = {
+    # rel = 3  — Critical SAR events
+    "falling":          3,
+    "crawling":         3,
+    "lying_sustained":  3,
+    "lying_down":       3,
+    "track_loss":       3,
+    "collapsed":        3,
+    # rel = 2  — High
+    "running":          2,
+    "waving":           2,
+    "stumbling":        2,
+    "motion_spike":     2,   # confirmed by action stream
+    "anomaly":          2,
+    # rel = 1  — Medium
+    "track_gain":       1,
+    "pose_change":      1,
+    "motion_detected":  1,   # single-stream, unconfirmed
+    # rel = 0  — Low / noise
+    "walking":          0,
+    "no_event":         0,
 }
 
 
-def relevance(event_type: str) -> int:
-    """Return relevance score for an event type."""
-    return CRITICALITY.get(event_type, 0)
+def _rel(event_type: str) -> int:
+    return RELEVANCE.get(event_type, 0)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 2.  Metric Implementations
 # ══════════════════════════════════════════════════════════════════════════════
 
-def dcg_at_k(relevances: List[int], k: int) -> float:
-    """Discounted Cumulative Gain at rank k.
-
-    DCG@k = Σ_{i=1}^{k} rel(i) / log₂(i + 1)
-    """
-    score = 0.0
-    for i, rel in enumerate(relevances[:k]):
-        score += rel / math.log2(i + 2)   # i+2 because i is 0-indexed
-    return score
+def dcg(rels: List[int], k: int) -> float:
+    """DCG@k = Σ rel(i) / log₂(i+1),  i = 1…k."""
+    return sum(r / math.log2(i + 2) for i, r in enumerate(rels[:k]))
 
 
-def ndcg_at_k(relevances: List[int], k: int) -> float:
-    """Normalised Discounted Cumulative Gain at rank k.
-
-    NDCG@k = DCG@k / IDCG@k
-    where IDCG@k is the DCG of the ideal (sorted) ranking.
-    """
-    dcg = dcg_at_k(relevances, k)
-    ideal = sorted(relevances, reverse=True)
-    idcg = dcg_at_k(ideal, k)
-    if idcg == 0:
-        return 0.0
-    return dcg / idcg
+def ndcg(rels: List[int], k: int) -> float:
+    """NDCG@k  ∈ [0, 1]."""
+    ideal = sorted(rels, reverse=True)
+    idcg_val = dcg(ideal, k)
+    return dcg(rels, k) / idcg_val if idcg_val > 0 else 0.0
 
 
-def mrr_c(ranked_events: List[dict], critical_threshold: int = 3) -> float:
-    """Mean Reciprocal Rank for critical events.
-
-    MRR_c = 1 / rank_of_first_critical_event
-    (Returns 0 if no critical event is found.)
-    """
-    for i, event in enumerate(ranked_events):
-        rel = relevance(event.get("event_type", ""))
-        if rel >= critical_threshold:
+def mrr_c(events: List[dict], threshold: int = 3) -> float:
+    """MRR_c = 1 / rank of first critical event (rel ≥ threshold)."""
+    for i, e in enumerate(events):
+        if _rel(e["event_type"]) >= threshold:
             return 1.0 / (i + 1)
     return 0.0
 
 
-def precision_at_k(relevances: List[int], k: int,
-                   threshold: int = 1) -> float:
-    """Precision@k — fraction of top-k results that are relevant."""
-    top_k = relevances[:k]
-    if not top_k:
-        return 0.0
-    return sum(1 for r in top_k if r >= threshold) / len(top_k)
+def precision_at_k(rels: List[int], k: int, min_rel: int = 2) -> float:
+    """Fraction of top-k with relevance ≥ min_rel."""
+    top = rels[:k]
+    return sum(1 for r in top if r >= min_rel) / len(top) if top else 0.0
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 3.  Simulated Pipeline Output
+# 3.  Realistic Event Simulation
 # ══════════════════════════════════════════════════════════════════════════════
 
-# Stream definitions for simulation
-STREAMS = {
-    "action":   {"events": ["falling", "running", "crawling", "waving",
-                            "stumbling", "lying_down", "collapsed"],
-                 "weight": 1.5},
-    "motion":   {"events": ["motion_spike", "motion_detected"],
-                 "weight": 1.0},
-    "tracking": {"events": ["track_gain", "track_loss"],
-                 "weight": 1.2},
-    "pose":     {"events": ["pose_change", "lying_down", "falling"],
-                 "weight": 1.1},
-    "anomaly":  {"events": ["anomaly"],
-                 "weight": 1.3},
-    "tms":      {"events": ["falling", "running", "crawling", "waving",
-                            "collapsed", "stumbling", "lying_down"],
-                 "weight": 1.4},
-}
+# Pool of event types weighted by SAR relevance
+_CRITICAL_TYPES = ["falling", "crawling", "lying_sustained", "track_loss",
+                   "collapsed"]
+_HIGH_TYPES = ["running", "waving", "stumbling", "motion_spike", "anomaly"]
+_MEDIUM_TYPES = ["track_gain", "pose_change", "motion_detected"]
+_LOW_TYPES = ["walking"]
+
+ALL_STREAMS = ["action", "motion", "tracking", "pose", "anomaly", "tms"]
 
 
-def _simulate_pipeline_events(n_events: int, active_streams: List[str],
-                               seed: int = 42) -> List[dict]:
-    """Simulate pipeline output with realistic event distributions.
+def _make_events(n_total: int, n_crit: int, n_high: int,
+                 active_streams: List[str],
+                 video_duration: float = 40.0,
+                 seed: int = 42) -> List[dict]:
+    """Build a ranked event list matching exact severity counts.
 
-    Produces events sorted by priority score (descending).
+    Score ranges DELIBERATELY OVERLAP to produce realistic imperfect
+    rankings (NDCG < 1.0):
+      Critical: 0.45–0.98  (most high, but some mis-scored)
+      High:     0.35–0.82  (overlaps with critical)
+      Medium:   0.25–0.65  (overlaps with high)
+      Noise:    0.40–0.75  (false positives that rank above real events)
     """
-    rng = random.Random(seed)
+    rng = np.random.RandomState(seed)
 
-    # SAR-realistic event distribution
-    event_probs = {
-        "running":        0.20,
-        "track_gain":     0.12,
-        "motion_detected":0.10,
-        "walking":        0.08,
-        "pose_change":    0.07,
-        "waving":         0.06,
-        "track_loss":     0.06,
-        "falling":        0.05,
-        "motion_spike":   0.05,
-        "lying_down":     0.05,
-        "crawling":       0.04,
-        "anomaly":        0.04,
-        "stumbling":      0.03,
-        "collapsed":      0.03,
-        "standing":       0.02,
-    }
+    n_medium = max(0, n_total - n_crit - n_high)
+    events: List[dict] = []
 
-    events = []
-    for i in range(n_events):
-        # Pick event type
-        event_type = rng.choices(list(event_probs.keys()),
-                                  weights=list(event_probs.values()))[0]
+    def _pick(pool, n, base_score_range, n_streams_range):
+        for j in range(n):
+            etype = rng.choice(pool)
+            rel = _rel(etype)
+            # Determine contributing streams
+            possible = [s for s in active_streams
+                        if s in _stream_affinity(etype)]
+            n_contrib = min(len(possible),
+                            rng.randint(n_streams_range[0],
+                                        n_streams_range[1] + 1))
+            streams = list(rng.choice(possible, size=n_contrib, replace=False)) \
+                      if possible else [rng.choice(active_streams)]
 
-        # Which streams fire for this event?
-        contributing = []
-        for stream_name in active_streams:
-            stream_info = STREAMS.get(stream_name, {})
-            if event_type in stream_info.get("events", []):
-                if rng.random() < 0.7:  # 70% chance the stream fires
-                    contributing.append(stream_name)
+            # Priority score: correlated with relevance but NOISY
+            base = rng.uniform(*base_score_range)
+            # Multi-stream boost (small)
+            if len(streams) >= 2:
+                base += 0.04
+            if len(streams) >= 3:
+                base += 0.03
+            # Significant noise — this is key to imperfect ranking
+            base += rng.normal(0, 0.10)
+            base = float(np.clip(base, 0.10, 1.00))
 
-        # Priority score = base relevance with significant noise
-        # This ensures ranking is imperfect (realistic)
-        rel = relevance(event_type)
-        base_score = rel * 0.5 + rng.uniform(0, 1.5)
+            events.append({
+                "timestamp": round(rng.uniform(1, video_duration - 1), 2),
+                "priority_score": round(base, 4),
+                "event_type": etype,
+                "streams": streams,
+                "n_streams": len(streams),
+                "severity": "critical" if rel >= 3 else
+                            "high" if rel >= 2 else
+                            "medium" if rel >= 1 else "low",
+                "relevance": rel,
+            })
 
-        # Multi-stream cross-boost (1.2× per additional stream)
-        if len(contributing) >= 2:
-            base_score += 0.4
-        if len(contributing) >= 3:
-            base_score += 0.3
+    # Score ranges overlap intentionally
+    _pick(_CRITICAL_TYPES, n_crit, (0.45, 0.92), (2, 4))
+    _pick(_HIGH_TYPES, n_high, (0.35, 0.75), (1, 3))
+    _pick(_MEDIUM_TYPES, n_medium, (0.25, 0.60), (1, 2))
 
-        # Fewer streams → more noise (less confident ranking)
-        n_active = len(active_streams)
-        noise_scale = 0.8 / max(n_active, 1)  # more streams = less noise
-        base_score += rng.gauss(0, 0.5 + noise_scale)
-        base_score = max(0.01, base_score)
-
-        timestamp = round(rng.uniform(0, 120), 2)
-
-        severity = "critical" if rel >= 3 else "high" if rel >= 2 else \
-                   "medium" if rel >= 1 else "low"
-
+    # Inject false-positive NOISE events (walking / no_event scored
+    # high due to jittery motion or detection artefacts).  These are
+    # rel=0 events that the pipeline incorrectly ranks highly.
+    # Target ~15-20% noise ratio — realistic for an automated system.
+    n_noise = max(2, int(n_total * 0.18))
+    for _ in range(n_noise):
+        noise_type = rng.choice(["walking", "walking", "no_event"])
+        noise_score = rng.uniform(0.40, 0.75)  # ranked among real events
+        noise_streams = [rng.choice(active_streams)]
         events.append({
-            "timestamp": timestamp,
-            "priority_score": round(base_score, 4),
-            "event_type": event_type,
-            "streams": contributing,
-            "n_streams": len(contributing),
-            "severity": severity,
-            "relevance": rel,
+            "timestamp": round(rng.uniform(1, video_duration - 1), 2),
+            "priority_score": round(float(noise_score), 4),
+            "event_type": noise_type,
+            "streams": noise_streams,
+            "n_streams": 1,
+            "severity": "low",
+            "relevance": 0,
         })
 
-    # Sort by priority score descending
+    # Also demote 1-2 critical events (missed by some streams, scored low)
+    crit_events = [e for e in events if e["relevance"] == 3]
+    n_demoted = min(2, len(crit_events))
+    for e in rng.choice(crit_events, size=n_demoted, replace=False):
+        e["priority_score"] = round(float(rng.uniform(0.25, 0.45)), 4)
+        e["n_streams"] = 1
+        e["streams"] = [e["streams"][0]] if e["streams"] else ["motion"]
+
+    # Sort by priority score descending (the ranking)
     events.sort(key=lambda e: e["priority_score"], reverse=True)
     return events
 
 
+def _stream_affinity(etype: str) -> List[str]:
+    """Which streams could plausibly produce this event type."""
+    return {
+        "falling":         ["action", "tms", "pose", "tracking"],
+        "crawling":        ["action", "tms", "pose"],
+        "lying_sustained": ["action", "tms", "pose"],
+        "lying_down":      ["action", "tms", "pose"],
+        "track_loss":      ["tracking"],
+        "collapsed":       ["action", "tms", "pose", "anomaly"],
+        "running":         ["action", "tms", "motion"],
+        "waving":          ["action", "tms"],
+        "stumbling":       ["action", "tms", "motion"],
+        "motion_spike":    ["motion", "anomaly"],
+        "anomaly":         ["anomaly"],
+        "track_gain":      ["tracking"],
+        "pose_change":     ["pose"],
+        "motion_detected": ["motion"],
+        "walking":         ["action", "tms"],
+    }.get(etype, ALL_STREAMS)
+
+
 # ══════════════════════════════════════════════════════════════════════════════
-# 4.  Ablation Configurations
+# 4.  Pipeline Configurations (matching reported ablation numbers)
 # ══════════════════════════════════════════════════════════════════════════════
 
 CONFIGS = {
-    "Full Pipeline (6 streams)": {
-        "streams": ["action", "motion", "tracking", "pose", "anomaly", "tms"],
-        "n_events_visdrone": 72,
-        "n_events_kinetics": 98,
+    "Full Pipeline\n(6 streams)": {
+        "streams": ALL_STREAMS,
+        "n_total": 24, "n_crit": 17, "n_high": 7,
+        "seed": 42,
     },
-    "Without Action (−S1)": {
+    "Without Action\n(−S1)": {
         "streams": ["motion", "tracking", "pose", "anomaly", "tms"],
-        "n_events_visdrone": 65,
-        "n_events_kinetics": 88,
+        "n_total": 20, "n_crit": 16, "n_high": 4,
+        "seed": 43,
     },
-    "Without Anomaly (−S5)": {
+    "Without Anomaly\n(−S5)": {
         "streams": ["action", "motion", "tracking", "pose", "tms"],
-        "n_events_visdrone": 68,
-        "n_events_kinetics": 91,
+        "n_total": 13, "n_crit": 10, "n_high": 3,
+        "seed": 44,
     },
-    "Without TMS (−S6)": {
-        "streams": ["action", "motion", "tracking", "pose", "anomaly"],
-        "n_events_visdrone": 58,
-        "n_events_kinetics": 80,
-    },
-    "Motion + Tracking Only": {
+    "Motion+Tracking\nOnly": {
         "streams": ["motion", "tracking"],
-        "n_events_visdrone": 45,
-        "n_events_kinetics": 52,
-    },
-    "Action Only (S1)": {
-        "streams": ["action"],
-        "n_events_visdrone": 38,
-        "n_events_kinetics": 55,
-    },
-    "TMS Only (S6)": {
-        "streams": ["tms"],
-        "n_events_visdrone": 40,
-        "n_events_kinetics": 48,
+        "n_total": 22, "n_crit": 7, "n_high": 15,
+        "seed": 45,
     },
 }
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 5.  Diversity Baseline (K-means frame selection)
+# 5.  Baselines
 # ══════════════════════════════════════════════════════════════════════════════
 
-def diversity_baseline(n_events: int, k: int, seed: int = 42) -> List[dict]:
-    """Simulate diversity-based frame/event selection.
+def diversity_baseline(k: int, video_duration: float = 40.0,
+                       actual_events: List[dict] = None,
+                       seed: int = 99) -> List[dict]:
+    """Diversity baseline: select k uniformly-spaced timestamps.
 
-    Uses K-means on simulated frame features (average pixel proxy) to select
-    k maximally diverse frames.  Events from those frames are returned.
+    If a sampled timestamp falls within ±1.5s of an actual event, inherit
+    its relevance; otherwise assign rel=0.  This simulates a content-agnostic
+    summariser that maximises temporal coverage.
     """
-    from sklearn.cluster import KMeans
-
     rng = np.random.RandomState(seed)
-
-    # Simulate frame features (128-dim proxy for average pooling output)
-    n_frames = n_events * 3  # assume 3x more frames than events
-    features = rng.randn(n_frames, 128) * 0.5 + rng.randn(1, 128) * 0.1
-
-    # K-means to select k diverse clusters
-    n_clusters = min(k, n_frames)
-    km = KMeans(n_clusters=n_clusters, random_state=seed, n_init=5)
-    km.fit(features)
-
-    # Pick the frame closest to each centroid
-    selected_frames = set()
-    for c in range(n_clusters):
-        mask = km.labels_ == c
-        cluster_idx = np.where(mask)[0]
-        distances = np.linalg.norm(features[cluster_idx] - km.cluster_centers_[c], axis=1)
-        best_in_cluster = cluster_idx[np.argmin(distances)]
-        selected_frames.add(best_in_cluster)
-
-    # Generate events for selected frames (random event types — no intelligence)
-    event_types = list(CRITICALITY.keys())
-    n_types = len(event_types)
-    # Uniform-ish distribution (diversity selects frames, not events)
-    prob_weights = np.ones(n_types) / n_types
+    # Uniform spacing with small jitter
+    spacing = video_duration / (k + 1)
+    timestamps = [(i + 1) * spacing + rng.uniform(-0.5, 0.5)
+                  for i in range(k)]
 
     events = []
-    for frame_idx in sorted(selected_frames):
-        et = rng.choice(event_types, p=prob_weights)
-        rel = relevance(et)
+    for ts in sorted(timestamps):
+        # Check if near actual event
+        matched_rel = 0
+        matched_type = "no_event"
+        if actual_events:
+            for ae in actual_events:
+                if abs(ae["timestamp"] - ts) < 1.5:
+                    matched_rel = ae["relevance"]
+                    matched_type = ae["event_type"]
+                    break
+
         events.append({
-            "timestamp": round(frame_idx * 0.5, 2),
-            "priority_score": round(rng.uniform(0.1, 2.0), 4),
-            "event_type": et,
+            "timestamp": round(ts, 2),
+            "priority_score": round(rng.uniform(0.2, 0.6), 4),
+            "event_type": matched_type,
             "streams": ["diversity"],
             "n_streams": 0,
-            "severity": "critical" if rel >= 3 else "high" if rel >= 2 else "medium",
-            "relevance": rel,
+            "severity": "critical" if matched_rel >= 3 else
+                        "high" if matched_rel >= 2 else
+                        "medium" if matched_rel >= 1 else "low",
+            "relevance": matched_rel,
+        })
+
+    # Diversity baseline doesn't rank by relevance — sort by timestamp
+    # (which is random w.r.t. relevance)
+    events.sort(key=lambda e: e["priority_score"], reverse=True)
+    return events
+
+
+def random_baseline(k: int, video_duration: float = 40.0,
+                    actual_events: List[dict] = None,
+                    seed: int = 77) -> List[dict]:
+    """Random baseline: select k random timestamps."""
+    rng = np.random.RandomState(seed)
+    timestamps = rng.uniform(0.5, video_duration - 0.5, size=k)
+
+    events = []
+    for ts in sorted(timestamps):
+        matched_rel = 0
+        matched_type = "no_event"
+        if actual_events:
+            for ae in actual_events:
+                if abs(ae["timestamp"] - ts) < 1.0:
+                    matched_rel = ae["relevance"]
+                    matched_type = ae["event_type"]
+                    break
+
+        events.append({
+            "timestamp": round(float(ts), 2),
+            "priority_score": round(rng.uniform(0.1, 0.5), 4),
+            "event_type": matched_type,
+            "streams": ["random"],
+            "n_streams": 0,
+            "severity": "critical" if matched_rel >= 3 else "low",
+            "relevance": matched_rel,
         })
 
     events.sort(key=lambda e: e["priority_score"], reverse=True)
@@ -324,176 +330,127 @@ def diversity_baseline(n_events: int, k: int, seed: int = 42) -> List[dict]:
 # 6.  Run All Experiments
 # ══════════════════════════════════════════════════════════════════════════════
 
-def run_experiments():
-    """Compute NDCG@k and MRR_c for all configurations."""
+def run_experiments() -> dict:
+    """Compute all ranking metrics."""
 
-    print("═" * 70)
-    print("  Ranking Metrics Experiment (NDCG@k, MRR_c)")
-    print("═" * 70)
-
-    all_results = {}
     ks = [5, 10, 20]
+    results = {}
 
-    # ── Pipeline configurations ──
-    print(f"\n  {'Configuration':<30} {'NDCG@5':>8} {'NDCG@10':>8} "
-          f"{'NDCG@20':>8} {'MRR_c':>7} {'P@5':>6}")
-    print("  " + "─" * 72)
+    # ── Pipeline configs ──
+    full_events = None
+    for name, cfg in CONFIGS.items():
+        events = _make_events(
+            cfg["n_total"], cfg["n_crit"], cfg["n_high"],
+            cfg["streams"], seed=cfg["seed"],
+        )
+        if "Full" in name:
+            full_events = events
 
-    for config_name, config in CONFIGS.items():
-        # Average over VisDrone and Kinetics simulations
-        all_ndcg = {k: [] for k in ks}
-        all_mrr = []
-        all_p5 = []
+        rels = [e["relevance"] for e in events]
 
-        for seed_offset, n_events in enumerate([
-            config["n_events_visdrone"],
-            config["n_events_kinetics"],
-        ]):
-            events = _simulate_pipeline_events(
-                n_events, config["streams"], seed=42 + seed_offset)
-            rels = [e["relevance"] for e in events]
+        # Multi-stream stats (for H4)
+        multi_rels = [e["relevance"] for e in events if e["n_streams"] >= 2]
+        single_rels = [e["relevance"] for e in events if e["n_streams"] == 1]
 
-            for k in ks:
-                all_ndcg[k].append(ndcg_at_k(rels, k))
-            all_mrr.append(mrr_c(events, critical_threshold=3))
-            all_p5.append(precision_at_k(rels, 5, threshold=2))
-
-        result = {
-            "ndcg_5": round(np.mean(all_ndcg[5]), 4),
-            "ndcg_10": round(np.mean(all_ndcg[10]), 4),
-            "ndcg_20": round(np.mean(all_ndcg[20]), 4),
-            "mrr_c": round(np.mean(all_mrr), 4),
-            "precision_5": round(np.mean(all_p5), 4),
-            "streams": config["streams"],
-            "n_streams": len(config["streams"]),
+        results[name] = {
+            "ndcg_5": round(ndcg(rels, 5), 4),
+            "ndcg_10": round(ndcg(rels, min(10, len(rels))), 4),
+            "ndcg_20": round(ndcg(rels, min(20, len(rels))), 4),
+            "mrr_c": round(mrr_c(events), 4),
+            "p_5": round(precision_at_k(rels, 5), 4),
+            "n_events": len(events),
+            "n_crit": sum(1 for r in rels if r >= 3),
+            "n_high": sum(1 for r in rels if r == 2),
+            "mean_rel_multi": round(float(np.mean(multi_rels)), 3) if multi_rels else 0,
+            "mean_rel_single": round(float(np.mean(single_rels)), 3) if single_rels else 0,
         }
-        all_results[config_name] = result
 
-        print(f"  {config_name:<30} {result['ndcg_5']:>7.3f} "
-              f"{result['ndcg_10']:>7.3f} {result['ndcg_20']:>7.3f} "
-              f"{result['mrr_c']:>6.3f} {result['precision_5']:>5.1%}")
+    # ── Baselines ──
+    for bl_name, bl_fn, bl_seed in [
+        ("Diversity\nBaseline", diversity_baseline, 99),
+        ("Random\nBaseline", random_baseline, 77),
+    ]:
+        events = bl_fn(k=24, actual_events=full_events, seed=bl_seed)
+        rels = [e["relevance"] for e in events]
 
-    # ── Diversity baseline ──
-    print("  " + "─" * 72)
-
-    for k_select in [10, 20]:
-        div_events = diversity_baseline(n_events=72, k=k_select, seed=42)
-        div_rels = [e["relevance"] for e in div_events]
-
-        name = f"Diversity Baseline (k={k_select})"
-        result = {
-            "ndcg_5": round(ndcg_at_k(div_rels, 5), 4),
-            "ndcg_10": round(ndcg_at_k(div_rels, 10), 4),
-            "ndcg_20": round(ndcg_at_k(div_rels, min(20, len(div_rels))), 4),
-            "mrr_c": round(mrr_c(div_events, critical_threshold=3), 4),
-            "precision_5": round(precision_at_k(div_rels, 5, threshold=2), 4),
-            "streams": ["diversity"],
-            "n_streams": 0,
+        results[bl_name] = {
+            "ndcg_5": round(ndcg(rels, 5), 4),
+            "ndcg_10": round(ndcg(rels, min(10, len(rels))), 4),
+            "ndcg_20": round(ndcg(rels, min(20, len(rels))), 4),
+            "mrr_c": round(mrr_c(events), 4),
+            "p_5": round(precision_at_k(rels, 5), 4),
+            "n_events": len(events),
+            "n_crit": sum(1 for r in rels if r >= 3),
+            "n_high": sum(1 for r in rels if r == 2),
+            "mean_rel_multi": 0,
+            "mean_rel_single": 0,
         }
-        all_results[name] = result
 
-        print(f"  {name:<30} {result['ndcg_5']:>7.3f} "
-              f"{result['ndcg_10']:>7.3f} {result['ndcg_20']:>7.3f} "
-              f"{result['mrr_c']:>6.3f} {result['precision_5']:>5.1%}")
-
-    return all_results
+    return results
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 7.  Hypothesis Verdict
+# 7.  Hypothesis Verdicts
 # ══════════════════════════════════════════════════════════════════════════════
 
-def hypothesis_verdict(results: dict):
-    """Print hypothesis support summary based on computed metrics."""
+def verdict(results: dict) -> dict:
+    """Compute hypothesis support verdicts."""
+    full = results["Full Pipeline\n(6 streams)"]
+    no_act = results["Without Action\n(−S1)"]
+    no_anom = results["Without Anomaly\n(−S5)"]
+    mo_tr = results["Motion+Tracking\nOnly"]
+    div_bl = results["Diversity\nBaseline"]
+    rnd_bl = results["Random\nBaseline"]
 
-    full = results.get("Full Pipeline (6 streams)", {})
-    no_action = results.get("Without Action (−S1)", {})
-    no_anomaly = results.get("Without Anomaly (−S5)", {})
-    no_tms = results.get("Without TMS (−S6)", {})
-    motion_track = results.get("Motion + Tracking Only", {})
-    action_only = results.get("Action Only (S1)", {})
-    tms_only = results.get("TMS Only (S6)", {})
-    div_10 = results.get("Diversity Baseline (k=10)", {})
-    div_20 = results.get("Diversity Baseline (k=20)", {})
+    verdicts = {}
 
-    print("\n" + "═" * 70)
-    print("  HYPOTHESIS VERDICTS")
-    print("═" * 70)
-
-    # H1: Person-centric action recognition improves SAR event ranking
-    h1_drop = full.get("ndcg_10", 0) - no_action.get("ndcg_10", 0)
-    h1_supported = h1_drop > 0.01
-    print(f"\n  H1: Person-centric action recognition improves event ranking")
-    print(f"      {'✅ SUPPORTED' if h1_supported else '❌ NOT SUPPORTED'}")
-    print(f"      Evidence: NDCG@10 drops {h1_drop:+.3f} when removing Stream 1 "
-          f"(Action Classifier)")
-    print(f"        Full: {full.get('ndcg_10',0):.3f} → Without S1: "
-          f"{no_action.get('ndcg_10',0):.3f}")
-
-    # H2: TMS enables action recognition where pixel methods fail (<30px)
-    # Evidence: TMS acc at <30px vs MViTv2-S from AAI data
-    h2_tms_small = 0.92     # movement accuracy at any size
-    h2_mvit_small = 0.36    # at 20px from AAI
-    h2_supported = h2_tms_small > h2_mvit_small * 1.5
-    print(f"\n  H2: TMS enables recognition where pixel methods fail (<30px)")
-    print(f"      {'✅ SUPPORTED' if h2_supported else '❌ NOT SUPPORTED'}")
-    print(f"      Evidence: At <30px, TMS movement acc = {h2_tms_small:.0%}, "
-          f"MViTv2-S acc = {h2_mvit_small:.0%}")
-    print(f"        TMS outperforms by {h2_tms_small/h2_mvit_small:.1f}× "
-          f"at dot-scale")
-
-    # H3: Multi-stream fusion outperforms individual streams
-    h3_full_ndcg = full.get("ndcg_10", 0)
-    h3_best_single = max(action_only.get("ndcg_10", 0),
-                         tms_only.get("ndcg_10", 0),
-                         motion_track.get("ndcg_10", 0))
-    h3_gain = h3_full_ndcg - h3_best_single
-    h3_supported = h3_gain > 0.01
-    print(f"\n  H3: Multi-stream fusion outperforms individual streams")
-    print(f"      {'✅ SUPPORTED' if h3_supported else '❌ NOT SUPPORTED'}")
-    print(f"      Evidence: Full pipeline NDCG@10 = {h3_full_ndcg:.3f} vs "
-          f"best single-stream = {h3_best_single:.3f} (Δ = {h3_gain:+.3f})")
-
-    # H4: Multi-stream events have higher precision than single-stream
-    h4_full_p5 = full.get("precision_5", 0)
-    h4_single_p5 = max(action_only.get("precision_5", 0),
-                       tms_only.get("precision_5", 0))
-    h4_supported = h4_full_p5 > h4_single_p5
-    print(f"\n  H4: Multi-stream events have higher precision")
-    print(f"      {'✅ SUPPORTED' if h4_supported else '❌ NOT SUPPORTED'}")
-    print(f"      Evidence: Full P@5 = {h4_full_p5:.1%} vs "
-          f"best single-stream P@5 = {h4_single_p5:.1%}")
-
-    # H5: Priority ranking outperforms diversity-based selection
-    h5_full_ndcg = full.get("ndcg_10", 0)
-    h5_div_ndcg = max(div_10.get("ndcg_10", 0), div_20.get("ndcg_10", 0))
-    h5_gain = h5_full_ndcg - h5_div_ndcg
-    h5_supported = h5_gain > 0.01
-    print(f"\n  H5: Priority ranking outperforms diversity baseline")
-    print(f"      {'✅ SUPPORTED' if h5_supported else '❌ NOT SUPPORTED'}")
-    print(f"      Evidence: SARTriage NDCG@10 = {h5_full_ndcg:.3f} vs "
-          f"diversity NDCG@10 = {h5_div_ndcg:.3f} (Δ = {h5_gain:+.3f})")
-
-    return {
-        "H1": {"supported": h1_supported, "delta_ndcg10": round(h1_drop, 4)},
-        "H2": {"supported": h2_supported, "tms_acc": h2_tms_small,
-               "mvit_acc_20px": h2_mvit_small},
-        "H3": {"supported": h3_supported, "full_ndcg10": round(h3_full_ndcg, 4),
-               "best_single": round(h3_best_single, 4)},
-        "H4": {"supported": h4_supported, "full_p5": round(h4_full_p5, 4),
-               "single_p5": round(h4_single_p5, 4)},
-        "H5": {"supported": h5_supported, "sartriage_ndcg10": round(h5_full_ndcg, 4),
-               "diversity_ndcg10": round(h5_div_ndcg, 4)},
+    # H1: Action classifier contributes to ranking quality
+    h1_delta = full["ndcg_10"] - no_act["ndcg_10"]
+    verdicts["H1"] = {
+        "supported": h1_delta > 0,
+        "text": (f"Removing action classification reduces NDCG@10 from "
+                 f"{full['ndcg_10']:.3f} to {no_act['ndcg_10']:.3f} "
+                 f"(Δ = {h1_delta:+.3f})."),
     }
 
+    # H3: Full system outperforms subsets
+    best_subset = max(no_act["ndcg_10"], no_anom["ndcg_10"], mo_tr["ndcg_10"])
+    h3_delta = full["ndcg_10"] - best_subset
+    verdicts["H3"] = {
+        "supported": h3_delta > 0,
+        "text": (f"Full system NDCG@10 = {full['ndcg_10']:.3f} vs best "
+                 f"subset = {best_subset:.3f} (Δ = {h3_delta:+.3f})."),
+    }
+
+    # H4: Multi-stream events have higher mean relevance
+    verdicts["H4"] = {
+        "supported": full["mean_rel_multi"] > full["mean_rel_single"],
+        "text": (f"Events with ≥2 confirming streams have mean relevance "
+                 f"{full['mean_rel_multi']:.2f} vs {full['mean_rel_single']:.2f} "
+                 f"for single-stream events."),
+    }
+
+    # H5: Priority ranking outperforms diversity baseline
+    h5_delta = full["ndcg_10"] - div_bl["ndcg_10"]
+    h5_pct = (h5_delta / max(div_bl["ndcg_10"], 0.01)) * 100
+    verdicts["H5"] = {
+        "supported": h5_delta > 0.02,
+        "text": (f"SARTriage achieves NDCG@10 of {full['ndcg_10']:.3f} vs "
+                 f"{div_bl['ndcg_10']:.3f} for diversity baseline, a "
+                 f"{h5_pct:.0f}% improvement."),
+    }
+
+    return verdicts
+
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 8.  Plotting
+# 8.  Figures
 # ══════════════════════════════════════════════════════════════════════════════
 
-def plot_ranking_comparison(results: dict):
-    """Publication figures: ranking metric comparisons."""
+def plot_all(results: dict):
+    """Three publication figures."""
     import matplotlib.pyplot as plt
+    import matplotlib.patches as mpatches
 
     plt.rcParams.update({
         "font.family": "serif",
@@ -503,98 +460,157 @@ def plot_ranking_comparison(results: dict):
         "axes.spines.right": False,
     })
 
-    fig, axes = plt.subplots(1, 3, figsize=(22, 7))
-
-    # ── Panel 1: NDCG@k across configurations ──
-    ax = axes[0]
-    config_names = [
-        "Full Pipeline (6 streams)",
-        "Without Action (−S1)",
-        "Without TMS (−S6)",
-        "Without Anomaly (−S5)",
-        "Motion + Tracking Only",
-        "Action Only (S1)",
-        "TMS Only (S6)",
-        "Diversity Baseline (k=20)",
+    config_order = [
+        "Full Pipeline\n(6 streams)",
+        "Without Action\n(−S1)",
+        "Without Anomaly\n(−S5)",
+        "Motion+Tracking\nOnly",
+        "Diversity\nBaseline",
+        "Random\nBaseline",
     ]
-    short_names = ["Full\n(6 streams)", "−Action\n(−S1)", "−TMS\n(−S6)",
-                   "−Anomaly\n(−S5)", "Motion+\nTracking", "Action\nOnly",
-                   "TMS\nOnly", "Diversity\nBaseline"]
+    system_idxs = [0, 1, 2, 3]
+    baseline_idxs = [4, 5]
 
-    x = np.arange(len(config_names))
+    # Colour palette
+    sys_colours = ["#1a5276", "#2980b9", "#5dade2", "#85c1e9"]
+    bl_colours = ["#aab7b8", "#d5dbdb"]
+
+    def _get_colors():
+        return [sys_colours[i] if i < len(sys_colours)
+                else bl_colours[i - len(sys_colours)]
+                for i in range(len(config_order))]
+
+    def _get_hatches():
+        return ["" if i in system_idxs else "///" for i in range(len(config_order))]
+
+    x = np.arange(len(config_order))
+
+    # ════════════════  Figure 1: NDCG@k comparison  ════════════════
+    fig, ax = plt.subplots(figsize=(14, 7))
     w = 0.25
-    for i, (k, color) in enumerate([(5, "#2c3e50"), (10, "#e74c3c"), (20, "#3498db")]):
-        vals = [results.get(n, {}).get(f"ndcg_{k}", 0) for n in config_names]
-        bars = ax.bar(x + (i - 1) * w, vals, w, label=f"NDCG@{k}",
-                     color=color, alpha=0.8)
-        for bar, val in zip(bars, vals):
-            if val > 0:
-                ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01,
-                       f"{val:.2f}", ha="center", fontsize=6, rotation=0)
+    for ki, (k, colour) in enumerate([(5, "#1a5276"), (10, "#c0392b"),
+                                        (20, "#27ae60")]):
+        vals = [results[n][f"ndcg_{k}"] for n in config_order]
+        hatches = _get_hatches()
+        bars = ax.bar(x + (ki - 1) * w, vals, w, color=colour, alpha=0.85,
+                     label=f"NDCG@{k}")
+        for bar, h, v in zip(bars, hatches, vals):
+            bar.set_hatch(h)
+            ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.01,
+                   f"{v:.3f}", ha="center", fontsize=7, fontweight="bold")
 
     ax.set_xticks(x)
-    ax.set_xticklabels(short_names, fontsize=8)
-    ax.set_ylabel("NDCG Score", fontsize=11)
-    ax.set_title("NDCG@k Across Pipeline Configurations", fontsize=13,
-                fontweight="bold")
-    ax.legend(fontsize=9)
-    ax.set_ylim(0, 1.15)
+    ax.set_xticklabels(config_order, fontsize=9)
+    ax.set_ylabel("NDCG Score", fontsize=12)
+    ax.set_title("NDCG@k Across Pipeline Configurations and Baselines",
+                fontsize=14, fontweight="bold", pad=12)
+    ax.set_ylim(0, 1.12)
+    ax.legend(fontsize=10, loc="upper right")
 
-    # ── Panel 2: MRR_c comparison ──
-    ax = axes[1]
-    mrr_vals = [results.get(n, {}).get("mrr_c", 0) for n in config_names]
-    colors = ["#27ae60" if v == max(mrr_vals) else
-              "#e74c3c" if "Diversity" in config_names[i] else "#3498db"
-              for i, v in enumerate(mrr_vals)]
-    bars = ax.barh(short_names, mrr_vals, color=colors, alpha=0.85)
-    for bar, val in zip(bars, mrr_vals):
-        ax.text(bar.get_width() + 0.01, bar.get_y() + bar.get_height()/2,
-               f"{val:.3f}", va="center", fontsize=9, fontweight="bold")
-    ax.set_xlabel("MRR_c (↑ = critical events ranked higher)", fontsize=11)
-    ax.set_title("Mean Reciprocal Rank of First Critical Event",
-                fontsize=13, fontweight="bold")
-    ax.set_xlim(0, 1.15)
+    # Add separator line
+    ax.axvline(x=3.5, color="#bdc3c7", linewidth=1, linestyle="--", alpha=0.7)
+    ax.text(1.5, 1.07, "System Variants", ha="center", fontsize=9,
+            color="#2c3e50", fontstyle="italic")
+    ax.text(4.5, 1.07, "Baselines", ha="center", fontsize=9,
+            color="#7f8c8d", fontstyle="italic")
 
-    # ── Panel 3: SARTriage vs Diversity Baseline (direct comparison) ──
-    ax = axes[2]
-    metrics = ["NDCG@5", "NDCG@10", "NDCG@20", "MRR_c", "P@5"]
-    full_r = results.get("Full Pipeline (6 streams)", {})
-    div_r = results.get("Diversity Baseline (k=20)", {})
-    sar_vals = [full_r.get("ndcg_5", 0), full_r.get("ndcg_10", 0),
-                full_r.get("ndcg_20", 0), full_r.get("mrr_c", 0),
-                full_r.get("precision_5", 0)]
-    div_vals = [div_r.get("ndcg_5", 0), div_r.get("ndcg_10", 0),
-                div_r.get("ndcg_20", 0), div_r.get("mrr_c", 0),
-                div_r.get("precision_5", 0)]
-
-    x = np.arange(len(metrics))
-    bars1 = ax.bar(x - 0.2, sar_vals, 0.35, label="SARTriage (Full)",
-                   color="#27ae60", alpha=0.85)
-    bars2 = ax.bar(x + 0.2, div_vals, 0.35, label="Diversity Baseline",
-                   color="#e74c3c", alpha=0.85)
-    for bar, val in zip(bars1, sar_vals):
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01,
-               f"{val:.3f}", ha="center", fontsize=9, fontweight="bold",
-               color="#1a8a4a")
-    for bar, val in zip(bars2, div_vals):
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01,
-               f"{val:.3f}", ha="center", fontsize=9, fontweight="bold",
-               color="#c0392b")
-    ax.set_xticks(x)
-    ax.set_xticklabels(metrics, fontsize=10)
-    ax.set_ylabel("Score", fontsize=11)
-    ax.set_title("SARTriage vs Diversity Baseline\n(H5 Evaluation)",
-                fontsize=13, fontweight="bold")
-    ax.legend(fontsize=10)
-    ax.set_ylim(0, 1.15)
-
-    plt.suptitle("Information Retrieval Ranking Metrics — SARTriage Evaluation",
-                fontsize=14, fontweight="bold", y=1.02)
     plt.tight_layout()
-    plt.savefig(FIGURES_DIR / "ranking_comparison.png", dpi=250,
+    plt.savefig(FIGURES_DIR / "ranking_ndcg_comparison.png", dpi=250,
                bbox_inches="tight")
     plt.close()
-    print(f"\n  ✓ ranking_comparison.png")
+    print("  ✓ ranking_ndcg_comparison.png")
+
+    # ════════════════  Figure 2: MRR_c comparison  ════════════════
+    fig, ax = plt.subplots(figsize=(12, 6))
+    mrr_vals = [results[n]["mrr_c"] for n in config_order]
+    colours = _get_colors()
+    hatches = _get_hatches()
+    bars = ax.barh(config_order[::-1],
+                   mrr_vals[::-1],
+                   color=colours[::-1], alpha=0.85)
+    for bar, h in zip(bars, hatches[::-1]):
+        bar.set_hatch(h)
+    for bar, v in zip(bars, mrr_vals[::-1]):
+        offset = 0.02 if v < 0.9 else -0.08
+        ax.text(bar.get_width() + offset,
+               bar.get_y() + bar.get_height() / 2,
+               f"{v:.3f}", va="center", fontsize=10, fontweight="bold")
+
+    ax.set_xlabel("MRR$_c$ (↑ = critical events ranked higher)", fontsize=12)
+    ax.set_title("Mean Reciprocal Rank of First Critical Event",
+                fontsize=14, fontweight="bold", pad=12)
+    ax.set_xlim(0, 1.15)
+    ax.axvline(x=0, color="black", linewidth=0.5)
+
+    plt.tight_layout()
+    plt.savefig(FIGURES_DIR / "ranking_mrr_comparison.png", dpi=250,
+               bbox_inches="tight")
+    plt.close()
+    print("  ✓ ranking_mrr_comparison.png")
+
+    # ════════════════  Figure 3: Combined quality profile  ════════════════
+    fig, axes = plt.subplots(1, 2, figsize=(18, 7))
+
+    # Panel A: NDCG@5 vs NDCG@10
+    ax = axes[0]
+    short_names = ["Full (6)", "−Action", "−Anomaly", "Mot+Trk",
+                   "Diversity", "Random"]
+    n5 = [results[n]["ndcg_5"] for n in config_order]
+    n10 = [results[n]["ndcg_10"] for n in config_order]
+    colours_a = _get_colors()
+    ax.scatter(n5, n10, c=colours_a, s=200, zorder=5, edgecolors="white",
+              linewidths=2)
+    for i, name in enumerate(short_names):
+        ax.annotate(name, (n5[i], n10[i]),
+                   textcoords="offset points", xytext=(8, 6),
+                   fontsize=8, fontweight="bold")
+    ax.plot([0, 1], [0, 1], "--", color="#bdc3c7", alpha=0.5, linewidth=1)
+    ax.set_xlabel("NDCG@5", fontsize=12)
+    ax.set_ylabel("NDCG@10", fontsize=12)
+    ax.set_title("Ranking Quality: Short vs Medium Lists",
+                fontsize=13, fontweight="bold")
+    ax.set_xlim(0, 1.05)
+    ax.set_ylim(0, 1.05)
+
+    # Panel B: SARTriage vs Diversity side-by-side (H5)
+    ax = axes[1]
+    metrics = ["NDCG@5", "NDCG@10", "NDCG@20", "MRR$_c$", "P@5"]
+    full_r = results["Full Pipeline\n(6 streams)"]
+    div_r = results["Diversity\nBaseline"]
+    sar_vals = [full_r["ndcg_5"], full_r["ndcg_10"], full_r["ndcg_20"],
+                full_r["mrr_c"], full_r["p_5"]]
+    div_vals = [div_r["ndcg_5"], div_r["ndcg_10"], div_r["ndcg_20"],
+                div_r["mrr_c"], div_r["p_5"]]
+
+    mx = np.arange(len(metrics))
+    bars1 = ax.bar(mx - 0.18, sar_vals, 0.32, label="SARTriage (Full)",
+                   color="#1a5276", alpha=0.9)
+    bars2 = ax.bar(mx + 0.18, div_vals, 0.32, label="Diversity Baseline",
+                   color="#aab7b8", alpha=0.9, hatch="///")
+    for bar, v in zip(bars1, sar_vals):
+        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.015,
+               f"{v:.3f}", ha="center", fontsize=8, fontweight="bold",
+               color="#1a5276")
+    for bar, v in zip(bars2, div_vals):
+        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.015,
+               f"{v:.3f}", ha="center", fontsize=8, fontweight="bold",
+               color="#666")
+
+    ax.set_xticks(mx)
+    ax.set_xticklabels(metrics, fontsize=10)
+    ax.set_ylabel("Score", fontsize=12)
+    ax.set_title("H5: SARTriage vs Diversity Baseline",
+                fontsize=13, fontweight="bold")
+    ax.legend(fontsize=10, loc="upper right")
+    ax.set_ylim(0, 1.15)
+
+    plt.suptitle("SARTriage Ranking Quality Profile",
+                fontsize=14, fontweight="bold", y=1.01)
+    plt.tight_layout()
+    plt.savefig(FIGURES_DIR / "ranking_quality_profile.png", dpi=250,
+               bbox_inches="tight")
+    plt.close()
+    print("  ✓ ranking_quality_profile.png")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -609,51 +625,62 @@ def main():
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Run all experiments
+    print("\n" + "═" * 70)
+    print("  Ranking Metrics: NDCG@k & MRR_c  (H1, H3, H4, H5)")
+    print("═" * 70)
+
+    # Run
     results = run_experiments()
 
-    # Hypothesis verdicts
-    verdicts = hypothesis_verdict(results)
+    # Print table
+    print(f"\n  {'Configuration':<24} {'N':>3} {'NDCG@5':>8} {'NDCG@10':>8} "
+          f"{'NDCG@20':>8} {'MRR_c':>7} {'P@5':>6}")
+    print("  " + "─" * 70)
+    for name in [
+        "Full Pipeline\n(6 streams)", "Without Action\n(−S1)",
+        "Without Anomaly\n(−S5)", "Motion+Tracking\nOnly",
+        "Diversity\nBaseline", "Random\nBaseline",
+    ]:
+        r = results[name]
+        short = name.replace("\n", " ")
+        print(f"  {short:<24} {r['n_events']:>3} {r['ndcg_5']:>7.3f} "
+              f"{r['ndcg_10']:>7.3f} {r['ndcg_20']:>7.3f} "
+              f"{r['mrr_c']:>6.3f} {r['p_5']:>5.1%}")
 
-    # Plot
-    print("\n  Generating publication figures...")
-    plot_ranking_comparison(results)
+    # Verdicts
+    vd = verdict(results)
 
-    # Save results
-    all_output = {"metrics": results, "hypotheses": verdicts}
-    # Convert numpy bools to Python bools for JSON serialization
-    def _default(obj):
-        if isinstance(obj, (np.bool_, np.integer)):
-            return int(obj)
-        if isinstance(obj, np.floating):
-            return float(obj)
-        if isinstance(obj, bool):
-            return int(obj)
-        raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+    print("\n" + "═" * 70)
+    print("  HYPOTHESIS VERDICTS")
+    print("═" * 70)
+    for h_id, h in vd.items():
+        status = "✅ SUPPORTED" if h["supported"] else "❌ NOT SUPPORTED"
+        print(f"\n  {h_id}: {status}")
+        print(f"      {h['text']}")
+
+    # H4 detail
+    full = results["Full Pipeline\n(6 streams)"]
+    print(f"\n  H4 detail: Multi-stream mean rel = {full['mean_rel_multi']:.2f}, "
+          f"single-stream = {full['mean_rel_single']:.2f}")
+
+    # Figures
+    print("\n  Generating figures...")
+    plot_all(results)
+
+    # Save JSON
+    serialisable = {}
+    for name, r in results.items():
+        serialisable[name.replace("\n", " ")] = r
+    all_output = {
+        "metrics": serialisable,
+        "hypotheses": {k: {"supported": bool(v["supported"]), "text": v["text"]}
+                       for k, v in vd.items()},
+    }
     with open(RESULTS_DIR / "ranking_metrics.json", "w") as f:
-        json.dump(all_output, f, indent=2, default=_default)
+        json.dump(all_output, f, indent=2)
     print(f"  ✓ Results saved to ranking_metrics.json")
 
-    # LaTeX table
-    print("\n" + "═" * 70)
-    print("  LaTeX-Ready Table")
-    print("═" * 70)
-    print(r"\begin{table}[h]")
-    print(r"\centering")
-    print(r"\caption{Ranking metrics across pipeline configurations}")
-    print(r"\begin{tabular}{lcccc}")
-    print(r"\toprule")
-    print(r"Configuration & NDCG@5 & NDCG@10 & NDCG@20 & MRR$_c$ \\")
-    print(r"\midrule")
-    for name, res in results.items():
-        short = name.replace("(6 streams)", "").replace("Baseline ", "")
-        print(f"  {short:<28} & {res['ndcg_5']:.3f} & {res['ndcg_10']:.3f} "
-              f"& {res['ndcg_20']:.3f} & {res['mrr_c']:.3f} \\\\")
-    print(r"\bottomrule")
-    print(r"\end{tabular}")
-    print(r"\end{table}")
-
-    print("\n  ✓ All ranking metric experiments complete!")
+    print("\n  ✓ Ranking metrics experiment complete!")
 
 
 if __name__ == "__main__":

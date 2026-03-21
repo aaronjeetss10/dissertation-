@@ -1,0 +1,59 @@
+# ============================================================================
+# SARTriage — Docker Compose
+# ============================================================================
+
+services:
+  sartriage:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sartriage
+    ports:
+      - "5000:5000"
+    volumes:
+      # Persistent storage for uploads and results
+      - ./uploads:/app/uploads
+      - ./results:/app/results
+      # Mount model files (download separately if not in image)
+      - ./sartriage/models:/app/models
+    environment:
+      - FLASK_ENV=production
+      - SARTRIAGE_WORKERS=2
+      - SARTRIAGE_UPLOAD_DIR=/app/uploads
+      - SARTRIAGE_RESULTS_DIR=/app/results
+      - SARTRIAGE_MODEL_DIR=/app/models
+      # Set to 'cpu' to force CPU inference (default: auto-detect)
+      - SARTRIAGE_DEVICE=cpu
+      # Max upload size in MB
+      - SARTRIAGE_MAX_UPLOAD_MB=500
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 4G
+
+  # Optional: NVIDIA GPU variant (uncomment for GPU deployment)
+  # sartriage-gpu:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: sartriage-gpu
+  #   ports:
+  #     - "5000:5000"
+  #   volumes:
+  #     - ./uploads:/app/uploads
+  #     - ./results:/app/results
+  #     - ./sartriage/models:/app/models
+  #   environment:
+  #     - SARTRIAGE_DEVICE=cuda
+  #     - SARTRIAGE_WORKERS=1
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: 1
+  #             capabilities: [gpu]
+  #   runtime: nvidia

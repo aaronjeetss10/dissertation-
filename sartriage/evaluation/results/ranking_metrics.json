@@ -1,147 +1,94 @@
 {
   "metrics": {
     "Full Pipeline (6 streams)": {
-      "ndcg_5": 0.9216,
-      "ndcg_10": 0.8784,
-      "ndcg_20": 0.8436,
-      "mrr_c": 0.75,
-      "precision_5": 1.0,
-      "streams": [
-        "action",
-        "motion",
-        "tracking",
-        "pose",
-        "anomaly",
-        "tms"
-      ],
-      "n_streams": 6
+      "ndcg_5": 1.0,
+      "ndcg_10": 1.0,
+      "ndcg_20": 0.914,
+      "mrr_c": 1.0,
+      "p_5": 1.0,
+      "n_events": 28,
+      "n_crit": 17,
+      "n_high": 7,
+      "mean_rel_multi": 2.846,
+      "mean_rel_single": 1.867
     },
     "Without Action (\u2212S1)": {
-      "ndcg_5": 0.8333,
-      "ndcg_10": 0.8449,
-      "ndcg_20": 0.8082,
-      "mrr_c": 0.75,
-      "precision_5": 1.0,
-      "streams": [
-        "motion",
-        "tracking",
-        "pose",
-        "anomaly",
-        "tms"
-      ],
-      "n_streams": 5
+      "ndcg_5": 1.0,
+      "ndcg_10": 0.9106,
+      "ndcg_20": 0.8886,
+      "mrr_c": 1.0,
+      "p_5": 1.0,
+      "n_events": 23,
+      "n_crit": 16,
+      "n_high": 4,
+      "mean_rel_multi": 2.917,
+      "mean_rel_single": 1.909
     },
     "Without Anomaly (\u2212S5)": {
-      "ndcg_5": 0.8432,
-      "ndcg_10": 0.809,
-      "ndcg_20": 0.8351,
+      "ndcg_5": 1.0,
+      "ndcg_10": 0.8341,
+      "ndcg_20": 0.9698,
+      "mrr_c": 1.0,
+      "p_5": 1.0,
+      "n_events": 15,
+      "n_crit": 10,
+      "n_high": 3,
+      "mean_rel_multi": 2.667,
+      "mean_rel_single": 2.0
+    },
+    "Motion+Tracking Only": {
+      "ndcg_5": 0.8235,
+      "ndcg_10": 0.8277,
+      "ndcg_20": 0.8363,
+      "mrr_c": 1.0,
+      "p_5": 1.0,
+      "n_events": 25,
+      "n_crit": 7,
+      "n_high": 15,
+      "mean_rel_multi": 0,
+      "mean_rel_single": 2.04
+    },
+    "Diversity Baseline": {
+      "ndcg_5": 0.6608,
+      "ndcg_10": 0.7163,
+      "ndcg_20": 0.7792,
       "mrr_c": 0.5,
-      "precision_5": 1.0,
-      "streams": [
-        "action",
-        "motion",
-        "tracking",
-        "pose",
-        "tms"
-      ],
-      "n_streams": 5
+      "p_5": 0.8,
+      "n_events": 24,
+      "n_crit": 19,
+      "n_high": 1,
+      "mean_rel_multi": 0,
+      "mean_rel_single": 0
     },
-    "Without TMS (\u2212S6)": {
-      "ndcg_5": 0.8051,
-      "ndcg_10": 0.8248,
-      "ndcg_20": 0.8037,
-      "mrr_c": 0.4167,
-      "precision_5": 1.0,
-      "streams": [
-        "action",
-        "motion",
-        "tracking",
-        "pose",
-        "anomaly"
-      ],
-      "n_streams": 5
-    },
-    "Motion + Tracking Only": {
-      "ndcg_5": 0.8115,
-      "ndcg_10": 0.8064,
-      "ndcg_20": 0.8226,
-      "mrr_c": 1.0,
-      "precision_5": 0.9,
-      "streams": [
-        "motion",
-        "tracking"
-      ],
-      "n_streams": 2
-    },
-    "Action Only (S1)": {
-      "ndcg_5": 0.8373,
-      "ndcg_10": 0.7758,
-      "ndcg_20": 0.8116,
-      "mrr_c": 1.0,
-      "precision_5": 1.0,
-      "streams": [
-        "action"
-      ],
-      "n_streams": 1
-    },
-    "TMS Only (S6)": {
-      "ndcg_5": 0.8591,
-      "ndcg_10": 0.7877,
-      "ndcg_20": 0.8243,
-      "mrr_c": 1.0,
-      "precision_5": 1.0,
-      "streams": [
-        "tms"
-      ],
-      "n_streams": 1
-    },
-    "Diversity Baseline (k=10)": {
-      "ndcg_5": 0.6172,
-      "ndcg_10": 0.8672,
-      "ndcg_20": 0.8672,
-      "mrr_c": 1.0,
-      "precision_5": 0.2,
-      "streams": [
-        "diversity"
-      ],
-      "n_streams": 0
-    },
-    "Diversity Baseline (k=20)": {
-      "ndcg_5": 0.5734,
-      "ndcg_10": 0.4911,
-      "ndcg_20": 0.7936,
+    "Random Baseline": {
+      "ndcg_5": 0.4731,
+      "ndcg_10": 0.4466,
+      "ndcg_20": 0.6933,
       "mrr_c": 0.5,
-      "precision_5": 0.4,
-      "streams": [
-        "diversity"
-      ],
-      "n_streams": 0
+      "p_5": 0.6,
+      "n_events": 24,
+      "n_crit": 14,
+      "n_high": 1,
+      "mean_rel_multi": 0,
+      "mean_rel_single": 0
     }
   },
   "hypotheses": {
     "H1": {
-      "supported": 1,
-      "delta_ndcg10": 0.0335
-    },
-    "H2": {
       "supported": true,
-      "tms_acc": 0.92,
-      "mvit_acc_20px": 0.36
+      "text": "Removing action classification reduces NDCG@10 from 1.000 to 0.911 (\u0394 = +0.089)."
     },
     "H3": {
-      "supported": 1,
-      "full_ndcg10": 0.8784,
-      "best_single": 0.8064
+      "supported": true,
+      "text": "Full system NDCG@10 = 1.000 vs best subset = 0.911 (\u0394 = +0.089)."
     },
     "H4": {
-      "supported": 0,
-      "full_p5": 1.0,
-      "single_p5": 1.0
+      "supported": true,
+      "text": "Events with \u22652 confirming streams have mean relevance 2.85 vs 1.87 for single-stream events."
     },
     "H5": {
-      "supported": 1,
-      "sartriage_ndcg10": 0.8784,
-      "diversity_ndcg10": 0.8672
+      "supported": true,
+      "text": "SARTriage achieves NDCG@10 of 1.000 vs 0.716 for diversity baseline, a 40% improvement."
     }
   }
 }

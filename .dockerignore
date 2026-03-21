@@ -1,0 +1,49 @@
+# SARTriage — Docker Ignore
+# Exclude test/evaluation/training artefacts from production image
+
+# Version control
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.egg-info
+.eggs
+dist
+build
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Evaluation & training (not needed at runtime)
+sartriage/evaluation/
+sartriage/training/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docs & deployment meta
+deploy/
+*.md
+LICENSE
+
+# Large data files
+*.zip
+*.tar.gz
+datasets/
+
+# Gemini agent
+.gemini/
+.agents/
