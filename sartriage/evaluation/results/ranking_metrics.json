@@ -1,0 +1,147 @@
+{
+  "metrics": {
+    "Full Pipeline (6 streams)": {
+      "ndcg_5": 0.9216,
+      "ndcg_10": 0.8784,
+      "ndcg_20": 0.8436,
+      "mrr_c": 0.75,
+      "precision_5": 1.0,
+      "streams": [
+        "action",
+        "motion",
+        "tracking",
+        "pose",
+        "anomaly",
+        "tms"
+      ],
+      "n_streams": 6
+    },
+    "Without Action (\u2212S1)": {
+      "ndcg_5": 0.8333,
+      "ndcg_10": 0.8449,
+      "ndcg_20": 0.8082,
+      "mrr_c": 0.75,
+      "precision_5": 1.0,
+      "streams": [
+        "motion",
+        "tracking",
+        "pose",
+        "anomaly",
+        "tms"
+      ],
+      "n_streams": 5
+    },
+    "Without Anomaly (\u2212S5)": {
+      "ndcg_5": 0.8432,
+      "ndcg_10": 0.809,
+      "ndcg_20": 0.8351,
+      "mrr_c": 0.5,
+      "precision_5": 1.0,
+      "streams": [
+        "action",
+        "motion",
+        "tracking",
+        "pose",
+        "tms"
+      ],
+      "n_streams": 5
+    },
+    "Without TMS (\u2212S6)": {
+      "ndcg_5": 0.8051,
+      "ndcg_10": 0.8248,
+      "ndcg_20": 0.8037,
+      "mrr_c": 0.4167,
+      "precision_5": 1.0,
+      "streams": [
+        "action",
+        "motion",
+        "tracking",
+        "pose",
+        "anomaly"
+      ],
+      "n_streams": 5
+    },
+    "Motion + Tracking Only": {
+      "ndcg_5": 0.8115,
+      "ndcg_10": 0.8064,
+      "ndcg_20": 0.8226,
+      "mrr_c": 1.0,
+      "precision_5": 0.9,
+      "streams": [
+        "motion",
+        "tracking"
+      ],
+      "n_streams": 2
+    },
+    "Action Only (S1)": {
+      "ndcg_5": 0.8373,
+      "ndcg_10": 0.7758,
+      "ndcg_20": 0.8116,
+      "mrr_c": 1.0,
+      "precision_5": 1.0,
+      "streams": [
+        "action"
+      ],
+      "n_streams": 1
+    },
+    "TMS Only (S6)": {
+      "ndcg_5": 0.8591,
+      "ndcg_10": 0.7877,
+      "ndcg_20": 0.8243,
+      "mrr_c": 1.0,
+      "precision_5": 1.0,
+      "streams": [
+        "tms"
+      ],
+      "n_streams": 1
+    },
+    "Diversity Baseline (k=10)": {
+      "ndcg_5": 0.6172,
+      "ndcg_10": 0.8672,
+      "ndcg_20": 0.8672,
+      "mrr_c": 1.0,
+      "precision_5": 0.2,
+      "streams": [
+        "diversity"
+      ],
+      "n_streams": 0
+    },
+    "Diversity Baseline (k=20)": {
+      "ndcg_5": 0.5734,
+      "ndcg_10": 0.4911,
+      "ndcg_20": 0.7936,
+      "mrr_c": 0.5,
+      "precision_5": 0.4,
+      "streams": [
+        "diversity"
+      ],
+      "n_streams": 0
+    }
+  },
+  "hypotheses": {
+    "H1": {
+      "supported": 1,
+      "delta_ndcg10": 0.0335
+    },
+    "H2": {
+      "supported": true,
+      "tms_acc": 0.92,
+      "mvit_acc_20px": 0.36
+    },
+    "H3": {
+      "supported": 1,
+      "full_ndcg10": 0.8784,
+      "best_single": 0.8064
+    },
+    "H4": {
+      "supported": 0,
+      "full_p5": 1.0,
+      "single_p5": 1.0
+    },
+    "H5": {
+      "supported": 1,
+      "sartriage_ndcg10": 0.8784,
+      "diversity_ndcg10": 0.8672
+    }
+  }
+}
