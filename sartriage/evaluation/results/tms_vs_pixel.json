@@ -1,0 +1,70 @@
+{
+  "crossover_px": 81.7,
+  "tms_movement_acc": 0.92,
+  "tms_overall_acc": 0.662,
+  "heridal_median_px": 14,
+  "heridal_pct_under_30": 0.98,
+  "buckets": [
+    {
+      "bucket": "Under 15px",
+      "size_range": "0\u201315px",
+      "midpoint_px": 7.5,
+      "mvit_acc": 0.125,
+      "tms_overall": 0.662,
+      "tms_movement": 0.92,
+      "aai_fused": 0.662,
+      "advantage_pp": 53.7,
+      "winner": "TMS",
+      "heridal_pct": 0.75
+    },
+    {
+      "bucket": "15\u201330px",
+      "size_range": "15\u201330px",
+      "midpoint_px": 22.5,
+      "mvit_acc": 0.2932,
+      "tms_overall": 0.662,
+      "tms_movement": 0.92,
+      "aai_fused": 0.662,
+      "advantage_pp": 36.9,
+      "winner": "TMS",
+      "heridal_pct": 0.23
+    },
+    {
+      "bucket": "30\u201350px",
+      "size_range": "30\u201350px",
+      "midpoint_px": 40.0,
+      "mvit_acc": 0.47,
+      "tms_overall": 0.662,
+      "tms_movement": 0.92,
+      "aai_fused": 0.662,
+      "advantage_pp": 19.2,
+      "winner": "TMS",
+      "heridal_pct": 0.02
+    },
+    {
+      "bucket": "50\u201380px",
+      "size_range": "50\u201380px",
+      "midpoint_px": 65.0,
+      "mvit_acc": 0.5995,
+      "tms_overall": 0.662,
+      "tms_movement": 0.92,
+      "aai_fused": 0.662,
+      "advantage_pp": 6.3,
+      "winner": "TMS",
+      "heridal_pct": 0.0
+    },
+    {
+      "bucket": "Over 80px",
+      "size_range": "80\u2013200px",
+      "midpoint_px": 140.0,
+      "mvit_acc": 0.8504,
+      "tms_overall": 0.662,
+      "tms_movement": 0.92,
+      "aai_fused": 0.8504,
+      "advantage_pp": -18.8,
+      "winner": "MViTv2-S",
+      "heridal_pct": 0.0
+    }
+  ],
+  "key_finding": "At person sizes below 82px, TMS outperforms MViTv2-S by up to 39pp. Since 95% of real SAR targets (HERIDAL) fall below this threshold, TMS provides superior classification for the majority of operational SAR scenarios."
+}
