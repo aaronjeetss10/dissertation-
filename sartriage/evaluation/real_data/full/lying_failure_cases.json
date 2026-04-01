@@ -1,0 +1,39 @@
+{
+  "lying_down_failures": [
+    {
+      "gt_id": 21,
+      "gt_action": "Lying",
+      "gt_sar": "lying_down",
+      "gt_n_frames": 61,
+      "gt_mean_size": 39.3,
+      "size_bin": "25-40px",
+      "category": "Detection Failure",
+      "category_idx": 4,
+      "detail": {
+        "reason": "No pipeline track matched this GT person",
+        "gt_n_frames": 61,
+        "gt_mean_size": 39.3,
+        "possible_cause": "Unknown \u2014 large enough to detect"
+      },
+      "sequence": "1.1.8"
+    },
+    {
+      "gt_id": 22,
+      "gt_action": "Lying",
+      "gt_sar": "lying_down",
+      "gt_n_frames": 181,
+      "gt_mean_size": 39.9,
+      "size_bin": "25-40px",
+      "category": "Detection Failure",
+      "category_idx": 4,
+      "detail": {
+        "reason": "No pipeline track matched this GT person",
+        "gt_n_frames": 181,
+        "gt_mean_size": 39.9,
+        "possible_cause": "Unknown \u2014 large enough to detect"
+      },
+      "sequence": "1.1.8"
+    }
+  ],
+  "note": "Okutama test sequences have very few/no lying_down GT tracks"
+}

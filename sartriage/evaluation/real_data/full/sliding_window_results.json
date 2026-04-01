@@ -1,0 +1,34 @@
+{
+  "Whole-track TMS-16": {
+    "accuracy": 0.639378969654199,
+    "kappa": 0.32245302421939415,
+    "critical_recall": 0.3956043956043956,
+    "macro_f1": 0.5319933112542171
+  },
+  "Window majority vote": {
+    "accuracy": 0.6400846859562456,
+    "kappa": 0.33048063193319355,
+    "critical_recall": 0.4835164835164835,
+    "macro_f1": 0.5425858361228868
+  },
+  "Window soft average": {
+    "accuracy": 0.6337332392378264,
+    "kappa": 0.31923967170124123,
+    "critical_recall": 0.43956043956043955,
+    "macro_f1": 0.5304743465044415
+  },
+  "Window meta-features": {
+    "accuracy": 0.5673959068454482,
+    "kappa": 0.10030651088997955,
+    "critical_recall": 0.0,
+    "macro_f1": 0.3484248721875307,
+    "n_features": 87
+  },
+  "TMS-16 + consistency": {
+    "accuracy": 0.4827099505998589,
+    "kappa": -0.050202462512395574,
+    "critical_recall": 0.02197802197802198,
+    "macro_f1": 0.3170434673709294,
+    "n_features": 19
+  }
+}

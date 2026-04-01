@@ -1,0 +1,384 @@
+{
+  "experiment": "jitter_filter_smoothing",
+  "description": "Tests whether trajectory smoothing (MA / Kalman) before TMS-16 feature extraction improves walking-vs-stationary discrimination",
+  "n_tracks": 2834,
+  "class_distribution": {
+    "walking": 1077,
+    "stationary": 1554,
+    "lying_down": 91,
+    "running": 112
+  },
+  "evaluation": "5-fold stratified CV, SMOTE-balanced RF (n_estimators=200, class_weight=balanced)",
+  "methods": {
+    "Raw (baseline)": {
+      "method": "Raw (baseline)",
+      "accuracy": 0.6033945943251008,
+      "accuracy_ci": 0.022297342654059277,
+      "kappa": 0.2952571134890527,
+      "per_class": {
+        "lying_down": {
+          "precision": 0.24183006535947713,
+          "recall": 0.4065934065934066,
+          "f1": 0.30327868852459017,
+          "support": 91
+        },
+        "stationary": {
+          "precision": 0.6972295514511874,
+          "recall": 0.6801801801801802,
+          "f1": 0.6885993485342019,
+          "support": 1554
+        },
+        "walking": {
+          "precision": 0.5572519083969466,
+          "recall": 0.542246982358403,
+          "f1": 0.5496470588235294,
+          "support": 1077
+        },
+        "running": {
+          "precision": 0.27350427350427353,
+          "recall": 0.2857142857142857,
+          "f1": 0.2794759825327511,
+          "support": 112
+        }
+      },
+      "confusion_matrix": [
+        [
+          37,
+          41,
+          11,
+          2
+        ],
+        [
+          67,
+          1057,
+          403,
+          27
+        ],
+        [
+          44,
+          393,
+          584,
+          56
+        ],
+        [
+          5,
+          25,
+          50,
+          32
+        ]
+      ]
+    },
+    "Moving Average (w=5)": {
+      "method": "Moving Average (w=5)",
+      "accuracy": 0.5984532066982008,
+      "accuracy_ci": 0.026140448275502316,
+      "kappa": 0.28253084751267765,
+      "per_class": {
+        "lying_down": {
+          "precision": 0.2805755395683453,
+          "recall": 0.42857142857142855,
+          "f1": 0.3391304347826087,
+          "support": 91
+        },
+        "stationary": {
+          "precision": 0.6896778435239974,
+          "recall": 0.675032175032175,
+          "f1": 0.6822764227642276,
+          "support": 1554
+        },
+        "walking": {
+          "precision": 0.5459662288930581,
+          "recall": 0.5403899721448467,
+          "f1": 0.5431637890807279,
+          "support": 1077
+        },
+        "running": {
+          "precision": 0.24074074074074073,
+          "recall": 0.23214285714285715,
+          "f1": 0.23636363636363636,
+          "support": 112
+        }
+      },
+      "confusion_matrix": [
+        [
+          39,
+          40,
+          10,
+          2
+        ],
+        [
+          62,
+          1049,
+          418,
+          25
+        ],
+        [
+          35,
+          405,
+          582,
+          55
+        ],
+        [
+          3,
+          27,
+          56,
+          26
+        ]
+      ]
+    },
+    "Moving Average (w=7)": {
+      "method": "Moving Average (w=7)",
+      "accuracy": 0.5973925128224303,
+      "accuracy_ci": 0.03443141589836193,
+      "kappa": 0.28403063865666056,
+      "per_class": {
+        "lying_down": {
+          "precision": 0.25,
+          "recall": 0.3956043956043956,
+          "f1": 0.30638297872340425,
+          "support": 91
+        },
+        "stationary": {
+          "precision": 0.6913417052214144,
+          "recall": 0.6731016731016731,
+          "f1": 0.6820997717639387,
+          "support": 1554
+        },
+        "walking": {
+          "precision": 0.5501893939393939,
+          "recall": 0.5394614670380687,
+          "f1": 0.5447726207219878,
+          "support": 1077
+        },
+        "running": {
+          "precision": 0.24793388429752067,
+          "recall": 0.26785714285714285,
+          "f1": 0.2575107296137339,
+          "support": 112
+        }
+      },
+      "confusion_matrix": [
+        [
+          36,
+          41,
+          10,
+          4
+        ],
+        [
+          67,
+          1046,
+          413,
+          28
+        ],
+        [
+          40,
+          397,
+          581,
+          59
+        ],
+        [
+          1,
+          29,
+          52,
+          30
+        ]
+      ]
+    },
+    "Kalman (Q=1.0, R=5.0)": {
+      "method": "Kalman (Q=1.0, R=5.0)",
+      "accuracy": 0.5956269747789181,
+      "accuracy_ci": 0.030513382254108483,
+      "kappa": 0.2808696087318693,
+      "per_class": {
+        "lying_down": {
+          "precision": 0.23717948717948717,
+          "recall": 0.4065934065934066,
+          "f1": 0.29959514170040485,
+          "support": 91
+        },
+        "stationary": {
+          "precision": 0.6924083769633508,
+          "recall": 0.6808236808236808,
+          "f1": 0.6865671641791045,
+          "support": 1554
+        },
+        "walking": {
+          "precision": 0.5473887814313346,
+          "recall": 0.5255338904363974,
+          "f1": 0.5362387494078635,
+          "support": 1077
+        },
+        "running": {
+          "precision": 0.23275862068965517,
+          "recall": 0.24107142857142858,
+          "f1": 0.23684210526315788,
+          "support": 112
+        }
+      },
+      "confusion_matrix": [
+        [
+          37,
+          40,
+          11,
+          3
+        ],
+        [
+          76,
+          1058,
+          400,
+          20
+        ],
+        [
+          43,
+          402,
+          566,
+          66
+        ],
+        [
+          0,
+          28,
+          57,
+          27
+        ]
+      ]
+    },
+    "Kalman Tight (Q=0.5, R=10)": {
+      "method": "Kalman Tight (Q=0.5, R=10)",
+      "accuracy": 0.5988140420413683,
+      "accuracy_ci": 0.039747939898167495,
+      "kappa": 0.28498944212339805,
+      "per_class": {
+        "lying_down": {
+          "precision": 0.2391304347826087,
+          "recall": 0.3626373626373626,
+          "f1": 0.28820960698689957,
+          "support": 91
+        },
+        "stationary": {
+          "precision": 0.6951623591782637,
+          "recall": 0.675032175032175,
+          "f1": 0.6849493960169768,
+          "support": 1554
+        },
+        "walking": {
+          "precision": 0.5485074626865671,
+          "recall": 0.5459610027855153,
+          "f1": 0.5472312703583062,
+          "support": 1077
+        },
+        "running": {
+          "precision": 0.23478260869565218,
+          "recall": 0.24107142857142858,
+          "f1": 0.23788546255506607,
+          "support": 112
+        }
+      },
+      "confusion_matrix": [
+        [
+          33,
+          42,
+          13,
+          3
+        ],
+        [
+          67,
+          1049,
+          416,
+          22
+        ],
+        [
+          37,
+          389,
+          588,
+          63
+        ],
+        [
+          1,
+          29,
+          55,
+          27
+        ]
+      ]
+    }
+  },
+  "displacement_statistics": {
+    "Raw (baseline)": {
+      "walking_mean_disp": 7.114303635928298,
+      "walking_std_disp": 6.032349188735842,
+      "stationary_mean_disp": 7.2805406592239095,
+      "stationary_std_disp": 6.982675179713442,
+      "overlap_ratio": 1.0233665895594368,
+      "n_walking": 1077,
+      "n_stationary": 1554
+    },
+    "Moving Average (w=5)": {
+      "walking_mean_disp": 6.944549370496279,
+      "walking_std_disp": 6.00484365998107,
+      "stationary_mean_disp": 7.142751320882224,
+      "stationary_std_disp": 6.992941005309297,
+      "overlap_ratio": 1.0285406481437938,
+      "n_walking": 1077,
+      "n_stationary": 1554
+    },
+    "Moving Average (w=7)": {
+      "walking_mean_disp": 6.909963187360736,
+      "walking_std_disp": 5.981124472985918,
+      "stationary_mean_disp": 7.117698294381703,
+      "stationary_std_disp": 6.987823950128781,
+      "overlap_ratio": 1.0300631263999078,
+      "n_walking": 1077,
+      "n_stationary": 1554
+    },
+    "Kalman (Q=1.0, R=5.0)": {
+      "walking_mean_disp": 6.837160298540763,
+      "walking_std_disp": 5.876829753572786,
+      "stationary_mean_disp": 7.035716700435039,
+      "stationary_std_disp": 6.835969138277825,
+      "overlap_ratio": 1.029040768818342,
+      "n_walking": 1077,
+      "n_stationary": 1554
+    },
+    "Kalman Tight (Q=0.5, R=10)": {
+      "walking_mean_disp": 6.619657645325474,
+      "walking_std_disp": 5.670249588930017,
+      "stationary_mean_disp": 6.834998715635335,
+      "stationary_std_disp": 6.6255313134351415,
+      "overlap_ratio": 1.032530543348661,
+      "n_walking": 1077,
+      "n_stationary": 1554
+    }
+  },
+  "deltas_vs_baseline": {
+    "Raw (baseline)": {
+      "acc_delta": 0.0,
+      "walking_recall_delta": 0.0,
+      "stationary_recall_delta": 0.0,
+      "kappa_delta": 0.0
+    },
+    "Moving Average (w=5)": {
+      "acc_delta": -0.004941387626899996,
+      "walking_recall_delta": -0.0018570102135562205,
+      "stationary_recall_delta": -0.005148005148005175,
+      "kappa_delta": -0.01272626597637505
+    },
+    "Moving Average (w=7)": {
+      "acc_delta": -0.006002081502670453,
+      "walking_recall_delta": -0.0027855153203342198,
+      "stationary_recall_delta": -0.007078507078507101,
+      "kappa_delta": -0.011226474832392142
+    },
+    "Kalman (Q=1.0, R=5.0)": {
+      "acc_delta": -0.007767619546182658,
+      "walking_recall_delta": -0.01671309192200554,
+      "stationary_recall_delta": 0.0006435006435006052,
+      "kappa_delta": -0.014387504757183422
+    },
+    "Kalman Tight (Q=0.5, R=10)": {
+      "acc_delta": -0.004580552283732442,
+      "walking_recall_delta": 0.00371402042711233,
+      "stationary_recall_delta": -0.005148005148005175,
+      "kappa_delta": -0.010267671365654651
+    }
+  },
+  "conclusion": "Neither moving-average smoothing nor Kalman filtering substantially resolved the walking-vs-stationary confusion (walking recall: 54.2% \u2192 54.6%, best method: Kalman Tight (Q=0.5, R=10)). This confirms that the limitation is fundamental to centroid-only analysis at sub-3px/frame displacement magnitudes, where genuine slow walking is physically indistinguishable from tracker jitter."
+}

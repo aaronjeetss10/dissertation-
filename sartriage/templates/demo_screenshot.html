@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SARAnalysis — Priority Results</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
+
+        /* Nav */
+        .navbar {
+            background: #0f172a; color: #fff; padding: 8px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .nav-left { display: flex; align-items: center; gap: 10px; }
+        .nav-icon {
+            width: 28px; height: 28px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 7px; display: flex; align-items: center; justify-content: center;
+        }
+        .nav-icon svg { width: 15px; height: 15px; }
+        .nav-brand { font-size: 0.95rem; font-weight: 700; }
+        .nav-brand .acc { color: #60a5fa; }
+        .nav-right { display: flex; align-items: center; gap: 12px; }
+        .nav-chip {
+            display: flex; align-items: center; gap: 5px;
+            font-size: 0.62rem; font-weight: 600; padding: 3px 10px; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.6);
+        }
+        .dot { width: 5px; height: 5px; border-radius: 50%; background: #4ade80; }
+        .nav-link {
+            font-size: 0.65rem; font-weight: 500; color: rgba(255,255,255,0.5);
+            text-decoration: none; padding: 3px 8px; border-radius: 5px;
+        }
+        .nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
+
+        /* Split layout */
+        .split {
+            display: grid; grid-template-columns: 420px 1fr;
+            height: calc(100vh - 42px); overflow: hidden;
+        }
+
+        /* LEFT: Video panel */
+        .video-panel {
+            background: #0f172a; padding: 14px; display: flex; flex-direction: column;
+            border-right: 1px solid #1e293b;
+        }
+        .video-label {
+            font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em;
+            color: #64748b; font-weight: 600; margin-bottom: 6px;
+        }
+        .video-viewport {
+            position: relative; width: 100%; aspect-ratio: 16/10;
+            background: #1a1a2e; border-radius: 8px; overflow: hidden;
+            border: 1px solid #334155;
+        }
+        .video-viewport img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+
+        /* Playback overlay */
+        .play-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 24px 10px 8px;
+        }
+        /* Color-coded timeline — YouTube-style */
+        .timeline-bar {
+            width: 100%; height: 4px; background: rgba(255,255,255,0.2);
+            border-radius: 2px; margin-bottom: 6px; position: relative;
+            overflow: visible; cursor: pointer;
+        }
+        /* Played portion (grey up to playhead) */
+        .tl-played {
+            position: absolute; top: 0; left: 0; width: 13%; height: 100%;
+            background: rgba(255,255,255,0.35); border-radius: 2px 0 0 2px;
+            z-index: 1;
+        }
+        .tl-segment {
+            position: absolute; top: 0; height: 100%; z-index: 2;
+        }
+        /* Events laid out in chronological order, no overlaps */
+        .tl-seg-c1 { left: 5%;  width: 8%;  background: #ef4444; border-radius: 2px; }
+        .tl-seg-h1 { left: 16%; width: 5%;  background: #f97316; border-radius: 2px; }
+        .tl-seg-c2 { left: 24%; width: 5%;  background: #ef4444; border-radius: 2px; }
+        .tl-seg-l1 { left: 32%; width: 3%;  background: #22c55e; border-radius: 2px; }
+        .tl-seg-h2 { left: 38%; width: 6%;  background: #f97316; border-radius: 2px; }
+        .tl-seg-m1 { left: 47%; width: 5%;  background: #eab308; border-radius: 2px; }
+        .tl-seg-h3 { left: 55%; width: 4%;  background: #f97316; border-radius: 2px; }
+        .tl-seg-l2 { left: 62%; width: 3%;  background: #22c55e; border-radius: 2px; }
+        .tl-seg-m2 { left: 68%; width: 4%;  background: #eab308; border-radius: 2px; }
+        .tl-seg-h4 { left: 75%; width: 5%;  background: #f97316; border-radius: 2px; }
+        .tl-seg-l3 { left: 83%; width: 3%;  background: #22c55e; border-radius: 2px; }
+        .tl-seg-m3 { left: 89%; width: 4%;  background: #eab308; border-radius: 2px; }
+        .tl-seg-l4 { left: 95%; width: 3%;  background: #22c55e; border-radius: 2px; }
+        /* Playhead — positioned on first critical segment (13% = inside c1) */
+        .tl-head {
+            position: absolute; top: 50%; left: 13%; z-index: 10;
+            width: 12px; height: 12px; border-radius: 50%;
+            background: #fff; transform: translate(-50%, -50%);
+            box-shadow: 0 0 6px rgba(0,0,0,0.4), 0 0 12px rgba(239,68,68,0.4);
+            border: 2px solid #ef4444;
+        }
+        .play-controls {
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .play-left { display: flex; align-items: center; gap: 8px; }
+        .play-btn {
+            width: 24px; height: 24px; border-radius: 50%;
+            background: rgba(255,255,255,0.15); border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .play-btn svg { width: 10px; height: 10px; }
+        .ctrl-btn {
+            background: none; border: none; cursor: pointer;
+            color: rgba(255,255,255,0.5); display: flex; align-items: center;
+        }
+        .ctrl-btn svg { width: 14px; height: 14px; }
+        .time {
+            font-size: 0.58rem; color: rgba(255,255,255,0.7);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Timeline legend */
+        .tl-legend {
+            display: flex; gap: 10px; margin-top: 6px; justify-content: center;
+        }
+        .tl-leg-item {
+            display: flex; align-items: center; gap: 3px;
+            font-size: 0.5rem; color: rgba(255,255,255,0.5);
+        }
+        .tl-leg-dot { width: 6px; height: 6px; border-radius: 2px; }
+
+        /* Track detail below video */
+        .track-detail {
+            margin-top: 10px; padding: 10px; background: #1e293b;
+            border-radius: 8px; border: 1px solid #334155; flex: 1; overflow-y: auto;
+        }
+        .td-title { font-size: 0.65rem; font-weight: 700; color: #f8fafc; margin-bottom: 6px; }
+        .td-row {
+            display: flex; justify-content: space-between; padding: 3px 0;
+            font-size: 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .td-key { color: #94a3b8; }
+        .td-val { color: #e2e8f0; font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+
+        /* RIGHT: Results panel */
+        .results-panel { padding: 14px 20px; overflow-y: auto; }
+
+        .stats-row {
+            display: grid; grid-template-columns: repeat(6, 1fr);
+            gap: 8px; margin-bottom: 12px;
+        }
+        .s-card {
+            background: #fff; border: 1px solid #e2e8f0;
+            border-radius: 8px; padding: 8px 6px; text-align: center;
+        }
+        .s-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem; font-weight: 700; line-height: 1.1;
+        }
+        .s-lbl {
+            font-size: 0.55rem; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #94a3b8; font-weight: 600; margin-top: 1px;
+        }
+        .c-total { border-left: 3px solid #2563eb; }   .c-total .s-num { color: #2563eb; }
+        .c-crit { border-left: 3px solid #dc2626; }     .c-crit .s-num { color: #dc2626; }
+        .c-high { border-left: 3px solid #ea580c; }     .c-high .s-num { color: #ea580c; }
+        .c-med { border-left: 3px solid #ca8a04; }      .c-med .s-num { color: #ca8a04; }
+        .c-low { border-left: 3px solid #16a34a; }      .c-low .s-num { color: #16a34a; }
+        .c-ndcg { border-left: 3px solid #7c3aed; }     .c-ndcg .s-num { color: #7c3aed; }
+
+        .list-hdr {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 6px;
+        }
+        .list-title { font-size: 0.78rem; font-weight: 700; color: #334155; }
+        .pills { display: flex; gap: 3px; }
+        .pill {
+            padding: 3px 9px; border-radius: 12px; font-size: 0.6rem; font-weight: 600;
+            border: 1px solid #e2e8f0; background: #fff; color: #64748b; cursor: pointer;
+        }
+        .pill.active { background: #2563eb; border-color: #2563eb; color: #fff; }
+
+        /* Track table */
+        .track-table { width: 100%; border-collapse: separate; border-spacing: 0 4px; }
+        .track-table th {
+            font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.05em;
+            color: #94a3b8; font-weight: 600; text-align: left; padding: 0 8px 3px;
+        }
+        .track-table th:last-child { text-align: right; }
+        .track-table th.tc { text-align: center; }
+
+        .t-row {
+            cursor: pointer;
+            transition: box-shadow 0.15s, transform 0.15s;
+        }
+        .t-row:hover { transform: translateX(2px); }
+        .t-row.selected { box-shadow: 0 0 0 2px #3b82f6; }
+        .t-row td { padding: 6px 8px; vertical-align: middle; }
+        .t-row td:first-child { border-radius: 6px 0 0 6px; position: relative; }
+        .t-row td:last-child { border-radius: 0 6px 6px 0; }
+        .t-row td:first-child::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 6px 0 0 6px;
+        }
+        /* Severity-tinted row backgrounds + borders */
+        .t-row.sev-critical { background: #fef2f2; }
+        .t-row.sev-critical td { border-top: 1px solid #fecaca; border-bottom: 1px solid #fecaca; }
+        .t-row.sev-critical td:first-child { border-left: 1px solid #fecaca; }
+        .t-row.sev-critical td:last-child { border-right: 1px solid #fecaca; }
+        .t-row.sev-critical td:first-child::before { background: #dc2626; }
+        .t-row.sev-critical:hover { background: #fee2e2; box-shadow: 0 2px 10px rgba(220,38,38,0.1); }
+
+        .t-row.sev-high { background: #fff7ed; }
+        .t-row.sev-high td { border-top: 1px solid #fed7aa; border-bottom: 1px solid #fed7aa; }
+        .t-row.sev-high td:first-child { border-left: 1px solid #fed7aa; }
+        .t-row.sev-high td:last-child { border-right: 1px solid #fed7aa; }
+        .t-row.sev-high td:first-child::before { background: #ea580c; }
+        .t-row.sev-high:hover { background: #ffedd5; box-shadow: 0 2px 10px rgba(234,88,12,0.1); }
+
+        .t-row.sev-medium { background: #fefce8; }
+        .t-row.sev-medium td { border-top: 1px solid #fef08a; border-bottom: 1px solid #fef08a; }
+        .t-row.sev-medium td:first-child { border-left: 1px solid #fef08a; }
+        .t-row.sev-medium td:last-child { border-right: 1px solid #fef08a; }
+        .t-row.sev-medium td:first-child::before { background: #ca8a04; }
+        .t-row.sev-medium:hover { background: #fef9c3; box-shadow: 0 2px 10px rgba(202,138,4,0.1); }
+
+        .t-row.sev-low { background: #f0fdf4; }
+        .t-row.sev-low td { border-top: 1px solid #bbf7d0; border-bottom: 1px solid #bbf7d0; }
+        .t-row.sev-low td:first-child { border-left: 1px solid #bbf7d0; }
+        .t-row.sev-low td:last-child { border-right: 1px solid #bbf7d0; }
+        .t-row.sev-low td:first-child::before { background: #16a34a; }
+        .t-row.sev-low:hover { background: #dcfce7; box-shadow: 0 2px 10px rgba(22,163,74,0.1); }
+
+        .t-rank { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700; color: #cbd5e1; text-align: center; }
+        .t-rank.top { color: #2563eb; }
+
+        .t-badge {
+            display: inline-block; font-size: 0.5rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.04em;
+            padding: 2px 6px; border-radius: 4px; text-align: center; min-width: 48px;
+        }
+        .bg-crit { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        .bg-high { background: #fff7ed; color: #ea580c; border: 1px solid #fed7aa; }
+        .bg-med  { background: #fefce8; color: #a16207; border: 1px solid #fef08a; }
+        .bg-low  { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+
+        .t-class { font-size: 0.75rem; font-weight: 600; color: #1e293b; }
+        .t-tid { font-weight: 400; font-size: 0.62rem; color: #94a3b8; margin-left: 3px; }
+        .t-meta { display: flex; gap: 3px; margin-top: 1px; flex-wrap: wrap; }
+        .m-tag {
+            font-size: 0.5rem; color: #64748b; background: #f1f5f9;
+            padding: 1px 5px; border-radius: 3px; font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Color-coded timestamps */
+        .t-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem; font-weight: 600; text-align: center;
+        }
+        .time-crit { color: #dc2626; }
+        .time-high { color: #ea580c; }
+        .time-med  { color: #a16207; }
+        .time-low  { color: #16a34a; }
+
+        .t-clfs { display: flex; gap: 2px; justify-content: center; }
+        .clf { font-size: 0.48rem; padding: 1px 4px; border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+        .clf.y { background: #f0fdf4; color: #16a34a; }
+        .clf.n { background: #fef2f2; color: #ef4444; opacity: 0.55; }
+
+        .t-score-wrap { text-align: right; }
+        .t-score-main { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; color: #1e293b; }
+        .bar-bg { width: 55px; height: 3px; background: #e2e8f0; border-radius: 2px; margin-top: 2px; overflow: hidden; margin-left: auto; }
+        .bar-fill { height: 100%; border-radius: 2px; }
+        .sev-critical .bar-fill { background: linear-gradient(90deg, #ef4444, #dc2626); }
+        .sev-high .bar-fill { background: linear-gradient(90deg, #f97316, #ea580c); }
+        .sev-medium .bar-fill { background: linear-gradient(90deg, #eab308, #ca8a04); }
+        .sev-low .bar-fill { background: linear-gradient(90deg, #22c55e, #16a34a); }
+
+        .foot { margin-top: 6px; text-align: center; font-size: 0.52rem; color: #94a3b8; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <div class="nav-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+                    <circle cx="12" cy="12" r="9"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/>
+                    <circle cx="12" cy="12" r="3" fill="white" stroke="none"/>
+                </svg>
+            </div>
+            <div class="nav-brand">SAR<span class="acc">Analysis</span></div>
+        </div>
+        <div class="nav-right">
+            <div class="nav-chip"><span class="dot"></span> Analysis Complete</div>
+            <a class="nav-link" href="/">New Upload</a>
+            <a class="nav-link" href="#">Export CSV</a>
+        </div>
+    </nav>
+
+    <div class="split">
+        <!-- LEFT: Video Panel -->
+        <div class="video-panel">
+            <div class="video-label">Source Footage — {{ filename }}</div>
+            <div class="video-viewport">
+                <img src="{{ url_for('static', filename='drone_frame.png') }}" alt="Drone footage frame">
+                <div class="play-overlay">
+                    <!-- Color-coded timeline -->
+                    <div class="timeline-bar">
+                        <div class="tl-played"></div>
+                        <div class="tl-segment tl-seg-c1"></div>
+                        <div class="tl-segment tl-seg-h1"></div>
+                        <div class="tl-segment tl-seg-c2"></div>
+                        <div class="tl-segment tl-seg-l1"></div>
+                        <div class="tl-segment tl-seg-h2"></div>
+                        <div class="tl-segment tl-seg-m1"></div>
+                        <div class="tl-segment tl-seg-h3"></div>
+                        <div class="tl-segment tl-seg-l2"></div>
+                        <div class="tl-segment tl-seg-m2"></div>
+                        <div class="tl-segment tl-seg-h4"></div>
+                        <div class="tl-segment tl-seg-l3"></div>
+                        <div class="tl-segment tl-seg-m3"></div>
+                        <div class="tl-segment tl-seg-l4"></div>
+                        <div class="tl-head"></div>
+                    </div>
+                    <div class="play-controls">
+                        <div class="play-left">
+                            <button class="play-btn">
+                                <svg viewBox="0 0 10 12" fill="white"><polygon points="0,0 10,6 0,12"/></svg>
+                            </button>
+                            <button class="ctrl-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 20L9 12l10-8v16z"/><line x1="5" y1="4" x2="5" y2="20"/></svg></button>
+                            <button class="ctrl-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4l10 8-10 8V4z"/><line x1="19" y1="4" x2="19" y2="20"/></svg></button>
+                        </div>
+                        <span class="time">00:24 / 03:12</span>
+                    </div>
+                    <div class="tl-legend">
+                        <div class="tl-leg-item"><div class="tl-leg-dot" style="background:#ef4444"></div>Critical</div>
+                        <div class="tl-leg-item"><div class="tl-leg-dot" style="background:#f97316"></div>High</div>
+                        <div class="tl-leg-item"><div class="tl-leg-dot" style="background:#eab308"></div>Medium</div>
+                        <div class="tl-leg-item"><div class="tl-leg-dot" style="background:#22c55e"></div>Low</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selected track detail -->
+            <div class="track-detail" id="track-detail">
+                <div class="td-title">Selected Person — Track #{{ tracks[0].track_id if tracks else '?' }}</div>
+                {% if tracks %}
+                {% set t = tracks[0] %}
+                <div class="td-row"><span class="td-key">Classification</span><span class="td-val">{{ t.ensemble_class | replace('_',' ') | title }}</span></div>
+                <div class="td-row"><span class="td-key">Severity</span><span class="td-val" style="color: #ef4444;">{{ t.severity | upper }}</span></div>
+                <div class="td-row"><span class="td-key">Priority Score</span><span class="td-val">{{ "%.3f"|format(t.final_priority) }}</span></div>
+                <div class="td-row"><span class="td-key">Track Length</span><span class="td-val">{{ t.n_frames }} frames</span></div>
+                <div class="td-row"><span class="td-key">Person Size</span><span class="td-val">{{ "%.0f"|format(t.person_size_px) }}px</span></div>
+                <div class="td-row"><span class="td-key">TCE State</span><span class="td-val">{{ t.tce_state }}</span></div>
+                <div class="td-row"><span class="td-key">AAI Weights</span><span class="td-val">traj={{ "%.0f"|format(t.aai_w_traj * 100) }}% / px={{ "%.0f"|format((1 - t.aai_w_traj) * 100) }}%</span></div>
+                <div class="td-row"><span class="td-key">TMS-16</span><span class="td-val">{{ t.tms16_class | replace('_',' ') | title }}</span></div>
+                <div class="td-row"><span class="td-key">TrajMAE</span><span class="td-val">{{ t.trajmae_class | replace('_',' ') | title }}</span></div>
+                <div class="td-row"><span class="td-key">SCTE</span><span class="td-val">{{ t.scte_class | replace('_',' ') | title }}</span></div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- RIGHT: Results table -->
+        <div class="results-panel">
+            <div class="stats-row">
+                <div class="s-card c-total"><div class="s-num">{{ summary.total_tracks }}</div><div class="s-lbl">Tracked</div></div>
+                <div class="s-card c-crit"><div class="s-num">{{ summary.critical }}</div><div class="s-lbl">Critical</div></div>
+                <div class="s-card c-high"><div class="s-num">{{ summary.high }}</div><div class="s-lbl">High</div></div>
+                <div class="s-card c-med"><div class="s-num">{{ summary.medium }}</div><div class="s-lbl">Medium</div></div>
+                <div class="s-card c-low"><div class="s-num">{{ summary.low }}</div><div class="s-lbl">Low</div></div>
+                <div class="s-card c-ndcg"><div class="s-num">{{ "%.2f"|format(summary.mean_ndcg3) }}</div><div class="s-lbl">NDCG@3</div></div>
+            </div>
+
+            <div class="list-hdr">
+                <div class="list-title">Ranked Priority List</div>
+                <div class="pills">
+                    <button class="pill active">All</button>
+                    <button class="pill">Critical</button>
+                    <button class="pill">High</button>
+                    <button class="pill">Medium</button>
+                    <button class="pill">Low</button>
+                </div>
+            </div>
+
+            <table class="track-table">
+                <thead><tr>
+                    <th style="width:32px">#</th>
+                    <th style="width:56px">Level</th>
+                    <th>Person &amp; Metadata</th>
+                    <th class="tc" style="width:48px">Time</th>
+                    <th class="tc" style="width:80px">Classifiers</th>
+                    <th style="width:75px;text-align:right">Priority</th>
+                </tr></thead>
+                <tbody>
+                {% for t in tracks %}
+                <tr class="t-row sev-{{ t.severity }}" data-index="{{ loop.index0 }}">
+                    <td><div class="t-rank {{ 'top' if loop.index <= 3 else '' }}">#{{ loop.index }}</div></td>
+                    <td><div class="t-badge bg-{{ 'crit' if t.severity == 'critical' else ('high' if t.severity == 'high' else ('med' if t.severity == 'medium' else 'low')) }}">{{ t.severity | upper }}</div></td>
+                    <td>
+                        <div class="t-class">{{ t.ensemble_class | replace('_', ' ') | title }}<span class="t-tid">Track #{{ t.track_id }}</span></div>
+                        <div class="t-meta">
+                            <span class="m-tag">Seq {{ t.sequence }}</span>
+                            <span class="m-tag">{{ t.n_frames }}f</span>
+                            <span class="m-tag">{{ "%.0f"|format(t.person_size_px) }}px</span>
+                            <span class="m-tag">{{ t.tce_state }}</span>
+                        </div>
+                    </td>
+                    <td><div class="t-time time-{{ 'crit' if t.severity == 'critical' else ('high' if t.severity == 'high' else ('med' if t.severity == 'medium' else 'low')) }}">{{ "%02d:%02d"|format((t.n_frames // 30) // 60, (t.n_frames // 30) % 60) }}</div></td>
+                    <td>
+                        <div class="t-clfs">
+                            <span class="clf {{ 'y' if t.tms16_class == t.ensemble_class else 'n' }}">T:{{ t.tms16_class[:3] }}</span>
+                            <span class="clf {{ 'y' if t.trajmae_class == t.ensemble_class else 'n' }}">M:{{ t.trajmae_class[:3] }}</span>
+                            <span class="clf {{ 'y' if t.scte_class == t.ensemble_class else 'n' }}">S:{{ t.scte_class[:3] }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="t-score-wrap">
+                            <div class="t-score-main">{{ "%.3f"|format(t.final_priority) }}</div>
+                            <div class="bar-bg"><div class="bar-fill" style="width:{{ [t.final_priority / 0.6 * 100, 100] | min }}%"></div></div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="foot">SARAnalysis v3 · 11-component pipeline · On-device processing</div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.t-row').forEach(row => {
+            row.addEventListener('click', () => {
+                document.querySelectorAll('.t-row').forEach(r => r.classList.remove('selected'));
+                row.classList.add('selected');
+            });
+        });
+        const first = document.querySelector('.t-row');
+        if (first) first.classList.add('selected');
+    </script>
+</body>
+</html>

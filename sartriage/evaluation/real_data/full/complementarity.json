@@ -1,0 +1,42 @@
+{
+  "note": "MViTv2-S tested on 200 tracks from Okutama TestSet; TMS-12 tested on 851 tracks (70/30 split). Not directly comparable per-sample, but per-bin comparison is valid.",
+  "mvit_accuracy": 0.265,
+  "tms12_accuracy": 0.6298472385428907,
+  "lstm_accuracy": 0.5053956834532374,
+  "mvit_by_bin": {
+    "<50px": {
+      "acc": 0.2604166666666667,
+      "n": 192
+    },
+    "50-75px": {
+      "acc": 0.42857142857142855,
+      "n": 7
+    },
+    "75-100px": {
+      "acc": 0.0,
+      "n": 1
+    },
+    ">100px": {
+      "acc": 0,
+      "n": 0
+    }
+  },
+  "tms12_by_bin": {
+    "<50px": {
+      "acc": 1.0,
+      "n": 2
+    },
+    "50-75px": {
+      "acc": 0.5824175824175825,
+      "n": 91
+    },
+    "75-100px": {
+      "acc": 0.5869565217391305,
+      "n": 230
+    },
+    ">100px": {
+      "acc": 0.3905579399141631,
+      "n": 233
+    }
+  }
+}

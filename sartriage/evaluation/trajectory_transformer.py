@@ -30,7 +30,7 @@ RESULTS_DIR = Path(__file__).parent / "results"
 OKUTAMA_DIR = Path(__file__).parent / "datasets" / "okutama"
 
 SAR_ACTIONS = ["falling", "running", "lying_down", "crawling",
-               "waving", "collapsed", "stumbling"]
+               "waving", "collapsed", "stumbling", "walking"]
 
 FEATURE_NAMES = [
     "net_displacement", "mean_speed", "speed_cv", "max_acceleration",
@@ -97,6 +97,12 @@ def _generate_trajectory_sequence(action: str, n_frames: int = 30,
             dy = random.gauss(0, 0.002)
             aspect = random.uniform(0.8, 1.4) + 0.3 * math.sin(i * 0.8)
             bsz = random.uniform(20, 40) / w
+        elif action == "walking":
+            # Moderate, consistent horizontal movement
+            dx = 0.004 + random.gauss(0, 0.0008)
+            dy = random.gauss(0, 0.0005)
+            aspect = random.uniform(1.2, 1.7)   # upright posture
+            bsz = random.uniform(22, 40) / w
         else:
             dx, dy, aspect, bsz = 0, 0, 1.0, 0.015
 

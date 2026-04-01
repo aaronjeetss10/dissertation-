@@ -1,0 +1,88 @@
+{
+  "version": "v2_11_of_11",
+  "n_sequences": 3,
+  "mean_ndcg3": 0.2991811422392911,
+  "mean_ndcg5": 0.37372359363537555,
+  "total_tracks": 217,
+  "total_yolo_dets": 4950,
+  "pipeline_status": {
+    "YOLO": {
+      "status": "RAN",
+      "note": "HERIDAL-finetuned, 1280px, 1842 dets"
+    },
+    "ByteTrack": {
+      "status": "RAN",
+      "note": "SimpleTracker (centroid+IoU), 65 tracks, 29 GT-matched. ByteTrack fails at 15-22px."
+    },
+    "TMS-12": {
+      "status": "RAN",
+      "note": "SMOTE-balanced RF, 200 trees"
+    },
+    "TrajMAE": {
+      "status": "RAN",
+      "note": "Pre-trained encoder + classifier head"
+    },
+    "AnomalyDet": {
+      "status": "RAN",
+      "note": "TrajMAE recon error, threshold=140.4143"
+    },
+    "SCTE": {
+      "status": "RAN",
+      "note": "Contrastive-trained on Okutama (InfoNCE, \u03c4=0.07)"
+    },
+    "TCE": {
+      "status": "RAN",
+      "note": "v2 with initial state assessment"
+    },
+    "MViTv2-S": {
+      "status": "RAN",
+      "note": "Pre-computed cache, 29/65 hits"
+    },
+    "AAI-v2": {
+      "status": "RAN",
+      "note": "Learned MLP meta-classifier (706 params)"
+    },
+    "EMI": {
+      "status": "RAN",
+      "note": "Phase=TRANSIT, hover=0.00"
+    },
+    "Ranker": {
+      "status": "RAN",
+      "note": "Priority-sorted timeline"
+    }
+  },
+  "mean_timings_ms": {
+    "yolo_ms": 81.15247595996921,
+    "tracking_ms": 0.13307819895756368,
+    "tms12_ms": 11.794561740611123,
+    "trajmae_ms": 3.166079828556452,
+    "scte_ms": 0.48190159487037626,
+    "tce_ms": 0.006849780504297509,
+    "mvit_ms": 0.00033460454181171665,
+    "aai_ms": 0.055170349457273705,
+    "emi_ms": 3.243683014185326
+  },
+  "v1_comparison": {
+    "1.1.8": {
+      "v1_ndcg3": 0.36691919031675035,
+      "v2_ndcg3": 0.40266363904741387,
+      "v1_tracks": 28,
+      "v2_tracks": 84,
+      "ndcg3_delta": 0.035744448730663514
+    },
+    "1.2.3": {
+      "v1_ndcg3": 0.7341740173706043,
+      "v2_ndcg3": 0.25,
+      "v1_tracks": 8,
+      "v2_tracks": 68,
+      "ndcg3_delta": -0.4841740173706043
+    },
+    "2.2.3": {
+      "v1_ndcg3": 0.3006305130279532,
+      "v2_ndcg3": 0.24487978767045943,
+      "v1_tracks": 12,
+      "v2_tracks": 65,
+      "ndcg3_delta": -0.05575072535749376
+    }
+  }
+}

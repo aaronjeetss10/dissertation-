@@ -1,0 +1,90 @@
+{
+  "version": "v3_all_improvements",
+  "improvements": [
+    "Track quality filter (size>=15px)",
+    "Confidence-aware TCE v3",
+    "Majority vote ensemble",
+    "TMS-16 features"
+  ],
+  "mean_ndcg3": 0.4104580962720887,
+  "mean_ndcg5": 0.4395320519537411,
+  "total_tracks": 124,
+  "total_before_filter": 217,
+  "pipeline_status": {
+    "YOLO": {
+      "status": "RAN",
+      "note": "HERIDAL, 1842 dets"
+    },
+    "ByteTrack": {
+      "status": "RAN",
+      "note": "SimpleTracker + size\u226515px filter, 65\u219240 tracks"
+    },
+    "TMS-16": {
+      "status": "RAN",
+      "note": "SMOTE-balanced RF, 200 trees, 16 features"
+    },
+    "TrajMAE": {
+      "status": "RAN",
+      "note": "Pre-trained encoder+classifier"
+    },
+    "AnomalyDet": {
+      "status": "RAN",
+      "note": "TrajMAE recon, thresh=155.66"
+    },
+    "SCTE": {
+      "status": "RAN",
+      "note": "Contrastive + linear probe"
+    },
+    "TCE": {
+      "status": "RAN",
+      "note": "v3 confidence-aware (base * dwell * conf_mod)"
+    },
+    "MViTv2-S": {
+      "status": "RAN",
+      "note": "Cache, 27/40 hits"
+    },
+    "AAI-v2": {
+      "status": "RAN",
+      "note": "MLP, ensemble+conf_TCE input"
+    },
+    "EMI": {
+      "status": "RAN",
+      "note": "Phase=TRANSIT"
+    },
+    "Ranker": {
+      "status": "RAN",
+      "note": "Priority-sorted"
+    }
+  },
+  "per_sequence": {
+    "1.1.8": {
+      "ndcg3": 0.8435737579924145,
+      "ndcg5": 0.7895676983469903,
+      "n_tracks": 42
+    },
+    "1.2.3": {
+      "ndcg3": 0.08333333333333334,
+      "ndcg5": 0.1380021156301424,
+      "n_tracks": 42
+    },
+    "2.2.3": {
+      "ndcg3": 0.3044671974905181,
+      "ndcg5": 0.3910263418840907,
+      "n_tracks": 40
+    }
+  },
+  "version_comparison": {
+    "v1_gt_isolated": {
+      "mean_ndcg3": 0.4672412402384359,
+      "components": "9/11"
+    },
+    "v2_no_filter": {
+      "mean_ndcg3": 0.2991811422392911,
+      "components": "11/11"
+    },
+    "v3_all_improvements": {
+      "mean_ndcg3": 0.4104580962720887,
+      "components": "11/11+improvements"
+    }
+  }
+}

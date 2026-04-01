@@ -1,0 +1,145 @@
+{
+  "overall_test_accuracy": 0.6298472385428907,
+  "wilson_ci_95": [
+    0.5968900451180651,
+    0.6616373826533489
+  ],
+  "cohens_kappa": 0.26255281922619833,
+  "classification_report": {
+    "lying_down": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 27.0
+    },
+    "running": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 34.0
+    },
+    "stationary": {
+      "precision": 0.6510067114093959,
+      "recall": 0.8308351177730193,
+      "f1-score": 0.7300094073377233,
+      "support": 467.0
+    },
+    "walking": {
+      "precision": 0.5803921568627451,
+      "recall": 0.4582043343653251,
+      "f1-score": 0.5121107266435986,
+      "support": 323.0
+    },
+    "accuracy": 0.6298472385428907,
+    "macro avg": {
+      "precision": 0.30784971706803527,
+      "recall": 0.3222598630345861,
+      "f1-score": 0.3105300334953305,
+      "support": 851.0
+    },
+    "weighted avg": {
+      "precision": 0.5775403065744472,
+      "recall": 0.6298472385428907,
+      "f1-score": 0.5949778589102223,
+      "support": 851.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      0,
+      22,
+      5,
+      0
+    ],
+    [
+      0,
+      388,
+      79,
+      0
+    ],
+    [
+      0,
+      175,
+      148,
+      0
+    ],
+    [
+      0,
+      11,
+      23,
+      0
+    ]
+  ],
+  "cv_accuracy_mean": 0.6288088694449119,
+  "cv_accuracy_std": 0.025976641503486088,
+  "size_bins_test_set": {
+    "<50px": {
+      "n": 16,
+      "accuracy": 0.9375,
+      "recalls": {
+        "lying_down": 0.0,
+        "stationary": 0.9375,
+        "walking": 0.0,
+        "running": 0.0
+      }
+    },
+    "50-75px": {
+      "n": 206,
+      "accuracy": 0.616504854368932,
+      "recalls": {
+        "lying_down": 0.0,
+        "stationary": 0.8923076923076924,
+        "walking": 0.171875,
+        "running": 0.0
+      }
+    },
+    "75-100px": {
+      "n": 305,
+      "accuracy": 0.659016393442623,
+      "recalls": {
+        "lying_down": 0.0,
+        "stationary": 0.8054054054054054,
+        "walking": 0.5048543689320388,
+        "running": 0.0
+      }
+    },
+    ">100px": {
+      "n": 324,
+      "accuracy": 0.595679012345679,
+      "recalls": {
+        "lying_down": 0.0,
+        "stationary": 0.7941176470588235,
+        "walking": 0.5448717948717948,
+        "running": 0.0
+      }
+    }
+  },
+  "gini_importance": {
+    "Net displacement": 0.08451864991809417,
+    "Mean speed": 0.08363377562132676,
+    "Speed CV": 0.08334522189985924,
+    "Max acceleration": 0.07132953562989197,
+    "Vertical dominance": 0.103196018132001,
+    "Direction change rate": 0.08577098685317534,
+    "Stationarity ratio": 0.0739963192578145,
+    "Aspect ratio change": 0.08376197255411166,
+    "Speed decay": 0.08377336687206814,
+    "Oscillation index": 0.06220169826745157,
+    "Mean aspect ratio": 0.10421209461897214,
+    "Mean normalised size": 0.08026036037523343
+  },
+  "permutation_importance": {
+    "Net displacement": 0.002702702702702697,
+    "Mean speed": 0.006345475910693288,
+    "Speed CV": 0.010928319623971805,
+    "Max acceleration": 0.0008225616921269108,
+    "Vertical dominance": 0.04371327849588719,
+    "Direction change rate": 0.0034077555816686258,
+    "Stationarity ratio": 0.01750881316098706,
+    "Aspect ratio change": 0.0012925969447708519,
+    "Speed decay": 0.005875440658049347,
+    "Oscillation index": 0.0058754406580493355,
+    "Mean aspect ratio": 0.025851938895417148,
+    "Mean normalised size": -0.001292596944770874
+  }
+}

@@ -1,0 +1,1988 @@
+{
+  "1.1.8": {
+    "0": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.7356,
+      "raw_probs": {
+        "falling": 0.7356,
+        "crawling": 0.1846,
+        "lying_down": 0.0032,
+        "running": 0.0208,
+        "waving_hand": 0.0039,
+        "climbing": 0.0142,
+        "stumbling": 0.0019,
+        "pushing": 0.0299,
+        "pulling": 0.0059
+      },
+      "reason": "inference_complete",
+      "person_size_px": 24.8
+    },
+    "1": {
+      "predicted_class": "crawling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.9038,
+      "raw_probs": {
+        "falling": 0.017,
+        "crawling": 0.9038,
+        "lying_down": 0.0027,
+        "running": 0.0196,
+        "waving_hand": 0.0445,
+        "climbing": 0.0033,
+        "stumbling": 0.001,
+        "pushing": 0.0056,
+        "pulling": 0.0025
+      },
+      "reason": "inference_complete",
+      "person_size_px": 24.9
+    },
+    "2": {
+      "predicted_class": "crawling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.7961,
+      "raw_probs": {
+        "falling": 0.0968,
+        "crawling": 0.7961,
+        "lying_down": 0.0025,
+        "running": 0.0083,
+        "waving_hand": 0.009,
+        "climbing": 0.0359,
+        "stumbling": 0.0013,
+        "pushing": 0.0486,
+        "pulling": 0.0016
+      },
+      "reason": "inference_complete",
+      "person_size_px": 26.2
+    },
+    "3": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.8848,
+      "raw_probs": {
+        "falling": 0.8848,
+        "crawling": 0.0262,
+        "lying_down": 0.0028,
+        "running": 0.0074,
+        "waving_hand": 0.0094,
+        "climbing": 0.0169,
+        "stumbling": 0.0027,
+        "pushing": 0.044,
+        "pulling": 0.0059
+      },
+      "reason": "inference_complete",
+      "person_size_px": 22.6
+    },
+    "4": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.4352,
+      "raw_probs": {
+        "falling": 0.4352,
+        "crawling": 0.3296,
+        "lying_down": 0.0096,
+        "running": 0.0201,
+        "waving_hand": 0.0197,
+        "climbing": 0.0206,
+        "stumbling": 0.0054,
+        "pushing": 0.1545,
+        "pulling": 0.0052
+      },
+      "reason": "inference_complete",
+      "person_size_px": 25.2
+    },
+    "5": {
+      "predicted_class": "crawling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.4864,
+      "raw_probs": {
+        "falling": 0.2111,
+        "crawling": 0.4864,
+        "lying_down": 0.0196,
+        "running": 0.019,
+        "waving_hand": 0.1297,
+        "climbing": 0.049,
+        "stumbling": 0.0226,
+        "pushing": 0.0455,
+        "pulling": 0.0171
+      },
+      "reason": "inference_complete",
+      "person_size_px": 35.6
+    },
+    "6": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.8137,
+      "raw_probs": {
+        "falling": 0.0678,
+        "crawling": 0.0158,
+        "lying_down": 0.0076,
+        "running": 0.0229,
+        "waving_hand": 0.0248,
+        "climbing": 0.026,
+        "stumbling": 0.0086,
+        "pushing": 0.8137,
+        "pulling": 0.0128
+      },
+      "reason": "inference_complete",
+      "person_size_px": 26.8
+    },
+    "7": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.9352,
+      "raw_probs": {
+        "falling": 0.0174,
+        "crawling": 0.0044,
+        "lying_down": 0.0018,
+        "running": 0.0061,
+        "waving_hand": 0.027,
+        "climbing": 0.0049,
+        "stumbling": 0.0015,
+        "pushing": 0.9352,
+        "pulling": 0.0016
+      },
+      "reason": "inference_complete",
+      "person_size_px": 28.5
+    },
+    "8": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.4894,
+      "raw_probs": {
+        "falling": 0.0534,
+        "crawling": 0.343,
+        "lying_down": 0.0086,
+        "running": 0.0094,
+        "waving_hand": 0.0278,
+        "climbing": 0.055,
+        "stumbling": 0.0087,
+        "pushing": 0.4894,
+        "pulling": 0.0047
+      },
+      "reason": "inference_complete",
+      "person_size_px": 39.1
+    },
+    "9": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.3064,
+      "raw_probs": {
+        "falling": 0.3064,
+        "crawling": 0.0314,
+        "lying_down": 0.0299,
+        "running": 0.0574,
+        "waving_hand": 0.149,
+        "climbing": 0.0764,
+        "stumbling": 0.0163,
+        "pushing": 0.2775,
+        "pulling": 0.0558
+      },
+      "reason": "inference_complete",
+      "person_size_px": 26.5
+    },
+    "10": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.6849,
+      "raw_probs": {
+        "falling": 0.6849,
+        "crawling": 0.1173,
+        "lying_down": 0.0077,
+        "running": 0.08,
+        "waving_hand": 0.0503,
+        "climbing": 0.0381,
+        "stumbling": 0.0038,
+        "pushing": 0.0119,
+        "pulling": 0.0059
+      },
+      "reason": "inference_complete",
+      "person_size_px": 23.8
+    },
+    "11": {
+      "predicted_class": "crawling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.5649,
+      "raw_probs": {
+        "falling": 0.2817,
+        "crawling": 0.5649,
+        "lying_down": 0.0084,
+        "running": 0.0466,
+        "waving_hand": 0.0143,
+        "climbing": 0.0209,
+        "stumbling": 0.0052,
+        "pushing": 0.0502,
+        "pulling": 0.0079
+      },
+      "reason": "inference_complete",
+      "person_size_px": 26.1
+    },
+    "12": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.8949,
+      "raw_probs": {
+        "falling": 0.8949,
+        "crawling": 0.0209,
+        "lying_down": 0.0011,
+        "running": 0.0096,
+        "waving_hand": 0.0023,
+        "climbing": 0.0038,
+        "stumbling": 0.0006,
+        "pushing": 0.0655,
+        "pulling": 0.0012
+      },
+      "reason": "inference_complete",
+      "person_size_px": 25.0
+    },
+    "13": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.559,
+      "raw_probs": {
+        "falling": 0.2725,
+        "crawling": 0.0443,
+        "lying_down": 0.0044,
+        "running": 0.0808,
+        "waving_hand": 0.0193,
+        "climbing": 0.0113,
+        "stumbling": 0.0039,
+        "pushing": 0.559,
+        "pulling": 0.0045
+      },
+      "reason": "inference_complete",
+      "person_size_px": 37.1
+    },
+    "14": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.8915,
+      "raw_probs": {
+        "falling": 0.8915,
+        "crawling": 0.0597,
+        "lying_down": 0.0022,
+        "running": 0.0063,
+        "waving_hand": 0.0032,
+        "climbing": 0.0059,
+        "stumbling": 0.0015,
+        "pushing": 0.0267,
+        "pulling": 0.003
+      },
+      "reason": "inference_complete",
+      "person_size_px": 26.9
+    },
+    "15": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.312,
+      "raw_probs": {
+        "falling": 0.2112,
+        "crawling": 0.0697,
+        "lying_down": 0.025,
+        "running": 0.1213,
+        "waving_hand": 0.0498,
+        "climbing": 0.1651,
+        "stumbling": 0.0137,
+        "pushing": 0.312,
+        "pulling": 0.0321
+      },
+      "reason": "inference_complete",
+      "person_size_px": 28.3
+    },
+    "16": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.5709,
+      "raw_probs": {
+        "falling": 0.0841,
+        "crawling": 0.0232,
+        "lying_down": 0.0043,
+        "running": 0.1213,
+        "waving_hand": 0.0069,
+        "climbing": 0.1754,
+        "stumbling": 0.0032,
+        "pushing": 0.5709,
+        "pulling": 0.0107
+      },
+      "reason": "inference_complete",
+      "person_size_px": 29.7
+    },
+    "17": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.5497,
+      "raw_probs": {
+        "falling": 0.5497,
+        "crawling": 0.0621,
+        "lying_down": 0.0112,
+        "running": 0.0442,
+        "waving_hand": 0.0049,
+        "climbing": 0.1535,
+        "stumbling": 0.0077,
+        "pushing": 0.1482,
+        "pulling": 0.0186
+      },
+      "reason": "inference_complete",
+      "person_size_px": 34.8
+    },
+    "18": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.3748,
+      "raw_probs": {
+        "falling": 0.0914,
+        "crawling": 0.0215,
+        "lying_down": 0.014,
+        "running": 0.2086,
+        "waving_hand": 0.0978,
+        "climbing": 0.1301,
+        "stumbling": 0.0232,
+        "pushing": 0.3748,
+        "pulling": 0.0386
+      },
+      "reason": "inference_complete",
+      "person_size_px": 42.9
+    },
+    "19": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.7331,
+      "raw_probs": {
+        "falling": 0.7331,
+        "crawling": 0.0304,
+        "lying_down": 0.0086,
+        "running": 0.0239,
+        "waving_hand": 0.0107,
+        "climbing": 0.0512,
+        "stumbling": 0.0049,
+        "pushing": 0.1285,
+        "pulling": 0.0086
+      },
+      "reason": "inference_complete",
+      "person_size_px": 33.9
+    },
+    "20": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.8361,
+      "raw_probs": {
+        "falling": 0.0333,
+        "crawling": 0.0558,
+        "lying_down": 0.0045,
+        "running": 0.0337,
+        "waving_hand": 0.0085,
+        "climbing": 0.025,
+        "stumbling": 0.0011,
+        "pushing": 0.8361,
+        "pulling": 0.002
+      },
+      "reason": "inference_complete",
+      "person_size_px": 24.6
+    },
+    "21": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.3572,
+      "raw_probs": {
+        "falling": 0.3572,
+        "crawling": 0.0568,
+        "lying_down": 0.0135,
+        "running": 0.0658,
+        "waving_hand": 0.1118,
+        "climbing": 0.0619,
+        "stumbling": 0.022,
+        "pushing": 0.2711,
+        "pulling": 0.04
+      },
+      "reason": "inference_complete",
+      "person_size_px": 39.3
+    },
+    "22": {
+      "predicted_class": "waving_hand",
+      "predicted_sar": "stationary",
+      "confidence": 0.3717,
+      "raw_probs": {
+        "falling": 0.149,
+        "crawling": 0.0501,
+        "lying_down": 0.0091,
+        "running": 0.018,
+        "waving_hand": 0.3717,
+        "climbing": 0.0564,
+        "stumbling": 0.0089,
+        "pushing": 0.316,
+        "pulling": 0.0207
+      },
+      "reason": "inference_complete",
+      "person_size_px": 39.9
+    },
+    "23": {
+      "predicted_class": "crawling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.4155,
+      "raw_probs": {
+        "falling": 0.3219,
+        "crawling": 0.4155,
+        "lying_down": 0.0026,
+        "running": 0.0177,
+        "waving_hand": 0.0033,
+        "climbing": 0.145,
+        "stumbling": 0.001,
+        "pushing": 0.0898,
+        "pulling": 0.0031
+      },
+      "reason": "inference_complete",
+      "person_size_px": 27.7
+    },
+    "24": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.866,
+      "raw_probs": {
+        "falling": 0.866,
+        "crawling": 0.0649,
+        "lying_down": 0.0034,
+        "running": 0.01,
+        "waving_hand": 0.0057,
+        "climbing": 0.0216,
+        "stumbling": 0.0012,
+        "pushing": 0.0239,
+        "pulling": 0.0033
+      },
+      "reason": "inference_complete",
+      "person_size_px": 29.4
+    },
+    "25": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.3206,
+      "raw_probs": {
+        "falling": 0.2254,
+        "crawling": 0.2237,
+        "lying_down": 0.0109,
+        "running": 0.0328,
+        "waving_hand": 0.0304,
+        "climbing": 0.1205,
+        "stumbling": 0.0207,
+        "pushing": 0.3206,
+        "pulling": 0.0151
+      },
+      "reason": "inference_complete",
+      "person_size_px": 36.5
+    },
+    "26": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.2903,
+      "raw_probs": {
+        "falling": 0.1717,
+        "crawling": 0.0229,
+        "lying_down": 0.0109,
+        "running": 0.1135,
+        "waving_hand": 0.1309,
+        "climbing": 0.1517,
+        "stumbling": 0.043,
+        "pushing": 0.2903,
+        "pulling": 0.0653
+      },
+      "reason": "inference_complete",
+      "person_size_px": 48.0
+    },
+    "27": {
+      "predicted_class": "climbing",
+      "predicted_sar": "walking",
+      "confidence": 0.6189,
+      "raw_probs": {
+        "falling": 0.117,
+        "crawling": 0.0311,
+        "lying_down": 0.0238,
+        "running": 0.0779,
+        "waving_hand": 0.0204,
+        "climbing": 0.6189,
+        "stumbling": 0.0183,
+        "pushing": 0.0404,
+        "pulling": 0.0521
+      },
+      "reason": "inference_complete",
+      "person_size_px": 26.2
+    },
+    "28": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.6802,
+      "raw_probs": {
+        "falling": 0.1095,
+        "crawling": 0.0135,
+        "lying_down": 0.0113,
+        "running": 0.0344,
+        "waving_hand": 0.0861,
+        "climbing": 0.0356,
+        "stumbling": 0.0126,
+        "pushing": 0.6802,
+        "pulling": 0.0168
+      },
+      "reason": "inference_complete",
+      "person_size_px": 34.7
+    },
+    "29": {
+      "predicted_class": "waving_hand",
+      "predicted_sar": "stationary",
+      "confidence": 0.7052,
+      "raw_probs": {
+        "falling": 0.0472,
+        "crawling": 0.0313,
+        "lying_down": 0.0152,
+        "running": 0.0311,
+        "waving_hand": 0.7052,
+        "climbing": 0.0201,
+        "stumbling": 0.0187,
+        "pushing": 0.1053,
+        "pulling": 0.026
+      },
+      "reason": "inference_complete",
+      "person_size_px": 21.6
+    },
+    "30": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.4944,
+      "raw_probs": {
+        "falling": 0.4944,
+        "crawling": 0.0424,
+        "lying_down": 0.0072,
+        "running": 0.0252,
+        "waving_hand": 0.0392,
+        "climbing": 0.1106,
+        "stumbling": 0.023,
+        "pushing": 0.2427,
+        "pulling": 0.0153
+      },
+      "reason": "inference_complete",
+      "person_size_px": 31.3
+    },
+    "31": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.481,
+      "raw_probs": {
+        "falling": 0.481,
+        "crawling": 0.2124,
+        "lying_down": 0.0109,
+        "running": 0.1026,
+        "waving_hand": 0.0249,
+        "climbing": 0.0247,
+        "stumbling": 0.0038,
+        "pushing": 0.1342,
+        "pulling": 0.0055
+      },
+      "reason": "inference_complete",
+      "person_size_px": 29.2
+    },
+    "32": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.8679,
+      "raw_probs": {
+        "falling": 0.8679,
+        "crawling": 0.0824,
+        "lying_down": 0.0032,
+        "running": 0.0077,
+        "waving_hand": 0.0028,
+        "climbing": 0.0234,
+        "stumbling": 0.001,
+        "pushing": 0.0062,
+        "pulling": 0.0053
+      },
+      "reason": "inference_complete",
+      "person_size_px": 22.6
+    },
+    "33": {
+      "predicted_class": "crawling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.5856,
+      "raw_probs": {
+        "falling": 0.149,
+        "crawling": 0.5856,
+        "lying_down": 0.0168,
+        "running": 0.0557,
+        "waving_hand": 0.0628,
+        "climbing": 0.0076,
+        "stumbling": 0.0065,
+        "pushing": 0.1078,
+        "pulling": 0.0081
+      },
+      "reason": "inference_complete",
+      "person_size_px": 24.1
+    },
+    "34": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.9783,
+      "raw_probs": {
+        "falling": 0.9783,
+        "crawling": 0.0052,
+        "lying_down": 0.0003,
+        "running": 0.001,
+        "waving_hand": 0.0005,
+        "climbing": 0.0014,
+        "stumbling": 0.0001,
+        "pushing": 0.0128,
+        "pulling": 0.0003
+      },
+      "reason": "inference_complete",
+      "person_size_px": 23.9
+    },
+    "35": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.4203,
+      "raw_probs": {
+        "falling": 0.4203,
+        "crawling": 0.0942,
+        "lying_down": 0.0083,
+        "running": 0.1444,
+        "waving_hand": 0.1138,
+        "climbing": 0.008,
+        "stumbling": 0.0044,
+        "pushing": 0.2008,
+        "pulling": 0.0058
+      },
+      "reason": "inference_complete",
+      "person_size_px": 23.4
+    },
+    "36": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.3337,
+      "raw_probs": {
+        "falling": 0.3337,
+        "crawling": 0.1513,
+        "lying_down": 0.0258,
+        "running": 0.1617,
+        "waving_hand": 0.037,
+        "climbing": 0.1207,
+        "stumbling": 0.0105,
+        "pushing": 0.141,
+        "pulling": 0.0181
+      },
+      "reason": "inference_complete",
+      "person_size_px": 24.7
+    },
+    "37": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.5179,
+      "raw_probs": {
+        "falling": 0.5179,
+        "crawling": 0.0961,
+        "lying_down": 0.048,
+        "running": 0.0611,
+        "waving_hand": 0.0203,
+        "climbing": 0.1368,
+        "stumbling": 0.018,
+        "pushing": 0.0826,
+        "pulling": 0.0191
+      },
+      "reason": "inference_complete",
+      "person_size_px": 27.5
+    },
+    "38": {
+      "predicted_class": "climbing",
+      "predicted_sar": "walking",
+      "confidence": 0.7386,
+      "raw_probs": {
+        "falling": 0.1525,
+        "crawling": 0.0163,
+        "lying_down": 0.0056,
+        "running": 0.0357,
+        "waving_hand": 0.0057,
+        "climbing": 0.7386,
+        "stumbling": 0.0043,
+        "pushing": 0.0317,
+        "pulling": 0.0095
+      },
+      "reason": "inference_complete",
+      "person_size_px": 20.6
+    },
+    "39": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.7197,
+      "raw_probs": {
+        "falling": 0.7197,
+        "crawling": 0.0908,
+        "lying_down": 0.0087,
+        "running": 0.0182,
+        "waving_hand": 0.0089,
+        "climbing": 0.1152,
+        "stumbling": 0.0032,
+        "pushing": 0.0265,
+        "pulling": 0.0089
+      },
+      "reason": "inference_complete",
+      "person_size_px": 25.3
+    },
+    "40": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.7132,
+      "raw_probs": {
+        "falling": 0.7132,
+        "crawling": 0.0314,
+        "lying_down": 0.0058,
+        "running": 0.045,
+        "waving_hand": 0.0129,
+        "climbing": 0.0125,
+        "stumbling": 0.0033,
+        "pushing": 0.1701,
+        "pulling": 0.0058
+      },
+      "reason": "inference_complete",
+      "person_size_px": 20.7
+    }
+  },
+  "1.2.3": {
+    "0": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.6362,
+      "raw_probs": {
+        "falling": 0.2326,
+        "crawling": 0.0452,
+        "lying_down": 0.0068,
+        "running": 0.0233,
+        "waving_hand": 0.0153,
+        "climbing": 0.0263,
+        "stumbling": 0.0051,
+        "pushing": 0.6362,
+        "pulling": 0.0092
+      },
+      "reason": "inference_complete",
+      "person_size_px": 28.1
+    },
+    "1": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.3535,
+      "raw_probs": {
+        "falling": 0.3535,
+        "crawling": 0.0306,
+        "lying_down": 0.0175,
+        "running": 0.0409,
+        "waving_hand": 0.0438,
+        "climbing": 0.1963,
+        "stumbling": 0.0195,
+        "pushing": 0.2581,
+        "pulling": 0.0399
+      },
+      "reason": "inference_complete",
+      "person_size_px": 30.7
+    },
+    "2": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.7052,
+      "raw_probs": {
+        "falling": 0.2338,
+        "crawling": 0.0201,
+        "lying_down": 0.0021,
+        "running": 0.0072,
+        "waving_hand": 0.0071,
+        "climbing": 0.0164,
+        "stumbling": 0.0038,
+        "pushing": 0.7052,
+        "pulling": 0.0044
+      },
+      "reason": "inference_complete",
+      "person_size_px": 37.8
+    },
+    "3": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.6134,
+      "raw_probs": {
+        "falling": 0.0775,
+        "crawling": 0.061,
+        "lying_down": 0.0198,
+        "running": 0.0499,
+        "waving_hand": 0.097,
+        "climbing": 0.0353,
+        "stumbling": 0.0254,
+        "pushing": 0.6134,
+        "pulling": 0.0207
+      },
+      "reason": "inference_complete",
+      "person_size_px": 23.0
+    },
+    "4": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.234,
+      "raw_probs": {
+        "falling": 0.1684,
+        "crawling": 0.1965,
+        "lying_down": 0.0645,
+        "running": 0.0563,
+        "waving_hand": 0.063,
+        "climbing": 0.1146,
+        "stumbling": 0.0618,
+        "pushing": 0.234,
+        "pulling": 0.041
+      },
+      "reason": "inference_complete",
+      "person_size_px": 31.7
+    },
+    "5": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.5597,
+      "raw_probs": {
+        "falling": 0.4097,
+        "crawling": 0.0065,
+        "lying_down": 0.0024,
+        "running": 0.01,
+        "waving_hand": 0.0038,
+        "climbing": 0.0059,
+        "stumbling": 0.0009,
+        "pushing": 0.5597,
+        "pulling": 0.0011
+      },
+      "reason": "inference_complete",
+      "person_size_px": 40.7
+    },
+    "6": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.7062,
+      "raw_probs": {
+        "falling": 0.7062,
+        "crawling": 0.0143,
+        "lying_down": 0.0086,
+        "running": 0.0741,
+        "waving_hand": 0.0111,
+        "climbing": 0.0175,
+        "stumbling": 0.0018,
+        "pushing": 0.1643,
+        "pulling": 0.0022
+      },
+      "reason": "inference_complete",
+      "person_size_px": 43.2
+    },
+    "7": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.7681,
+      "raw_probs": {
+        "falling": 0.7681,
+        "crawling": 0.0158,
+        "lying_down": 0.0053,
+        "running": 0.0273,
+        "waving_hand": 0.0047,
+        "climbing": 0.1544,
+        "stumbling": 0.0016,
+        "pushing": 0.0163,
+        "pulling": 0.0065
+      },
+      "reason": "inference_complete",
+      "person_size_px": 49.8
+    },
+    "8": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.6969,
+      "raw_probs": {
+        "falling": 0.6969,
+        "crawling": 0.023,
+        "lying_down": 0.0223,
+        "running": 0.0317,
+        "waving_hand": 0.1362,
+        "climbing": 0.0263,
+        "stumbling": 0.0082,
+        "pushing": 0.0502,
+        "pulling": 0.0053
+      },
+      "reason": "inference_complete",
+      "person_size_px": 37.1
+    },
+    "9": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.4285,
+      "raw_probs": {
+        "falling": 0.1868,
+        "crawling": 0.0308,
+        "lying_down": 0.019,
+        "running": 0.0517,
+        "waving_hand": 0.215,
+        "climbing": 0.0519,
+        "stumbling": 0.0102,
+        "pushing": 0.4285,
+        "pulling": 0.0062
+      },
+      "reason": "inference_complete",
+      "person_size_px": 37.5
+    },
+    "10": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.3632,
+      "raw_probs": {
+        "falling": 0.3632,
+        "crawling": 0.0937,
+        "lying_down": 0.0357,
+        "running": 0.0852,
+        "waving_hand": 0.137,
+        "climbing": 0.0662,
+        "stumbling": 0.0181,
+        "pushing": 0.1666,
+        "pulling": 0.0343
+      },
+      "reason": "inference_complete",
+      "person_size_px": 35.8
+    },
+    "11": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.8963,
+      "raw_probs": {
+        "falling": 0.8963,
+        "crawling": 0.0169,
+        "lying_down": 0.0079,
+        "running": 0.0101,
+        "waving_hand": 0.0047,
+        "climbing": 0.0289,
+        "stumbling": 0.0026,
+        "pushing": 0.023,
+        "pulling": 0.0096
+      },
+      "reason": "inference_complete",
+      "person_size_px": 39.5
+    },
+    "12": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.4938,
+      "raw_probs": {
+        "falling": 0.0759,
+        "crawling": 0.2308,
+        "lying_down": 0.0257,
+        "running": 0.0321,
+        "waving_hand": 0.0113,
+        "climbing": 0.1112,
+        "stumbling": 0.0057,
+        "pushing": 0.4938,
+        "pulling": 0.0135
+      },
+      "reason": "inference_complete",
+      "person_size_px": 40.1
+    },
+    "13": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.6159,
+      "raw_probs": {
+        "falling": 0.6159,
+        "crawling": 0.0115,
+        "lying_down": 0.003,
+        "running": 0.0233,
+        "waving_hand": 0.0143,
+        "climbing": 0.0454,
+        "stumbling": 0.0027,
+        "pushing": 0.2824,
+        "pulling": 0.0016
+      },
+      "reason": "inference_complete",
+      "person_size_px": 34.0
+    },
+    "14": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.6355,
+      "raw_probs": {
+        "falling": 0.6355,
+        "crawling": 0.0155,
+        "lying_down": 0.0064,
+        "running": 0.0092,
+        "waving_hand": 0.0178,
+        "climbing": 0.0135,
+        "stumbling": 0.0017,
+        "pushing": 0.2983,
+        "pulling": 0.0019
+      },
+      "reason": "inference_complete",
+      "person_size_px": 33.6
+    },
+    "15": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.9574,
+      "raw_probs": {
+        "falling": 0.0354,
+        "crawling": 0.002,
+        "lying_down": 0.0004,
+        "running": 0.001,
+        "waving_hand": 0.0011,
+        "climbing": 0.0021,
+        "stumbling": 0.0002,
+        "pushing": 0.9574,
+        "pulling": 0.0003
+      },
+      "reason": "inference_complete",
+      "person_size_px": 32.8
+    },
+    "16": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.8744,
+      "raw_probs": {
+        "falling": 0.8744,
+        "crawling": 0.0149,
+        "lying_down": 0.0161,
+        "running": 0.0108,
+        "waving_hand": 0.0233,
+        "climbing": 0.0243,
+        "stumbling": 0.0019,
+        "pushing": 0.0245,
+        "pulling": 0.0098
+      },
+      "reason": "inference_complete",
+      "person_size_px": 36.3
+    },
+    "17": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.7279,
+      "raw_probs": {
+        "falling": 0.7279,
+        "crawling": 0.0203,
+        "lying_down": 0.0055,
+        "running": 0.0166,
+        "waving_hand": 0.0202,
+        "climbing": 0.0637,
+        "stumbling": 0.0013,
+        "pushing": 0.1378,
+        "pulling": 0.0067
+      },
+      "reason": "inference_complete",
+      "person_size_px": 42.1
+    },
+    "18": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.6071,
+      "raw_probs": {
+        "falling": 0.117,
+        "crawling": 0.0314,
+        "lying_down": 0.0152,
+        "running": 0.0583,
+        "waving_hand": 0.0198,
+        "climbing": 0.1355,
+        "stumbling": 0.0068,
+        "pushing": 0.6071,
+        "pulling": 0.0091
+      },
+      "reason": "inference_complete",
+      "person_size_px": 27.3
+    },
+    "19": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.9969,
+      "raw_probs": {
+        "falling": 0.0008,
+        "crawling": 0.0003,
+        "lying_down": 0.0002,
+        "running": 0.001,
+        "waving_hand": 0.0002,
+        "climbing": 0.0003,
+        "stumbling": 0.0001,
+        "pushing": 0.9969,
+        "pulling": 0.0001
+      },
+      "reason": "inference_complete",
+      "person_size_px": 33.7
+    },
+    "20": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.9124,
+      "raw_probs": {
+        "falling": 0.0713,
+        "crawling": 0.004,
+        "lying_down": 0.0015,
+        "running": 0.005,
+        "waving_hand": 0.0018,
+        "climbing": 0.0025,
+        "stumbling": 0.0006,
+        "pushing": 0.9124,
+        "pulling": 0.0009
+      },
+      "reason": "inference_complete",
+      "person_size_px": 33.5
+    },
+    "21": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.7532,
+      "raw_probs": {
+        "falling": 0.7532,
+        "crawling": 0.1357,
+        "lying_down": 0.0065,
+        "running": 0.0084,
+        "waving_hand": 0.0265,
+        "climbing": 0.0526,
+        "stumbling": 0.0011,
+        "pushing": 0.0066,
+        "pulling": 0.0095
+      },
+      "reason": "inference_complete",
+      "person_size_px": 47.8
+    },
+    "22": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.6223,
+      "raw_probs": {
+        "falling": 0.6223,
+        "crawling": 0.0675,
+        "lying_down": 0.0092,
+        "running": 0.1197,
+        "waving_hand": 0.0437,
+        "climbing": 0.0419,
+        "stumbling": 0.0013,
+        "pushing": 0.086,
+        "pulling": 0.0082
+      },
+      "reason": "inference_complete",
+      "person_size_px": 53.4
+    },
+    "23": {
+      "predicted_class": "running",
+      "predicted_sar": "running",
+      "confidence": 0.3952,
+      "raw_probs": {
+        "falling": 0.0292,
+        "crawling": 0.1094,
+        "lying_down": 0.028,
+        "running": 0.3952,
+        "waving_hand": 0.2542,
+        "climbing": 0.0499,
+        "stumbling": 0.0164,
+        "pushing": 0.0931,
+        "pulling": 0.0246
+      },
+      "reason": "inference_complete",
+      "person_size_px": 42.1
+    },
+    "24": {
+      "predicted_class": "running",
+      "predicted_sar": "running",
+      "confidence": 0.8167,
+      "raw_probs": {
+        "falling": 0.0188,
+        "crawling": 0.0221,
+        "lying_down": 0.0039,
+        "running": 0.8167,
+        "waving_hand": 0.0436,
+        "climbing": 0.0704,
+        "stumbling": 0.0013,
+        "pushing": 0.0184,
+        "pulling": 0.0048
+      },
+      "reason": "inference_complete",
+      "person_size_px": 46.4
+    },
+    "25": {
+      "predicted_class": "running",
+      "predicted_sar": "running",
+      "confidence": 0.838,
+      "raw_probs": {
+        "falling": 0.0105,
+        "crawling": 0.035,
+        "lying_down": 0.0114,
+        "running": 0.838,
+        "waving_hand": 0.0504,
+        "climbing": 0.036,
+        "stumbling": 0.0009,
+        "pushing": 0.0131,
+        "pulling": 0.0047
+      },
+      "reason": "inference_complete",
+      "person_size_px": 45.3
+    },
+    "26": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.6648,
+      "raw_probs": {
+        "falling": 0.6648,
+        "crawling": 0.0183,
+        "lying_down": 0.0091,
+        "running": 0.0658,
+        "waving_hand": 0.0391,
+        "climbing": 0.1073,
+        "stumbling": 0.0032,
+        "pushing": 0.0822,
+        "pulling": 0.0101
+      },
+      "reason": "inference_complete",
+      "person_size_px": 41.5
+    },
+    "27": {
+      "predicted_class": "running",
+      "predicted_sar": "running",
+      "confidence": 0.3774,
+      "raw_probs": {
+        "falling": 0.2897,
+        "crawling": 0.0159,
+        "lying_down": 0.0111,
+        "running": 0.3774,
+        "waving_hand": 0.0282,
+        "climbing": 0.2067,
+        "stumbling": 0.0026,
+        "pushing": 0.0558,
+        "pulling": 0.0126
+      },
+      "reason": "inference_complete",
+      "person_size_px": 44.9
+    },
+    "28": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.45,
+      "raw_probs": {
+        "falling": 0.45,
+        "crawling": 0.0669,
+        "lying_down": 0.0223,
+        "running": 0.1094,
+        "waving_hand": 0.118,
+        "climbing": 0.0907,
+        "stumbling": 0.0263,
+        "pushing": 0.0837,
+        "pulling": 0.0327
+      },
+      "reason": "inference_complete",
+      "person_size_px": 48.6
+    },
+    "29": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.6161,
+      "raw_probs": {
+        "falling": 0.6161,
+        "crawling": 0.0157,
+        "lying_down": 0.0238,
+        "running": 0.0691,
+        "waving_hand": 0.0241,
+        "climbing": 0.0974,
+        "stumbling": 0.0098,
+        "pushing": 0.1268,
+        "pulling": 0.017
+      },
+      "reason": "inference_complete",
+      "person_size_px": 36.8
+    },
+    "30": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.3179,
+      "raw_probs": {
+        "falling": 0.2078,
+        "crawling": 0.0307,
+        "lying_down": 0.0185,
+        "running": 0.2697,
+        "waving_hand": 0.0265,
+        "climbing": 0.0856,
+        "stumbling": 0.0176,
+        "pushing": 0.3179,
+        "pulling": 0.0257
+      },
+      "reason": "inference_complete",
+      "person_size_px": 30.4
+    },
+    "31": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.5926,
+      "raw_probs": {
+        "falling": 0.5926,
+        "crawling": 0.0602,
+        "lying_down": 0.0158,
+        "running": 0.0412,
+        "waving_hand": 0.0263,
+        "climbing": 0.0349,
+        "stumbling": 0.0098,
+        "pushing": 0.2001,
+        "pulling": 0.0191
+      },
+      "reason": "inference_complete",
+      "person_size_px": 35.5
+    },
+    "32": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.7189,
+      "raw_probs": {
+        "falling": 0.1771,
+        "crawling": 0.0214,
+        "lying_down": 0.0113,
+        "running": 0.0163,
+        "waving_hand": 0.0213,
+        "climbing": 0.0098,
+        "stumbling": 0.0127,
+        "pushing": 0.7189,
+        "pulling": 0.0111
+      },
+      "reason": "inference_complete",
+      "person_size_px": 34.8
+    },
+    "33": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.275,
+      "raw_probs": {
+        "falling": 0.275,
+        "crawling": 0.1448,
+        "lying_down": 0.0548,
+        "running": 0.1156,
+        "waving_hand": 0.2057,
+        "climbing": 0.0322,
+        "stumbling": 0.0401,
+        "pushing": 0.0881,
+        "pulling": 0.0437
+      },
+      "reason": "inference_complete",
+      "person_size_px": 35.1
+    },
+    "34": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.7637,
+      "raw_probs": {
+        "falling": 0.7637,
+        "crawling": 0.0093,
+        "lying_down": 0.0064,
+        "running": 0.0249,
+        "waving_hand": 0.0244,
+        "climbing": 0.0107,
+        "stumbling": 0.0037,
+        "pushing": 0.1515,
+        "pulling": 0.0054
+      },
+      "reason": "inference_complete",
+      "person_size_px": 37.7
+    },
+    "35": {
+      "predicted_class": "climbing",
+      "predicted_sar": "walking",
+      "confidence": 0.2938,
+      "raw_probs": {
+        "falling": 0.2621,
+        "crawling": 0.0315,
+        "lying_down": 0.0267,
+        "running": 0.0872,
+        "waving_hand": 0.032,
+        "climbing": 0.2938,
+        "stumbling": 0.0175,
+        "pushing": 0.2184,
+        "pulling": 0.0308
+      },
+      "reason": "inference_complete",
+      "person_size_px": 42.3
+    },
+    "36": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.6008,
+      "raw_probs": {
+        "falling": 0.6008,
+        "crawling": 0.0228,
+        "lying_down": 0.0093,
+        "running": 0.0274,
+        "waving_hand": 0.0493,
+        "climbing": 0.0259,
+        "stumbling": 0.0066,
+        "pushing": 0.2494,
+        "pulling": 0.0084
+      },
+      "reason": "inference_complete",
+      "person_size_px": 34.3
+    },
+    "37": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.3935,
+      "raw_probs": {
+        "falling": 0.3935,
+        "crawling": 0.042,
+        "lying_down": 0.0165,
+        "running": 0.0542,
+        "waving_hand": 0.0252,
+        "climbing": 0.2087,
+        "stumbling": 0.0067,
+        "pushing": 0.2312,
+        "pulling": 0.022
+      },
+      "reason": "inference_complete",
+      "person_size_px": 36.4
+    },
+    "38": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.899,
+      "raw_probs": {
+        "falling": 0.899,
+        "crawling": 0.0055,
+        "lying_down": 0.0047,
+        "running": 0.0107,
+        "waving_hand": 0.0101,
+        "climbing": 0.022,
+        "stumbling": 0.0028,
+        "pushing": 0.0406,
+        "pulling": 0.0046
+      },
+      "reason": "inference_complete",
+      "person_size_px": 26.0
+    }
+  },
+  "2.2.3": {
+    "0": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.9584,
+      "raw_probs": {
+        "falling": 0.0193,
+        "crawling": 0.0027,
+        "lying_down": 0.0013,
+        "running": 0.0091,
+        "waving_hand": 0.003,
+        "climbing": 0.0044,
+        "stumbling": 0.0006,
+        "pushing": 0.9584,
+        "pulling": 0.0012
+      },
+      "reason": "inference_complete",
+      "person_size_px": 35.4
+    },
+    "1": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.8781,
+      "raw_probs": {
+        "falling": 0.0706,
+        "crawling": 0.0116,
+        "lying_down": 0.0023,
+        "running": 0.0212,
+        "waving_hand": 0.0056,
+        "climbing": 0.0065,
+        "stumbling": 0.0015,
+        "pushing": 0.8781,
+        "pulling": 0.0025
+      },
+      "reason": "inference_complete",
+      "person_size_px": 39.5
+    },
+    "2": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.7445,
+      "raw_probs": {
+        "falling": 0.7445,
+        "crawling": 0.0574,
+        "lying_down": 0.0123,
+        "running": 0.0201,
+        "waving_hand": 0.0408,
+        "climbing": 0.035,
+        "stumbling": 0.0102,
+        "pushing": 0.0659,
+        "pulling": 0.0138
+      },
+      "reason": "inference_complete",
+      "person_size_px": 32.2
+    },
+    "3": {
+      "predicted_class": "waving_hand",
+      "predicted_sar": "stationary",
+      "confidence": 0.3434,
+      "raw_probs": {
+        "falling": 0.1442,
+        "crawling": 0.0615,
+        "lying_down": 0.1515,
+        "running": 0.0491,
+        "waving_hand": 0.3434,
+        "climbing": 0.0633,
+        "stumbling": 0.0716,
+        "pushing": 0.0349,
+        "pulling": 0.0807
+      },
+      "reason": "inference_complete",
+      "person_size_px": 29.6
+    },
+    "4": {
+      "predicted_class": "pulling",
+      "predicted_sar": "stationary",
+      "confidence": 0.2067,
+      "raw_probs": {
+        "falling": 0.1147,
+        "crawling": 0.0629,
+        "lying_down": 0.0903,
+        "running": 0.1807,
+        "waving_hand": 0.0478,
+        "climbing": 0.0996,
+        "stumbling": 0.0374,
+        "pushing": 0.16,
+        "pulling": 0.2067
+      },
+      "reason": "inference_complete",
+      "person_size_px": 35.2
+    },
+    "5": {
+      "predicted_class": "running",
+      "predicted_sar": "running",
+      "confidence": 0.5649,
+      "raw_probs": {
+        "falling": 0.0529,
+        "crawling": 0.0574,
+        "lying_down": 0.0153,
+        "running": 0.5649,
+        "waving_hand": 0.1244,
+        "climbing": 0.0478,
+        "stumbling": 0.0069,
+        "pushing": 0.1177,
+        "pulling": 0.0127
+      },
+      "reason": "inference_complete",
+      "person_size_px": 40.1
+    },
+    "6": {
+      "predicted_class": "waving_hand",
+      "predicted_sar": "stationary",
+      "confidence": 0.4908,
+      "raw_probs": {
+        "falling": 0.2257,
+        "crawling": 0.0387,
+        "lying_down": 0.0114,
+        "running": 0.1124,
+        "waving_hand": 0.4908,
+        "climbing": 0.0118,
+        "stumbling": 0.0034,
+        "pushing": 0.0995,
+        "pulling": 0.0063
+      },
+      "reason": "inference_complete",
+      "person_size_px": 42.6
+    },
+    "7": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.7231,
+      "raw_probs": {
+        "falling": 0.0641,
+        "crawling": 0.026,
+        "lying_down": 0.0098,
+        "running": 0.1112,
+        "waving_hand": 0.0302,
+        "climbing": 0.0232,
+        "stumbling": 0.0038,
+        "pushing": 0.7231,
+        "pulling": 0.0086
+      },
+      "reason": "inference_complete",
+      "person_size_px": 39.7
+    },
+    "8": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.8777,
+      "raw_probs": {
+        "falling": 0.8777,
+        "crawling": 0.0325,
+        "lying_down": 0.0094,
+        "running": 0.0124,
+        "waving_hand": 0.0106,
+        "climbing": 0.0153,
+        "stumbling": 0.0126,
+        "pushing": 0.0211,
+        "pulling": 0.0083
+      },
+      "reason": "inference_complete",
+      "person_size_px": 29.6
+    },
+    "9": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.4647,
+      "raw_probs": {
+        "falling": 0.4647,
+        "crawling": 0.1112,
+        "lying_down": 0.0139,
+        "running": 0.0177,
+        "waving_hand": 0.1095,
+        "climbing": 0.0366,
+        "stumbling": 0.0165,
+        "pushing": 0.2181,
+        "pulling": 0.0118
+      },
+      "reason": "inference_complete",
+      "person_size_px": 32.6
+    },
+    "10": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.5351,
+      "raw_probs": {
+        "falling": 0.5351,
+        "crawling": 0.2584,
+        "lying_down": 0.0708,
+        "running": 0.0138,
+        "waving_hand": 0.0427,
+        "climbing": 0.0275,
+        "stumbling": 0.0083,
+        "pushing": 0.0318,
+        "pulling": 0.0116
+      },
+      "reason": "inference_complete",
+      "person_size_px": 36.1
+    },
+    "11": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.9064,
+      "raw_probs": {
+        "falling": 0.9064,
+        "crawling": 0.0267,
+        "lying_down": 0.0023,
+        "running": 0.0031,
+        "waving_hand": 0.0042,
+        "climbing": 0.0033,
+        "stumbling": 0.0005,
+        "pushing": 0.0526,
+        "pulling": 0.001
+      },
+      "reason": "inference_complete",
+      "person_size_px": 37.6
+    },
+    "12": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.7926,
+      "raw_probs": {
+        "falling": 0.7926,
+        "crawling": 0.0169,
+        "lying_down": 0.006,
+        "running": 0.046,
+        "waving_hand": 0.0116,
+        "climbing": 0.0253,
+        "stumbling": 0.003,
+        "pushing": 0.0917,
+        "pulling": 0.0068
+      },
+      "reason": "inference_complete",
+      "person_size_px": 24.2
+    },
+    "13": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.6682,
+      "raw_probs": {
+        "falling": 0.6682,
+        "crawling": 0.0118,
+        "lying_down": 0.0034,
+        "running": 0.0274,
+        "waving_hand": 0.0084,
+        "climbing": 0.0796,
+        "stumbling": 0.0025,
+        "pushing": 0.1937,
+        "pulling": 0.005
+      },
+      "reason": "inference_complete",
+      "person_size_px": 20.4
+    },
+    "14": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.1963,
+      "raw_probs": {
+        "falling": 0.1963,
+        "crawling": 0.0646,
+        "lying_down": 0.0696,
+        "running": 0.1277,
+        "waving_hand": 0.0591,
+        "climbing": 0.1882,
+        "stumbling": 0.0874,
+        "pushing": 0.0712,
+        "pulling": 0.1359
+      },
+      "reason": "inference_complete",
+      "person_size_px": 49.9
+    },
+    "15": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.9776,
+      "raw_probs": {
+        "falling": 0.9776,
+        "crawling": 0.002,
+        "lying_down": 0.0012,
+        "running": 0.0036,
+        "waving_hand": 0.0022,
+        "climbing": 0.0046,
+        "stumbling": 0.0005,
+        "pushing": 0.0073,
+        "pulling": 0.001
+      },
+      "reason": "inference_complete",
+      "person_size_px": 30.3
+    },
+    "16": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.3879,
+      "raw_probs": {
+        "falling": 0.1298,
+        "crawling": 0.0353,
+        "lying_down": 0.0143,
+        "running": 0.3391,
+        "waving_hand": 0.0138,
+        "climbing": 0.0598,
+        "stumbling": 0.0072,
+        "pushing": 0.3879,
+        "pulling": 0.0127
+      },
+      "reason": "inference_complete",
+      "person_size_px": 53.4
+    },
+    "17": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.3933,
+      "raw_probs": {
+        "falling": 0.3933,
+        "crawling": 0.0887,
+        "lying_down": 0.0154,
+        "running": 0.2092,
+        "waving_hand": 0.0506,
+        "climbing": 0.0879,
+        "stumbling": 0.0064,
+        "pushing": 0.1377,
+        "pulling": 0.0108
+      },
+      "reason": "inference_complete",
+      "person_size_px": 61.6
+    },
+    "18": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.5697,
+      "raw_probs": {
+        "falling": 0.5697,
+        "crawling": 0.0469,
+        "lying_down": 0.0166,
+        "running": 0.0422,
+        "waving_hand": 0.0152,
+        "climbing": 0.1134,
+        "stumbling": 0.0068,
+        "pushing": 0.1762,
+        "pulling": 0.0131
+      },
+      "reason": "inference_complete",
+      "person_size_px": 31.6
+    },
+    "19": {
+      "predicted_class": "pushing",
+      "predicted_sar": "stationary",
+      "confidence": 0.4383,
+      "raw_probs": {
+        "falling": 0.0412,
+        "crawling": 0.2683,
+        "lying_down": 0.0144,
+        "running": 0.1456,
+        "waving_hand": 0.0293,
+        "climbing": 0.0488,
+        "stumbling": 0.0052,
+        "pushing": 0.4383,
+        "pulling": 0.0088
+      },
+      "reason": "inference_complete",
+      "person_size_px": 48.0
+    },
+    "20": {
+      "predicted_class": "crawling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.699,
+      "raw_probs": {
+        "falling": 0.0038,
+        "crawling": 0.699,
+        "lying_down": 0.002,
+        "running": 0.0275,
+        "waving_hand": 0.0037,
+        "climbing": 0.0045,
+        "stumbling": 0.0011,
+        "pushing": 0.2569,
+        "pulling": 0.0013
+      },
+      "reason": "inference_complete",
+      "person_size_px": 38.1
+    },
+    "21": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.9063,
+      "raw_probs": {
+        "falling": 0.9063,
+        "crawling": 0.0088,
+        "lying_down": 0.0049,
+        "running": 0.012,
+        "waving_hand": 0.0048,
+        "climbing": 0.0423,
+        "stumbling": 0.0021,
+        "pushing": 0.0155,
+        "pulling": 0.0033
+      },
+      "reason": "inference_complete",
+      "person_size_px": 38.6
+    },
+    "22": {
+      "predicted_class": "crawling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.7089,
+      "raw_probs": {
+        "falling": 0.0545,
+        "crawling": 0.7089,
+        "lying_down": 0.0063,
+        "running": 0.0903,
+        "waving_hand": 0.0318,
+        "climbing": 0.0216,
+        "stumbling": 0.0019,
+        "pushing": 0.081,
+        "pulling": 0.0038
+      },
+      "reason": "inference_complete",
+      "person_size_px": 39.9
+    },
+    "23": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.6197,
+      "raw_probs": {
+        "falling": 0.6197,
+        "crawling": 0.0518,
+        "lying_down": 0.0149,
+        "running": 0.0209,
+        "waving_hand": 0.0675,
+        "climbing": 0.0607,
+        "stumbling": 0.0044,
+        "pushing": 0.1545,
+        "pulling": 0.0056
+      },
+      "reason": "inference_complete",
+      "person_size_px": 36.5
+    },
+    "24": {
+      "predicted_class": "falling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.15,
+      "raw_probs": {
+        "falling": 0.15,
+        "crawling": 0.1063,
+        "lying_down": 0.0931,
+        "running": 0.1367,
+        "waving_hand": 0.1456,
+        "climbing": 0.1208,
+        "stumbling": 0.0762,
+        "pushing": 0.0803,
+        "pulling": 0.0911
+      },
+      "reason": "inference_complete",
+      "person_size_px": 56.8
+    },
+    "27": {
+      "predicted_class": "climbing",
+      "predicted_sar": "walking",
+      "confidence": 0.3438,
+      "raw_probs": {
+        "falling": 0.3437,
+        "crawling": 0.0201,
+        "lying_down": 0.0168,
+        "running": 0.069,
+        "waving_hand": 0.0226,
+        "climbing": 0.3438,
+        "stumbling": 0.0063,
+        "pushing": 0.1595,
+        "pulling": 0.0183
+      },
+      "reason": "inference_complete",
+      "person_size_px": 38.8
+    },
+    "28": {
+      "predicted_class": "crawling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.4786,
+      "raw_probs": {
+        "falling": 0.1066,
+        "crawling": 0.4786,
+        "lying_down": 0.0248,
+        "running": 0.0946,
+        "waving_hand": 0.0669,
+        "climbing": 0.0691,
+        "stumbling": 0.0067,
+        "pushing": 0.1351,
+        "pulling": 0.0177
+      },
+      "reason": "inference_complete",
+      "person_size_px": 53.3
+    },
+    "29": {
+      "predicted_class": "running",
+      "predicted_sar": "running",
+      "confidence": 0.5952,
+      "raw_probs": {
+        "falling": 0.0056,
+        "crawling": 0.2599,
+        "lying_down": 0.0098,
+        "running": 0.5952,
+        "waving_hand": 0.0177,
+        "climbing": 0.0059,
+        "stumbling": 0.0014,
+        "pushing": 0.1018,
+        "pulling": 0.0026
+      },
+      "reason": "inference_complete",
+      "person_size_px": 43.0
+    },
+    "30": {
+      "predicted_class": "running",
+      "predicted_sar": "running",
+      "confidence": 0.6639,
+      "raw_probs": {
+        "falling": 0.0133,
+        "crawling": 0.2639,
+        "lying_down": 0.003,
+        "running": 0.6639,
+        "waving_hand": 0.0169,
+        "climbing": 0.007,
+        "stumbling": 0.0004,
+        "pushing": 0.0306,
+        "pulling": 0.001
+      },
+      "reason": "inference_complete",
+      "person_size_px": 37.8
+    },
+    "31": {
+      "predicted_class": "crawling",
+      "predicted_sar": "lying_down",
+      "confidence": 0.8884,
+      "raw_probs": {
+        "falling": 0.0071,
+        "crawling": 0.8884,
+        "lying_down": 0.0022,
+        "running": 0.0415,
+        "waving_hand": 0.0445,
+        "climbing": 0.0019,
+        "stumbling": 0.0003,
+        "pushing": 0.0131,
+        "pulling": 0.001
+      },
+      "reason": "inference_complete",
+      "person_size_px": 42.6
+    }
+  }
+}

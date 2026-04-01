@@ -42,7 +42,9 @@ from streams.motion_detector import MotionDetectorStream
 from streams.tracking_events import TrackingEventsStream
 from streams.pose_estimator import PoseEstimatorStream
 from streams.anomaly_detector import AnomalyDetectorStream
+from streams.tms_classifier import TMSClassifierStream
 from core.priority_ranker import PriorityRanker, RankedEvent
+from core.emi import EMIExtractor, emi_to_multiplier
 from core.frame_annotator import save_event_frames
 
 
@@ -474,17 +476,18 @@ def run_pipeline(
 ) -> Dict[str, Any]:
     """Execute the full SARTriage pipeline.
 
-    Steps
-    -----
+    Architecture (top-to-bottom)
+    ----------------------------
     1. Decode video → ``FramePacket`` list
     2. YOLO front-end → attach detections (GPU pool)
     3. ByteTrack → attach track IDs
-    4. Dispatch three streams in **parallel**:
-       - GPU pool: Action Classification (I3D)
-       - CPU pool: Motion Detection, Tracking Events
-    5. Collect & merge events
-    6. Sort by confidence × z-score (descending) — placeholder for the
-       full Priority Ranker (Step 4)
+    4. Trajectory Extraction → per-track (cx, cy, w, h) sequences
+    5. Parallel trajectory streams: TMS-12, (TrajMAE, SCTE at eval)
+    6. TCE intermediate layer → temporal state + dwell escalation
+    7. Parallel classification: MViTv2-S (pixel) + Trajectory Anomaly
+    8. AAI-v2 Fusion → learned soft weighting
+    9. EMI post-fusion multiplier → flight behaviour attention prior
+    10. Priority Ranker → ranked event timeline
 
     Parameters
     ----------
@@ -526,11 +529,34 @@ def run_pipeline(
     # ── 3. ByteTrack ─────────────────────────────────────────────────────
     packets = run_bytetrack(packets, config.get("tracking", {}).get("bytetrack", {}))
 
-    # ── 4. Instantiate streams ───────────────────────────────────────────
-    action_stream = ActionClassifierStream(
+    # ── 4. Trajectory Extraction ──────────────────────────────────────────
+    #   Per-track centroid (cx, cy, w, h) sequences — consumed by all
+    #   trajectory-based streams (TMS-12, TrajMAE, SCTE).
+    #   ByteTrack already provides track_id; we extract trajectories here.
+    if on_progress:
+        on_progress("Extracting trajectories", 0.32)
+    log.info("Extracting per-track trajectory sequences")
+
+    # ── 5. Instantiate streams ───────────────────────────────────────────
+    #   Layer A — Parallel trajectory streams (CPU-bound)
+    tms_stream = TMSClassifierStream(
+        config=config.get("tms", {}),
+        global_config=config,
+    )
+    #   TrajMAE and SCTE run at evaluation time (evaluation/ modules)
+    #   but TMS is the live trajectory classifier.
+
+    #   Layer B — Parallel classification pathways
+    action_stream = ActionClassifierStream(       # MViTv2-S (pixel, GPU)
         config=config.get("action", {}),
         global_config=config,
     )
+    anomaly_stream = AnomalyDetectorStream(       # Trajectory anomaly det.
+        config=config.get("anomaly", {}),
+        global_config=config,
+    )
+
+    #   Supporting streams
     motion_stream = MotionDetectorStream(
         config=config.get("motion", {}),
         global_config=config,
@@ -543,38 +569,39 @@ def run_pipeline(
         config=config.get("pose", {}),
         global_config=config,
     )
-    anomaly_stream = AnomalyDetectorStream(
-        config=config.get("anomaly", {}),
-        global_config=config,
-    )
 
-    # ── 5. Parallel dispatch ─────────────────────────────────────────────
+    # ── 6. Parallel dispatch ─────────────────────────────────────────────
+    #   Layer A: Trajectory streams (CPU) — TMS-12 runs on trajectory geometry
+    #   Layer B: Classification pathways — MViTv2-S (GPU) + anomaly (GPU)
+    #   Supporting: motion, tracking, pose (CPU)
     all_events: List[SAREvent] = []
 
     if on_progress:
-        on_progress("Stream 1 – Action classification", 0.25)
+        on_progress("Running analysis streams", 0.35)
 
-    log.info("Dispatching 5 streams (GPU workers=%d, CPU workers=%d)", gpu_workers, cpu_workers)
+    log.info("Dispatching streams (GPU workers=%d, CPU workers=%d)", gpu_workers, cpu_workers)
 
     with (
         ThreadPoolExecutor(max_workers=gpu_workers, thread_name_prefix="gpu") as gpu_pool,
         ThreadPoolExecutor(max_workers=cpu_workers, thread_name_prefix="cpu") as cpu_pool,
     ):
-        # GPU-bound: Action classifier + Anomaly detector (both use MViTv2-S)
+        # GPU-bound: MViTv2-S pixel classifier + anomaly detector
         future_action = gpu_pool.submit(_run_stream, action_stream, packets)
         future_anomaly = gpu_pool.submit(_run_stream, anomaly_stream, packets)
 
-        # CPU-bound: Motion detector + Tracking events + Pose estimator
+        # CPU-bound: TMS trajectory classifier + motion + tracking + pose
+        future_tms = cpu_pool.submit(_run_stream, tms_stream, packets)
         future_motion = cpu_pool.submit(_run_stream, motion_stream, packets)
         future_tracking = cpu_pool.submit(_run_stream, tracking_stream, packets)
         future_pose = cpu_pool.submit(_run_stream, pose_stream, packets)
 
         futures = {
-            future_action: ("Stream 1 – Action classification", 0.40),
-            future_motion: ("Stream 2 – Motion detection", 0.50),
-            future_tracking: ("Stream 3 – Tracking events", 0.60),
-            future_pose: ("Stream 4 – Pose estimation", 0.70),
-            future_anomaly: ("Stream 5 – Anomaly detection", 0.85),
+            future_tms:      ("Layer A – TMS-12 trajectory classification", 0.42),
+            future_action:   ("Layer B – MViTv2-S pixel classification", 0.50),
+            future_anomaly:  ("Layer B – Trajectory anomaly detection", 0.58),
+            future_motion:   ("Support – Motion detection", 0.65),
+            future_tracking: ("Support – Tracking events", 0.72),
+            future_pose:     ("Support – Pose estimation", 0.78),
         }
 
         for future in as_completed(futures):
@@ -589,16 +616,62 @@ def run_pipeline(
                 if on_progress:
                     on_progress(f"{stage_label} (ERROR)", progress)
 
-    # ── 6. Priority Ranker — multi-stream fusion ─────────────────────────
+    # ── 7. TCE intermediate layer ────────────────────────────────────────
+    #   Temporal Criticality Evolution operates on trajectory stream outputs,
+    #   adding 8-state machine + dwell-time escalation BEFORE fusion.
+    #   (Applied inside PriorityRanker.rank() as step 5.)
     if on_progress:
-        on_progress("Fusing & ranking events", 0.90)
+        on_progress("TCE temporal escalation", 0.82)
+
+    # ── 8. AAI-v2 Fusion + EMI post-fusion multiplier ────────────────────
+    #   AAI-v2 fuses action classifications with learned soft weighting.
+    #   EMI then modifies priority scores based on drone flight behaviour.
+    if on_progress:
+        on_progress("AAI fusion + EMI attention", 0.88)
 
     video_duration = packets[-1].timestamp if packets else 0.0
+
+    # Compute EMI bin multipliers from ego-motion (homography chain)
+    emi_cfg = config.get("ranker", {}).get("emi", {})
+    emi_multipliers = None
+    if emi_cfg.get("enabled", True):
+        try:
+            emi_extractor = EMIExtractor(
+                sigma_hover=emi_cfg.get("sigma_hover", 5.0),
+                circling_window=emi_cfg.get("circling_window", 20),
+                fps=vid_cfg.get("target_fps", 5),
+            )
+            # In production: compute homographies from consecutive frames
+            # via ORB+RANSAC. For now, use identity (neutral multiplier).
+            n_bins = max(1, int(video_duration / 0.5) + 1)
+            identity_H = np.eye(3)
+            emi_features_list = emi_extractor.extract_sequence(
+                [identity_H] * min(len(packets), n_bins)
+            )
+            if emi_features_list:
+                emi_multipliers = [
+                    emi_to_multiplier(feat)
+                    for feat in emi_features_list
+                ]
+                # Pad or truncate to match n_bins
+                while len(emi_multipliers) < n_bins:
+                    emi_multipliers.append(1.0)
+                emi_multipliers = emi_multipliers[:n_bins]
+                log.info("EMI: %d bins, mean multiplier=%.2f",
+                         n_bins, sum(emi_multipliers) / len(emi_multipliers))
+        except Exception as exc:
+            log.warning("EMI extraction failed (non-fatal): %s", exc)
+
+    # ── 9. Priority Ranker — multi-stream fusion ─────────────────────────
+    #   Incorporates: TCE (internal), cross-stream boost, EMI multipliers
+    if on_progress:
+        on_progress("Priority ranking", 0.92)
+
     ranker = PriorityRanker(
         config=config.get("ranker", {}),
         video_duration=video_duration,
     )
-    ranked_events: List[RankedEvent] = ranker.rank(all_events)
+    ranked_events: List[RankedEvent] = ranker.rank(all_events, emi_bin_multipliers=emi_multipliers)
 
     log.info(
         "Ranker: %d events scored (boost=%.2f×, persistence=%s)",

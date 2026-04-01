@@ -1,0 +1,46 @@
+{
+  "sequence": "1.1.8",
+  "n_sampled_frames": 100,
+  "n_yolo_detections": 791,
+  "yolo_time_s": 8.927767038345337,
+  "methods": {
+    "gt_assignment": {
+      "valid_tracks": 14,
+      "matched_dets": 403,
+      "unmatched_dets": 388,
+      "track_lengths": {
+        "min": 5,
+        "max": 55,
+        "mean": 28.428571428571427
+      },
+      "time_s": 0.005300045013427734
+    },
+    "bytetrack": {
+      "best_config": "",
+      "total_ids": 0,
+      "valid_tracks": 0,
+      "track_lengths": {
+        "min": 0,
+        "max": 0,
+        "mean": 0.0
+      },
+      "time_s": 0.1666707992553711,
+      "failure_reason": "ByteTrack IoU matching fails at 15-22px: 6-frame gap causes person displacement > bbox size, IoU drops to 0, tracks fragment into single-frame IDs."
+    },
+    "simple_tracker": {
+      "total_ids": 134,
+      "valid_tracks": 35,
+      "track_lengths": {
+        "min": 5,
+        "max": 60,
+        "mean": 17.97142857142857
+      },
+      "gt_covered": 11,
+      "gt_fragmented": 5,
+      "gt_missed": 3,
+      "coverage_rate": 0.7857142857142857,
+      "time_s": 0.011146068572998047
+    }
+  },
+  "key_finding": "ByteTrack fails catastrophically on 15-22px persons with 6-frame sampling gap. The IoU between consecutive detections of the same person drops to ~0 because the person moves 5-10px between frames but the bbox is only 15-22px. This demonstrates why production SAR systems need either: (1) higher frame rate, (2) centroid-based trackers instead of IoU-based, or (3) Kalman prediction with appearance features."
+}

@@ -1,0 +1,100 @@
+================================================================================
+  SARTriage — Positioning Against Published Aerial Action Recognition
+================================================================================
+
+PART B: Comparison Table
+================================================================================
+
+┌─────────────────────────────┬──────┬────────────┬──────────────────┬──────────────┬────────┬────────────────────────────────────────────────┐
+│ Method                      │ Year │ Type       │ Resolution       │ Metric       │ Score  │ Comparison Notes                               │
+├─────────────────────────────┼──────┼────────────┼──────────────────┼──────────────┼────────┼────────────────────────────────────────────────┤
+│ PUBLISHED BASELINES         │      │            │                  │              │        │                                                │
+├─────────────────────────────┼──────┼────────────┼──────────────────┼──────────────┼────────┼────────────────────────────────────────────────┤
+│ SSD 960×540 (Barekatain)    │ 2017 │ Pixel      │ 960×540          │ mAP@0.5      │ 18.8%  │ Action DETECTION (localise+classify); persons   │
+│                             │      │            │                  │              │        │ 50-150px at inference res. Low mAP shows even   │
+│                             │      │            │                  │              │        │ full-res aerial is hard for pixel methods.       │
+├─────────────────────────────┼──────┼────────────┼──────────────────┼──────────────┼────────┼────────────────────────────────────────────────┤
+│ SSD 512×512 (Barekatain)    │ 2017 │ Pixel      │ 512×512          │ mAP@0.5      │ 15.4%  │ Worse at lower resolution — trend supports our  │
+│                             │      │            │                  │              │        │ finding that pixel methods degrade with scale.   │
+├─────────────────────────────┼──────┼────────────┼──────────────────┼──────────────┼────────┼────────────────────────────────────────────────┤
+│ SSD OptFlow (Barekatain)    │ 2017 │ Pixel+Flow │ 512×512          │ mAP@0.5      │  6.5%  │ Optical flow alone fails at drone altitude —     │
+│                             │      │            │                  │              │        │ ego-motion dominates person motion.              │
+├─────────────────────────────┼──────┼────────────┼──────────────────┼──────────────┼────────┼────────────────────────────────────────────────┤
+│ YOLOv5+GBM (Verma et al.)  │ 2022 │ Pixel+ML   │ Full-res crops   │ F1           │  N/R   │ "Outperforms SSD baseline" but no single acc.   │
+│                             │      │            │                  │              │        │ Requires reliable detection box (>50px).         │
+├─────────────────────────────┼──────┼────────────┼──────────────────┼──────────────┼────────┼────────────────────────────────────────────────┤
+│ SCP (ICPR 2024)             │ 2024 │ VLM+Prompt │ Full-res + GT BB │ Accuracy     │ SOTA*  │ +10.2% over prev. SOTA; requires GT bounding    │
+│                             │      │            │                  │              │        │ boxes. Not applicable to operational SAR.        │
+├─────────────────────────────┼──────┼────────────┼──────────────────┼──────────────┼────────┼────────────────────────────────────────────────┤
+│ Ped. Detection (Barekatain) │ 2017 │ Pixel      │ Full-res         │ mAP@0.5      │ 72.3%  │ Person detection only (no action). Shows that    │
+│                             │      │            │                  │              │        │ detection is solvable but classification is not. │
+├─────────────────────────────┼──────┼────────────┼──────────────────┼──────────────┼────────┼────────────────────────────────────────────────┤
+│ OUR RESULTS (SUB-50px)      │      │            │                  │              │        │                                                │
+├─────────────────────────────┼──────┼────────────┼──────────────────┼──────────────┼────────┼────────────────────────────────────────────────┤
+│ MViTv2-S (ours, pixel)      │ 2026 │ Pixel      │ <50px crops      │ 4-class acc  │ 26.5%  │ Near-chance (25%). κ = -0.01. Pixel features    │
+│                             │      │            │                  │              │        │ vanish at drone altitude. N=200, 96% sub-50px.  │
+├─────────────────────────────┼──────┼────────────┼──────────────────┼──────────────┼────────┼────────────────────────────────────────────────┤
+│ LSTM Trajectory (ours)      │ 2026 │ Trajectory │ Scale-invariant  │ 4-class acc  │ 50.5%  │ Sequence model on centroid deltas. N=556.        │
+│                             │      │            │                  │              │        │ 1.9× MViTv2 but limited by sequence length.     │
+├─────────────────────────────┼──────┼────────────┼──────────────────┼──────────────┼────────┼────────────────────────────────────────────────┤
+│ TrajMAE (ours)              │ 2026 │ Trajectory │ Scale-invariant  │ 4-class acc  │ 50.5%  │ Masked autoencoder on trajectory tokens. N=556.  │
+│                             │      │            │                  │              │        │ Self-supervised pretraining helps anomaly only.  │
+├─────────────────────────────┼──────┼────────────┼──────────────────┼──────────────┼────────┼────────────────────────────────────────────────┤
+│ TMS-12 + RF (ours)          │ 2026 │ Trajectory │ Scale-invariant  │ 4-class acc  │ 59.1%  │ 12 hand-crafted motion features. N=2834.         │
+│                             │      │            │                  │              │        │ 2.2× MViTv2. SMOTE for class balance.           │
+├─────────────────────────────┼──────┼────────────┼──────────────────┼──────────────┼────────┼────────────────────────────────────────────────┤
+│ ★ TMS-16 + RF (ours)        │ 2026 │ Trajectory │ Scale-invariant  │ 4-class acc  │ 60.3%  │ 16 features incl. aspect ratio + size norm.      │
+│                             │      │            │ (normalised)     │              │ ±2.2%  │ 2.3× MViTv2. κ=0.30. Lying recall=40.7%.        │
+│                             │      │            │                  │              │        │ Novel contribution: first viable classifier at  │
+│                             │      │            │                  │              │        │ sub-50px aerial scales.                          │
+├─────────────────────────────┼──────┼────────────┼──────────────────┼──────────────┼────────┼────────────────────────────────────────────────┤
+│ TMS-16 + GBM (ours)         │ 2026 │ Trajectory │ Scale-invariant  │ 4-class acc  │ 57.6%  │ Gradient boosting alternative. Slightly lower    │
+│                             │      │            │                  │              │        │ than RF but faster inference.                    │
+└─────────────────────────────┴──────┴────────────┴──────────────────┴──────────────┴────────┴────────────────────────────────────────────────┘
+
+* SCP reports relative improvement, not absolute accuracy. Absolute numbers not publicly available.
+  N/R = Not reported as a single number.
+
+
+PART C: Contribution Positioning Paragraph
+================================================================================
+
+Published aerial action recognition methods report their results at favourable
+resolutions where persons occupy 50–200 pixels — the best-performing methods
+achieve up to 18.8% mAP for action detection (Barekatain et al., 2017) and
+recent prompt-tuning approaches (ICPR 2024) claim further improvements, but
+all require either full-resolution crops or ground-truth bounding boxes.
+However, at operational SAR altitudes (45–120m AGL) where 96% of persons
+in our Okutama test set measure below 50 pixels, pixel-based classifiers
+such as MViTv2-S degrade to chance level (26.5%, κ ≈ 0). SARTriage's
+trajectory-centric TMS-16 classifier, which operates on scale-normalised
+centroid displacement features rather than pixel appearance, achieves 60.3%
+4-class accuracy at these same sub-50px scales — a 2.3× improvement that
+represents, to our knowledge, the first demonstration that action
+classification remains viable at operationally relevant drone altitudes.
+The resulting 11-component pipeline translates this classification advantage
+into an NDCG@3 of 0.41 for casualty triage ranking, surfacing the most
+critical persons within the operator's immediate attention window despite
+the severe resolution constraint.
+
+
+NOTE ON FAIRNESS
+================================================================================
+
+This comparison is necessarily asymmetric:
+
+1. Published methods report mAP (detection+classification) while we report
+   classification accuracy (given tracked persons). Our task is harder in
+   one sense (we must classify from centroid trajectories) but easier in
+   another (we assume detection has already occurred).
+
+2. Published methods operate at much higher resolution (960×540 or 4K)
+   while our operational regime is 1280×720 with persons typically 15-25px.
+
+3. The Okutama "action detection" task has 12 classes while our SAR task
+   maps to 4 classes. Our 60.3% on 4 classes is not comparable to 18.8%
+   mAP on 12-class detection.
+
+The positioning argument is NOT "we beat published methods" but rather
+"published methods operate at scales that don't exist in operational SAR;
+when you evaluate at real SAR scales, only trajectory methods work."

@@ -1,0 +1,558 @@
+{
+  "1.1.8": {
+    "0": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.1775
+    },
+    "1": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.1546
+    },
+    "2": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.1711
+    },
+    "3": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1653
+    },
+    "4": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1473
+    },
+    "5": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.3204
+    },
+    "6": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.1702
+    },
+    "7": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.2095
+    },
+    "8": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.2562
+    },
+    "9": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.3013
+    },
+    "10": {
+      "predicted_sar": "walking",
+      "predicted_raw": "stumbling",
+      "confidence": 0.1494
+    },
+    "11": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.1585
+    },
+    "12": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.2063
+    },
+    "13": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1875
+    },
+    "14": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.1965
+    },
+    "15": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.2294
+    },
+    "16": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "crawling",
+      "confidence": 0.1772
+    },
+    "17": {
+      "predicted_sar": "walking",
+      "predicted_raw": "stumbling",
+      "confidence": 0.2034
+    },
+    "18": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "falling",
+      "confidence": 0.1594
+    },
+    "19": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "waving_hand",
+      "confidence": 0.1603
+    },
+    "20": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "lying_down",
+      "confidence": 0.1671
+    },
+    "21": {
+      "predicted_sar": "walking",
+      "predicted_raw": "climbing",
+      "confidence": 0.2065
+    },
+    "22": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "lying_down",
+      "confidence": 0.174
+    },
+    "23": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.1773
+    },
+    "24": {
+      "predicted_sar": "walking",
+      "predicted_raw": "stumbling",
+      "confidence": 0.1404
+    },
+    "25": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1602
+    },
+    "26": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.197
+    },
+    "27": {
+      "predicted_sar": "walking",
+      "predicted_raw": "stumbling",
+      "confidence": 0.1576
+    },
+    "28": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1478
+    },
+    "29": {
+      "predicted_sar": "walking",
+      "predicted_raw": "climbing",
+      "confidence": 0.1614
+    },
+    "30": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.1793
+    },
+    "31": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1863
+    },
+    "32": {
+      "predicted_sar": "walking",
+      "predicted_raw": "stumbling",
+      "confidence": 0.1682
+    },
+    "33": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.1808
+    },
+    "34": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.1938
+    },
+    "35": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.2007
+    },
+    "36": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.174
+    },
+    "37": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.1657
+    },
+    "38": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "lying_down",
+      "confidence": 0.1563
+    },
+    "39": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "waving_hand",
+      "confidence": 0.1509
+    },
+    "40": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.1521
+    }
+  },
+  "1.2.3": {
+    "0": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1533
+    },
+    "1": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1741
+    },
+    "2": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1942
+    },
+    "3": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "lying_down",
+      "confidence": 0.1598
+    },
+    "4": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "falling",
+      "confidence": 0.245
+    },
+    "5": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "lying_down",
+      "confidence": 0.1763
+    },
+    "6": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.188
+    },
+    "7": {
+      "predicted_sar": "running",
+      "predicted_raw": "running",
+      "confidence": 0.1788
+    },
+    "8": {
+      "predicted_sar": "walking",
+      "predicted_raw": "climbing",
+      "confidence": 0.1804
+    },
+    "9": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "lying_down",
+      "confidence": 0.1958
+    },
+    "10": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "crawling",
+      "confidence": 0.1686
+    },
+    "11": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1885
+    },
+    "12": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "lying_down",
+      "confidence": 0.1681
+    },
+    "13": {
+      "predicted_sar": "walking",
+      "predicted_raw": "climbing",
+      "confidence": 0.1718
+    },
+    "14": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1582
+    },
+    "15": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.2056
+    },
+    "16": {
+      "predicted_sar": "walking",
+      "predicted_raw": "climbing",
+      "confidence": 0.1723
+    },
+    "17": {
+      "predicted_sar": "walking",
+      "predicted_raw": "climbing",
+      "confidence": 0.1772
+    },
+    "18": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1693
+    },
+    "19": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "falling",
+      "confidence": 0.1546
+    },
+    "20": {
+      "predicted_sar": "walking",
+      "predicted_raw": "climbing",
+      "confidence": 0.1657
+    },
+    "21": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1628
+    },
+    "22": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.146
+    },
+    "23": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "lying_down",
+      "confidence": 0.158
+    },
+    "24": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "falling",
+      "confidence": 0.2397
+    },
+    "25": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "falling",
+      "confidence": 0.2365
+    },
+    "26": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1454
+    },
+    "27": {
+      "predicted_sar": "walking",
+      "predicted_raw": "climbing",
+      "confidence": 0.1582
+    },
+    "28": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.2502
+    },
+    "29": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.2292
+    },
+    "30": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.2231
+    },
+    "31": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "falling",
+      "confidence": 0.2267
+    },
+    "32": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.2033
+    },
+    "33": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "falling",
+      "confidence": 0.1846
+    },
+    "34": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "falling",
+      "confidence": 0.1974
+    },
+    "35": {
+      "predicted_sar": "walking",
+      "predicted_raw": "climbing",
+      "confidence": 0.141
+    },
+    "36": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.2955
+    },
+    "37": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.2196
+    },
+    "38": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.2065
+    }
+  },
+  "2.2.3": {
+    "0": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "falling",
+      "confidence": 0.1826
+    },
+    "1": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.2133
+    },
+    "2": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.181
+    },
+    "3": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.2201
+    },
+    "4": {
+      "predicted_sar": "walking",
+      "predicted_raw": "stumbling",
+      "confidence": 0.1524
+    },
+    "5": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1834
+    },
+    "6": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "lying_down",
+      "confidence": 0.2248
+    },
+    "7": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "lying_down",
+      "confidence": 0.1971
+    },
+    "8": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1711
+    },
+    "9": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "lying_down",
+      "confidence": 0.2069
+    },
+    "10": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.2323
+    },
+    "11": {
+      "predicted_sar": "walking",
+      "predicted_raw": "stumbling",
+      "confidence": 0.1411
+    },
+    "12": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "lying_down",
+      "confidence": 0.1754
+    },
+    "13": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1699
+    },
+    "14": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1613
+    },
+    "15": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1752
+    },
+    "16": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "waving_hand",
+      "confidence": 0.1476
+    },
+    "17": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "waving_hand",
+      "confidence": 0.2183
+    },
+    "18": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1553
+    },
+    "19": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "waving_hand",
+      "confidence": 0.2196
+    },
+    "20": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "waving_hand",
+      "confidence": 0.2374
+    },
+    "21": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.3021
+    },
+    "22": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "lying_down",
+      "confidence": 0.1693
+    },
+    "23": {
+      "predicted_sar": "walking",
+      "predicted_raw": "stumbling",
+      "confidence": 0.1463
+    },
+    "24": {
+      "predicted_sar": "walking",
+      "predicted_raw": "stumbling",
+      "confidence": 0.1757
+    },
+    "27": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1481
+    },
+    "28": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1527
+    },
+    "29": {
+      "predicted_sar": "lying_down",
+      "predicted_raw": "falling",
+      "confidence": 0.2047
+    },
+    "30": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1476
+    },
+    "31": {
+      "predicted_sar": "stationary",
+      "predicted_raw": "pushing",
+      "confidence": 0.1849
+    }
+  }
+}

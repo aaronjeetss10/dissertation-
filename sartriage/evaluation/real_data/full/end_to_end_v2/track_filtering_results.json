@@ -1,0 +1,236 @@
+{
+  "NO_FILTER": {
+    "config": {
+      "min_frames": 5,
+      "min_conf": 0.0,
+      "min_size": 0,
+      "max_speed_cv": 999
+    },
+    "total_tracks_before": 217,
+    "total_tracks_after": 217,
+    "retention_rate": 1.0,
+    "gt_matched_retained": 84,
+    "ndcg3": 0.21755454634913796,
+    "ndcg5": 0.2974911606813689,
+    "ndcg3_per_seq": [
+      0.40266363904741387,
+      0.08333333333333334,
+      0.16666666666666669
+    ]
+  },
+  "LENGTH_10": {
+    "config": {
+      "min_frames": 10,
+      "min_conf": 0.0,
+      "min_size": 0,
+      "max_speed_cv": 999
+    },
+    "total_tracks_before": 217,
+    "total_tracks_after": 120,
+    "retention_rate": 0.5529953917050692,
+    "gt_matched_retained": 70,
+    "ndcg3": 0.2932817615337845,
+    "ndcg5": 0.3082982051350565,
+    "ndcg3_per_seq": [
+      0.40266363904741387,
+      0.08333333333333334,
+      0.39384831222060623
+    ]
+  },
+  "LENGTH_15": {
+    "config": {
+      "min_frames": 15,
+      "min_conf": 0.0,
+      "min_size": 0,
+      "max_speed_cv": 999
+    },
+    "total_tracks_before": 217,
+    "total_tracks_after": 84,
+    "retention_rate": 0.3870967741935484,
+    "gt_matched_retained": 55,
+    "ndcg3": 0.2618753212825273,
+    "ndcg5": 0.3254576939015516,
+    "ndcg3_per_seq": [
+      0.3084443182936423,
+      0.08333333333333334,
+      0.39384831222060623
+    ]
+  },
+  "CONF_0.2": {
+    "config": {
+      "min_frames": 5,
+      "min_conf": 0.2,
+      "min_size": 0,
+      "max_speed_cv": 999
+    },
+    "total_tracks_before": 217,
+    "total_tracks_after": 217,
+    "retention_rate": 1.0,
+    "gt_matched_retained": 84,
+    "ndcg3": 0.21755454634913796,
+    "ndcg5": 0.2974911606813689,
+    "ndcg3_per_seq": [
+      0.40266363904741387,
+      0.08333333333333334,
+      0.16666666666666669
+    ]
+  },
+  "CONF_0.3": {
+    "config": {
+      "min_frames": 5,
+      "min_conf": 0.3,
+      "min_size": 0,
+      "max_speed_cv": 999
+    },
+    "total_tracks_before": 217,
+    "total_tracks_after": 213,
+    "retention_rate": 0.9815668202764977,
+    "gt_matched_retained": 83,
+    "ndcg3": 0.21755454634913796,
+    "ndcg5": 0.2974911606813689,
+    "ndcg3_per_seq": [
+      0.40266363904741387,
+      0.08333333333333334,
+      0.16666666666666669
+    ]
+  },
+  "SIZE_10": {
+    "config": {
+      "min_frames": 5,
+      "min_conf": 0.0,
+      "min_size": 10,
+      "max_speed_cv": 999
+    },
+    "total_tracks_before": 217,
+    "total_tracks_after": 183,
+    "retention_rate": 0.8433179723502304,
+    "gt_matched_retained": 84,
+    "ndcg3": 0.21755454634913796,
+    "ndcg5": 0.2974911606813689,
+    "ndcg3_per_seq": [
+      0.40266363904741387,
+      0.08333333333333334,
+      0.16666666666666669
+    ]
+  },
+  "SIZE_15": {
+    "config": {
+      "min_frames": 5,
+      "min_conf": 0.0,
+      "min_size": 15,
+      "max_speed_cv": 999
+    },
+    "total_tracks_before": 217,
+    "total_tracks_after": 126,
+    "retention_rate": 0.5806451612903226,
+    "gt_matched_retained": 74,
+    "ndcg3": 0.43311566172032584,
+    "ndcg5": 0.44416432524047544,
+    "ndcg3_per_seq": [
+      0.8435737579924145,
+      0.08333333333333334,
+      0.37243989383522974
+    ]
+  },
+  "MOTION_CV3": {
+    "config": {
+      "min_frames": 5,
+      "min_conf": 0.0,
+      "min_size": 0,
+      "max_speed_cv": 3.0
+    },
+    "total_tracks_before": 217,
+    "total_tracks_after": 217,
+    "retention_rate": 1.0,
+    "gt_matched_retained": 84,
+    "ndcg3": 0.21755454634913796,
+    "ndcg5": 0.2974911606813689,
+    "ndcg3_per_seq": [
+      0.40266363904741387,
+      0.08333333333333334,
+      0.16666666666666669
+    ]
+  },
+  "COMBINED_A": {
+    "config": {
+      "min_frames": 10,
+      "min_conf": 0.2,
+      "min_size": 10,
+      "max_speed_cv": 999
+    },
+    "total_tracks_before": 217,
+    "total_tracks_after": 110,
+    "retention_rate": 0.5069124423963134,
+    "gt_matched_retained": 70,
+    "ndcg3": 0.2932817615337845,
+    "ndcg5": 0.3082982051350565,
+    "ndcg3_per_seq": [
+      0.40266363904741387,
+      0.08333333333333334,
+      0.39384831222060623
+    ]
+  },
+  "COMBINED_B": {
+    "config": {
+      "min_frames": 10,
+      "min_conf": 0.2,
+      "min_size": 12,
+      "max_speed_cv": 5.0
+    },
+    "total_tracks_before": 217,
+    "total_tracks_after": 106,
+    "retention_rate": 0.48847926267281105,
+    "gt_matched_retained": 68,
+    "ndcg3": 0.2932817615337845,
+    "ndcg5": 0.317606840093672,
+    "ndcg3_per_seq": [
+      0.40266363904741387,
+      0.08333333333333334,
+      0.39384831222060623
+    ]
+  },
+  "COMBINED_C": {
+    "config": {
+      "min_frames": 15,
+      "min_conf": 0.25,
+      "min_size": 12,
+      "max_speed_cv": 5.0
+    },
+    "total_tracks_before": 217,
+    "total_tracks_after": 76,
+    "retention_rate": 0.35023041474654376,
+    "gt_matched_retained": 53,
+    "ndcg3": 0.27932450704968925,
+    "ndcg5": 0.36192682605696797,
+    "ndcg3_per_seq": [
+      0.3084443182936423,
+      0.08333333333333334,
+      0.44619586952209217
+    ]
+  },
+  "AGGRESSIVE": {
+    "config": {
+      "min_frames": 20,
+      "min_conf": 0.3,
+      "min_size": 15,
+      "max_speed_cv": 3.0
+    },
+    "total_tracks_before": 217,
+    "total_tracks_after": 50,
+    "retention_rate": 0.2304147465437788,
+    "gt_matched_retained": 39,
+    "ndcg3": 0.5320037935662154,
+    "ndcg5": 0.6844196896884438,
+    "ndcg3_per_seq": [
+      0.8026120593560898,
+      0.09440941594289153,
+      0.698989905399665
+    ]
+  },
+  "_summary": {
+    "best_config": "AGGRESSIVE",
+    "best_ndcg3": 0.5320037935662154,
+    "baseline_ndcg3": 0.21755454634913796,
+    "improvement_pp": 31.444924721707746
+  }
+}

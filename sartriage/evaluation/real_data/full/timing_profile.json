@@ -1,0 +1,15 @@
+{
+  "components": {
+    "yolo_detection_ms": 86.96302572886148,
+    "track_extraction_ms": 0.00133514404296875,
+    "tms12_extraction_ms": 9.5367431640625e-05,
+    "tce_scoring_ms": 0.0,
+    "ranking_ms": 2.384185791015625e-05,
+    "total_ms": 86.964480082194
+  },
+  "realtime_factor": 2.60893440246582,
+  "video_duration_s": 1.0,
+  "n_frames": 30,
+  "n_tracks": 21,
+  "hardware": "arm64 / arm / macOS 14.5"
+}

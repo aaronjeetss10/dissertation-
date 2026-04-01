@@ -17,12 +17,13 @@ calls) to satisfy GDPR / data-privacy constraints for SAR footage.
 
 from __future__ import annotations
 
+import json
 import os
 import uuid
 import time
 import threading
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import yaml
 from flask import (
@@ -190,6 +191,116 @@ def results_json(task_id: str):
         "events": task["events"],
         "summary": task["summary"],
     })
+
+
+# ── Demo route: pre-computed v3 results ──────────────────────────────────────
+
+def _load_v3_demo_data() -> Dict[str, Any]:
+    """Load pre-computed e2e v3 results and convert to display format."""
+    base = Path(__file__).parent / "evaluation" / "real_data" / "full" / "end_to_end_v3"
+    sequences = []
+    for fn in sorted(base.glob("v3_*.json")):
+        if fn.name == "v3_summary.json":
+            continue
+        with open(fn) as f:
+            sequences.append(json.load(f))
+
+    # Merge all ranked tracks across sequences
+    all_tracks: List[Dict] = []
+    for seq in sequences:
+        seq_id = seq.get("sequence", "?")
+        for t in seq.get("ranked_output", []):
+            t["sequence"] = seq_id
+            all_tracks.append(t)
+
+    # Sort by final_priority descending
+    all_tracks.sort(key=lambda t: t.get("final_priority", 0), reverse=True)
+
+    # Assign severity based on ensemble class
+    def _severity(track: Dict) -> str:
+        cls = track.get("ensemble_class", "")
+        score = track.get("final_priority", 0)
+        if cls == "lying_down":
+            return "critical"
+        if cls == "stationary" and score > 0.35:
+            return "high"
+        if cls == "stationary":
+            return "medium"
+        return "low"
+
+    for t in all_tracks:
+        t["severity"] = _severity(t)
+
+    summary = {
+        "total_tracks": len(all_tracks),
+        "critical": sum(1 for t in all_tracks if t["severity"] == "critical"),
+        "high": sum(1 for t in all_tracks if t["severity"] == "high"),
+        "medium": sum(1 for t in all_tracks if t["severity"] == "medium"),
+        "low": sum(1 for t in all_tracks if t["severity"] == "low"),
+        "sequences_analysed": len(sequences),
+        "mean_ndcg3": sum(s.get("ndcg3", 0) for s in sequences) / max(len(sequences), 1),
+    }
+
+    return {"tracks": all_tracks, "summary": summary}
+
+
+@app.route("/demo")
+def demo():
+    """Display pre-computed v3 pipeline results for screenshot purposes."""
+    try:
+        data = _load_v3_demo_data()
+    except Exception as exc:
+        return f"Could not load demo data: {exc}", 500
+
+    return render_template(
+        "results_v3.html",
+        tracks=data["tracks"],
+        summary=data["summary"],
+        filename="Okutama-Action (3 test sequences)",
+    )
+
+
+@app.route("/demo/compact")
+def demo_compact():
+    """Show 2 tracks per severity — all colours, counts match display."""
+    try:
+        data = _load_v3_demo_data()
+    except Exception as exc:
+        return f"Could not load demo data: {exc}", 500
+
+    # Pick: 2 critical, 4 high, 3 medium, 4 low
+    limits = {"critical": 2, "high": 4, "medium": 3, "low": 4}
+    buckets = {"critical": [], "high": [], "medium": [], "low": []}
+    for t in data["tracks"]:
+        sev = t.get("severity", "low")
+        if sev in buckets and len(buckets[sev]) < limits[sev]:
+            buckets[sev].append(t)
+
+    compact_tracks = []
+    for sev in ["critical", "high", "medium", "low"]:
+        compact_tracks.extend(buckets[sev])
+
+    # Re-number ranks
+    for i, t in enumerate(compact_tracks):
+        t["rank"] = i + 1
+
+    # Summary counts MATCH what is actually displayed
+    summary = {
+        "total_tracks": len(compact_tracks),
+        "critical": len(buckets["critical"]),
+        "high": len(buckets["high"]),
+        "medium": len(buckets["medium"]),
+        "low": len(buckets["low"]),
+        "sequences_analysed": data["summary"]["sequences_analysed"],
+        "mean_ndcg3": data["summary"]["mean_ndcg3"],
+    }
+
+    return render_template(
+        "demo_screenshot.html",
+        tracks=compact_tracks,
+        summary=summary,
+        filename="Okutama-Action (3 test sequences)",
+    )
 
 
 @app.route("/health")

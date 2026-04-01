@@ -1,0 +1,53 @@
+{
+  "Random": {
+    "type": "\u2014",
+    "accuracy": 0.23971797884841364,
+    "lying_recall": 0.2777777777777778,
+    "kappa": 0.006241257636877107
+  },
+  "Majority Class": {
+    "type": "\u2014",
+    "accuracy": 0.5240893066980024,
+    "lying_recall": 0.0,
+    "kappa": 0.0
+  },
+  "MViTv2-S": {
+    "type": "Pixel",
+    "accuracy": 0.265,
+    "lying_recall": 0.0,
+    "kappa": 0.0,
+    "note": "from prior eval"
+  },
+  "TMS-12 + RF": {
+    "type": "Trajectory",
+    "accuracy": 0.5875440658049353,
+    "lying_recall": 0.2777777777777778,
+    "kappa": 0.29199652991760927
+  },
+  "TMS-16 + RF": {
+    "type": "Trajectory",
+    "accuracy": 0.5722679200940071,
+    "lying_recall": 0.3333333333333333,
+    "kappa": 0.251969302545725
+  },
+  "TMS-16 + GBM": {
+    "type": "Trajectory",
+    "accuracy": 0.5499412455934195,
+    "lying_recall": 0.2777777777777778,
+    "kappa": 0.21772950918036715
+  },
+  "TrajMAE": {
+    "type": "Traj+SSL",
+    "accuracy": 0.246,
+    "lying_recall": 0.47,
+    "kappa": 0.02,
+    "note": "from prior evaluation"
+  },
+  "SCTE + Linear": {
+    "type": "Traj+CL",
+    "accuracy": 0.565,
+    "lying_recall": 0.0,
+    "kappa": 0.0,
+    "note": "from scte_real_eval.py"
+  }
+}

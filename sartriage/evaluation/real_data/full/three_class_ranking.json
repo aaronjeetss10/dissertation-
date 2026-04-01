@@ -1,0 +1,14 @@
+{
+  "3_class": {
+    "ndcg3": 1.0,
+    "ndcg5": 1.0,
+    "critical_recall3": 1.0,
+    "n_scenes_with_critical": 56
+  },
+  "4_class": {
+    "ndcg3": 1.0,
+    "ndcg5": 1.0,
+    "lying_recall3": 1.0,
+    "n_scenes_with_lying": 56
+  }
+}

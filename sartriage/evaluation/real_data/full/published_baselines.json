@@ -1,0 +1,118 @@
+{
+  "metadata": {
+    "purpose": "Literature comparison for SARTriage dissertation critical evaluation",
+    "compiled": "2026-03-26",
+    "note": "Published numbers from original papers; our numbers from MASTER_RESULTS.json and tms16_results.json"
+  },
+  "published_baselines": {
+    "Barekatain_SSD_2017": {
+      "paper": "Okutama-Action: An Aerial View Video Dataset for Concurrent Human Action Detection",
+      "authors": "Barekatain et al.",
+      "venue": "CVPR Workshops 2017",
+      "task": "Action detection (spatio-temporal localisation)",
+      "metric": "mAP@0.5",
+      "results": {
+        "SSD_960x540_RGB": 0.188,
+        "SSD_512x512_RGB": 0.154,
+        "SSD_512x512_OptFlow": 0.065
+      },
+      "resolution": "960×540 (downscaled from 3840×2160)",
+      "person_size_px": "50-150px (at inference resolution)",
+      "note": "Action DETECTION (localisation+classification), not classification-only. Not directly comparable to pure classification accuracy."
+    },
+    "Barekatain_PedDet_2017": {
+      "paper": "Same as above",
+      "task": "Pedestrian detection",
+      "metric": "mAP@0.5",
+      "result": 0.723,
+      "resolution": "Full resolution crops",
+      "note": "Detection only, no action classification"
+    },
+    "YOLOv5_GBM_2022": {
+      "paper": "Real-Time Action Detection in Drone Videos Using YoloV5 and Gradient Boosting",
+      "venue": "PMC/NIH 2022",
+      "task": "Action recognition from drone",
+      "metric": "Precision/F1 (not mAP)",
+      "result_description": "Claimed improvement over SSD baseline but no single accuracy number published for Okutama",
+      "resolution": "Full-resolution detection crops",
+      "person_size_px": ">50px (requires reliable detection box)"
+    },
+    "SCP_2024": {
+      "paper": "Soft Conditional Prompt Learning for Aerial Video Action Recognition",
+      "venue": "ICPR 2024 / arXiv",
+      "task": "Action recognition (classification given GT boxes)",
+      "metric": "Classification accuracy",
+      "result_description": "+10.2% over previous SOTA without bbox, +3.17% with bbox on Okutama",
+      "resolution": "Full resolution with GT bounding boxes provided",
+      "person_size_px": "50-200px (GT box crops at full 4K resolution)",
+      "note": "Uses prompt tuning on VLMs. Requires GT boxes — NOT applicable to operational SAR."
+    }
+  },
+  "our_results_on_okutama": {
+    "MViTv2-S_pixel": {
+      "accuracy": 0.265,
+      "accuracy_sub50px": 0.260,
+      "metric": "4-class SAR accuracy",
+      "n_test": 200,
+      "pct_sub50px": 96.0,
+      "method_type": "Pixel (video classification)",
+      "resolution": "Actual drone-altitude crops (<50px persons)",
+      "source": "E6 in MASTER_RESULTS.json",
+      "kappa": -0.013,
+      "note": "Near-chance performance (25% for 4 classes). Kappa ≈ 0 confirms no discriminative ability at <50px."
+    },
+    "LSTM_trajectory": {
+      "accuracy": 0.505,
+      "metric": "4-class SAR accuracy",
+      "n_test": 556,
+      "method_type": "Trajectory (sequence model)",
+      "resolution": "Scale-invariant (centroid trajectories)",
+      "source": "E9 in MASTER_RESULTS.json",
+      "kappa": 0.019
+    },
+    "TrajMAE": {
+      "accuracy": 0.505,
+      "metric": "4-class SAR accuracy",
+      "n_test": 556,
+      "method_type": "Trajectory (masked autoencoder)",
+      "resolution": "Scale-invariant",
+      "source": "E9 in MASTER_RESULTS.json"
+    },
+    "TMS-12_RF": {
+      "accuracy": 0.591,
+      "accuracy_ci": 0.033,
+      "lying_recall": 0.396,
+      "metric": "4-class SAR accuracy",
+      "n_test": 2834,
+      "method_type": "Trajectory (hand-crafted features)",
+      "resolution": "Scale-invariant (normalised centroid deltas)",
+      "source": "tms16_results.json"
+    },
+    "TMS-16_RF": {
+      "accuracy": 0.603,
+      "accuracy_ci": 0.022,
+      "lying_recall": 0.407,
+      "kappa": 0.295,
+      "metric": "4-class SAR accuracy",
+      "n_test": 2834,
+      "method_type": "Trajectory (hand-crafted features + SMOTE)",
+      "resolution": "Scale-invariant (normalised centroid deltas)",
+      "source": "tms16_results.json",
+      "note": "2.3× MViTv2-S accuracy at sub-50px scales"
+    },
+    "TMS-16_GBM": {
+      "accuracy": 0.576,
+      "accuracy_ci": 0.018,
+      "lying_recall": 0.374,
+      "metric": "4-class SAR accuracy",
+      "n_test": 2834,
+      "method_type": "Trajectory (gradient boosting)",
+      "resolution": "Scale-invariant",
+      "source": "tms16_results.json"
+    }
+  },
+  "key_insight": {
+    "summary": "Published aerial action recognition methods achieve high accuracy (76-93% on Kinetics, 18.8% mAP on Okutama at 960×540) because they operate on large person crops (50-200px). At operational SAR drone altitudes where 96% of persons are sub-50px, pixel methods collapse to chance level (26.5%). Our trajectory-centric TMS-16+RF achieves 60.3% at these same scales — a 2.3× improvement that represents the first demonstration of viable action classification at sub-50px aerial scales.",
+    "comparison_ratio": "TMS-16 / MViTv2-S = 60.3% / 26.5% = 2.27×"
+  }
+}

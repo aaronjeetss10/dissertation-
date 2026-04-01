@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SARTriage v3 — System Architecture</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0f0f1a;
+    color: #e8e8f0;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  .diagram {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .title {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .title h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  .title .subtitle {
+    font-size: 13px;
+    color: #8888aa;
+    font-weight: 400;
+  }
+
+  /* Stage wrapper */
+  .stage {
+    position: relative;
+    margin-bottom: 12px;
+    border-radius: 16px;
+    padding: 20px 24px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .stage-label {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 2px 10px;
+    border-radius: 4px;
+    background: #1a1a2e;
+  }
+
+  /* Color themes */
+  .stage-input { background: linear-gradient(135deg, #1e293b 0%, #172033 100%); }
+  .stage-input .stage-label { color: #94a3b8; }
+
+  .stage-detect { background: linear-gradient(135deg, #1a1520 0%, #201525 100%); border-color: rgba(239,68,68,0.15); }
+  .stage-detect .stage-label { color: #f87171; }
+
+  .stage-classify { background: linear-gradient(135deg, #0f1a1f 0%, #131f25 100%); border-color: rgba(20,184,166,0.15); }
+  .stage-classify .stage-label { color: #2dd4bf; }
+
+  .stage-temporal { background: linear-gradient(135deg, #1a1810 0%, #201d15 100%); border-color: rgba(251,191,36,0.15); }
+  .stage-temporal .stage-label { color: #fbbf24; }
+
+  .stage-fusion { background: linear-gradient(135deg, #0f1a15 0%, #132018 100%); border-color: rgba(34,197,94,0.15); }
+  .stage-fusion .stage-label { color: #4ade80; }
+
+  .stage-output { background: linear-gradient(135deg, #1a1025 0%, #1e1530 100%); border-color: rgba(168,85,247,0.2); }
+  .stage-output .stage-label { color: #c084fc; }
+
+  /* Component blocks */
+  .component {
+    border-radius: 10px;
+    padding: 14px 16px;
+    position: relative;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .component:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  }
+  .component .badge {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.7;
+    margin-bottom: 4px;
+  }
+  .component .name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .component .desc {
+    font-size: 11px;
+    opacity: 0.7;
+    line-height: 1.4;
+  }
+
+  /* Component colors */
+  .c-blue { background: linear-gradient(135deg, #1e3a5f, #1a3050); border: 1px solid rgba(96,165,250,0.3); }
+  .c-blue .name { color: #93c5fd; }
+  .c-red { background: linear-gradient(135deg, #4a1d1d, #3d1818); border: 1px solid rgba(248,113,113,0.3); }
+  .c-red .name { color: #fca5a5; }
+  .c-orange { background: linear-gradient(135deg, #4a3520, #3d2c18); border: 1px solid rgba(251,191,36,0.3); }
+  .c-orange .name { color: #fcd34d; }
+  .c-purple { background: linear-gradient(135deg, #3b1f5e, #301a4d); border: 1px solid rgba(168,85,247,0.3); }
+  .c-purple .name { color: #d8b4fe; }
+  .c-teal { background: linear-gradient(135deg, #134e4a, #0f3d3a); border: 1px solid rgba(45,212,191,0.3); }
+  .c-teal .name { color: #99f6e4; }
+  .c-pink { background: linear-gradient(135deg, #4a1d3d, #3d1830); border: 1px solid rgba(244,114,182,0.3); }
+  .c-pink .name { color: #f9a8d4; }
+  .c-green { background: linear-gradient(135deg, #14532d, #0f4024); border: 1px solid rgba(74,222,128,0.3); }
+  .c-green .name { color: #86efac; }
+  .c-amber { background: linear-gradient(135deg, #4a3800, #3d2e00); border: 1px solid rgba(251,191,36,0.3); }
+  .c-amber .name { color: #fde68a; }
+  .c-slate { background: linear-gradient(135deg, #1e293b, #182030); border: 1px solid rgba(148,163,184,0.25); }
+  .c-slate .name { color: #cbd5e1; }
+
+  /* Layout helpers */
+  .row { display: flex; gap: 12px; align-items: stretch; }
+  .row > * { flex: 1; }
+  .col { display: flex; flex-direction: column; gap: 8px; }
+
+  /* Arrows */
+  .arrow-down {
+    text-align: center;
+    padding: 6px 0;
+    color: #555570;
+    font-size: 12px;
+    line-height: 1.3;
+  }
+  .arrow-down .arrow-icon {
+    font-size: 18px;
+    display: block;
+  }
+  .arrow-down .arrow-label {
+    font-size: 10px;
+    color: #6b6b88;
+    font-weight: 500;
+  }
+
+  .arrow-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555570;
+    font-size: 20px;
+    flex: 0 0 30px;
+  }
+
+  /* Ensemble highlight */
+  .ensemble-box {
+    border: 2px dashed rgba(45,212,191,0.3);
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 8px;
+  }
+
+  /* NDCG badge */
+  .ndcg-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  /* Stream header */
+  .stream-header {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+    opacity: 0.6;
+  }
+
+  /* Input block special */
+  .input-block {
+    text-align: center;
+    padding: 16px;
+  }
+  .input-block .drone-icon {
+    font-size: 36px;
+    margin-bottom: 6px;
+  }
+  .input-block .input-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #94a3b8;
+  }
+  .input-block .input-detail {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 4px;
+  }
+
+  /* Output block */
+  .output-block {
+    text-align: center;
+    padding: 16px;
+  }
+  .output-entry {
+    background: rgba(168,85,247,0.1);
+    border: 1px solid rgba(168,85,247,0.2);
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin: 8px auto;
+    max-width: 500px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    color: #d8b4fe;
+  }
+
+  /* Divider labels */
+  .stage-number {
+    font-size: 32px;
+    font-weight: 800;
+    opacity: 0.08;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="diagram">
+
+  <!-- Title -->
+  <div class="title">
+    <h1>SARTriage v3 — 11-Component Pipeline Architecture</h1>
+    <div class="subtitle">UAV Search-and-Rescue Post-Mission Video Triage System</div>
+  </div>
+
+  <!-- INPUT -->
+  <div class="stage stage-input">
+    <span class="stage-label">Input</span>
+    <div class="input-block">
+      <div class="drone-icon">🛸</div>
+      <div class="input-label">UAV SAR Video Feed</div>
+      <div class="input-detail">Post-mission drone footage • 1280×720 @ 5fps • Persons typically 15–25px</div>
+    </div>
+  </div>
+
+  <div class="arrow-down">
+    <span class="arrow-icon">↓</span>
+    <span class="arrow-label">video frames</span>
+  </div>
+
+  <!-- STAGE 1: Detection & Tracking -->
+  <div class="stage stage-detect">
+    <span class="stage-label">Stage 1 — Detection & Tracking</span>
+    <span class="stage-number">1</span>
+    <div class="row">
+      <div class="component c-red">
+        <div class="badge">C1</div>
+        <div class="name">YOLOv8 Person Detector</div>
+        <div class="desc">HERIDAL fine-tuned • conf ≥ 0.1 • ~82ms/frame<br>Outputs bounding boxes per frame</div>
+      </div>
+      <div class="arrow-right">→</div>
+      <div class="component c-red">
+        <div class="badge">C2</div>
+        <div class="name">ByteTrack MOT</div>
+        <div class="desc">IoU + centroid distance association<br>max_lost=10, iou_thresh=0.15</div>
+      </div>
+      <div class="arrow-right">→</div>
+      <div class="component c-slate" style="flex: 0.7;">
+        <div class="badge">Filter</div>
+        <div class="name">Track Quality</div>
+        <div class="desc">≥15px mean size<br>≥5 frame history</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down">
+    <span class="arrow-icon">↓</span>
+    <span class="arrow-label">validated tracks (centroids, bboxes, confidences)</span>
+  </div>
+
+  <!-- STAGE 2: Multi-Stream Classification -->
+  <div class="stage stage-classify">
+    <span class="stage-label">Stage 2 — Multi-Stream Classification</span>
+    <span class="stage-number">2</span>
+
+    <div class="row" style="margin-bottom: 12px;">
+      <!-- Stream A: TMS-16 -->
+      <div class="col">
+        <div class="stream-header" style="color: #fcd34d;">Trajectory Stream A</div>
+        <div class="component c-orange">
+          <div class="badge">C3</div>
+          <div class="name">TMS-16 + Random Forest</div>
+          <div class="desc">16 hand-crafted motion features<br>SMOTE-balanced, 200 trees<br><strong>60.3% accuracy</strong> (our contribution)</div>
+        </div>
+      </div>
+
+      <!-- Stream B: TrajMAE -->
+      <div class="col">
+        <div class="stream-header" style="color: #d8b4fe;">Trajectory Stream B</div>
+        <div class="component c-purple">
+          <div class="badge">C4</div>
+          <div class="name">TrajMAE</div>
+          <div class="desc">Masked autoencoder on<br>trajectory delta tokens</div>
+        </div>
+        <div class="component c-purple" style="opacity: 0.8;">
+          <div class="badge">C5</div>
+          <div class="name">Anomaly Detector</div>
+          <div class="desc">Reconstruction error → anomaly flag</div>
+        </div>
+      </div>
+
+      <!-- Stream C: SCTE -->
+      <div class="col">
+        <div class="stream-header" style="color: #99f6e4;">Trajectory Stream C</div>
+        <div class="component c-teal">
+          <div class="badge">C6</div>
+          <div class="name">SCTE</div>
+          <div class="desc">Self-supervised Contrastive<br>Trajectory Encoder<br>+ linear probe classifier</div>
+        </div>
+      </div>
+
+      <!-- Stream D: MViTv2-S -->
+      <div class="col">
+        <div class="stream-header" style="color: #f9a8d4;">Pixel Stream</div>
+        <div class="component c-pink">
+          <div class="badge">C7</div>
+          <div class="name">MViTv2-S</div>
+          <div class="desc">Video transformer on person crops<br>Kinetics-pretrained → SAR fine-tuned<br><em style="opacity:0.6">26.5% at &lt;50px (chance level)</em></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ensemble -->
+    <div class="ensemble-box">
+      <div class="row">
+        <div class="component c-teal" style="flex: 1;">
+          <div class="badge">C8</div>
+          <div class="name">Majority Vote Ensemble</div>
+          <div class="desc">Fuses TMS-16 + TrajMAE + SCTE class predictions via majority vote → {lying_down, stationary, walking, running}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down">
+    <span class="arrow-icon">↓</span>
+    <span class="arrow-label">ensemble class • confidence • anomaly flag</span>
+  </div>
+
+  <!-- STAGE 3: Temporal & Context -->
+  <div class="stage stage-temporal">
+    <span class="stage-label">Stage 3 — Temporal & Context Analysis</span>
+    <span class="stage-number">3</span>
+    <div class="row">
+      <div class="component c-amber">
+        <div class="badge">C9</div>
+        <div class="name">TCE v3 — Temporal Criticality Engine</div>
+        <div class="desc">Confidence-aware state machine<br>
+          <span style="color:#fde68a;">MOVING → STATIONARY → COLLAPSED → STOPPED</span><br>
+          score = base × dwell_escalation × (0.5 + 0.5 × max_class_prob)</div>
+      </div>
+      <div class="component c-amber">
+        <div class="badge">C10</div>
+        <div class="name">EMI — Ego-Motion Intelligence</div>
+        <div class="desc">ORB features → homography decomposition<br>
+          <span style="color:#fde68a;">Flight phase: TRANSIT / SCANNING / HOVERING</span><br>
+          Hovering = operator interest → boost priority</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down">
+    <span class="arrow-icon">↓</span>
+    <span class="arrow-label">TCE score • EMI attention multiplier</span>
+  </div>
+
+  <!-- STAGE 4: Fusion & Ranking -->
+  <div class="stage stage-fusion">
+    <span class="stage-label">Stage 4 — Fusion & Ranking</span>
+    <span class="stage-number">4</span>
+    <div class="col" style="gap: 12px;">
+      <div class="component c-green">
+        <div class="badge">C11</div>
+        <div class="name">AAI-v2 Meta-Classifier</div>
+        <div class="desc">3-layer MLP → softmax weights [w<sub>pixel</sub>, w<sub>traj</sub>]<br>
+          Input: person_size, det_confidence, motion_magnitude<br>
+          <strong>fused = w<sub>pixel</sub> × MViT_score + w<sub>traj</sub> × (ensemble_score × TCE)</strong></div>
+      </div>
+      <div class="component c-green" style="opacity: 0.85;">
+        <div class="badge">Ranker</div>
+        <div class="name">Priority Ranker</div>
+        <div class="desc">final_priority = fused_score × EMI_multiplier → sort descending</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down">
+    <span class="arrow-icon">↓</span>
+    <span class="arrow-label">ranked priority list</span>
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="stage stage-output">
+    <span class="stage-label">Output</span>
+    <div class="output-block">
+      <div style="font-size: 16px; font-weight: 700; color: #c084fc; margin-bottom: 8px;">
+        Ranked Triage List
+      </div>
+      <div class="output-entry">
+        1. Track #128 — <span style="color:#f87171;">CRITICAL</span> (stationary) — Priority: 0.4077<br>
+        2. Track #256 — <span style="color:#fbbf24;">HIGH</span> (stationary) — Priority: 0.3831<br>
+        3. Track #261 — <span style="color:#94a3b8;">MODERATE</span> (stationary) — Priority: 0.3555
+      </div>
+      <div style="margin-top: 12px;">
+        <span class="ndcg-badge">NDCG@3 = 0.41</span>
+        <span style="font-size: 11px; color: #6b6b88; margin-left: 10px;">Mean across 3 Okutama test sequences</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="text-align: center; margin-top: 24px; color: #444460; font-size: 11px;">
+    SARTriage BSc Dissertation — 11/11 components • ~21,600 lines • 36 files<br>
+    Trajectory-centric approach: 2.3× pixel accuracy at sub-50px aerial scales
+  </div>
+
+</div>
+
+</body>
+</html>

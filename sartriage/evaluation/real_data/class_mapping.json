@@ -1,0 +1,21 @@
+{
+  "okutama_to_sar_mapping": {
+    "Walking": "walking",
+    "Running": "running",
+    "Lying": "lying_down",
+    "Sitting": "stationary",
+    "Standing": "stationary",
+    "Pushing/Pulling": "unmapped",
+    "Reading": "unmapped",
+    "Calling": "unmapped",
+    "Carrying": "unmapped",
+    "Drinking": "unmapped"
+  },
+  "sar_priority": {
+    "Lying": 0.9,
+    "Sitting": 0.4,
+    "Standing": 0.2,
+    "Walking": 0.1,
+    "Running": 0.1
+  }
+}

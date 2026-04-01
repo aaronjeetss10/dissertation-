@@ -39,14 +39,19 @@ COMPONENTS = {
     "Video Decode":         {"ms_per_unit": 8.0,   "units": N_FRAMES, "label": "frame"},
     "SAR Preprocessing":    {"ms_per_unit": 15.0,  "units": N_FRAMES, "label": "frame"},
     "YOLO11n Detection":    {"ms_per_unit": 29.0,  "units": N_FRAMES, "label": "frame"},
-    "SAHI Tiling + NMS":    {"ms_per_unit": 750.0, "units": N_FRAMES // 5, "label": "keyframe"},
     "ByteTrack":            {"ms_per_unit": 5.0,   "units": N_FRAMES, "label": "frame"},
+    "Traj. Extraction":     {"ms_per_unit": 0.5,   "units": N_FRAMES, "label": "frame"},
     "S1: MViTv2-S":         {"ms_per_unit": 530.0, "units": N_FRAMES // 16, "label": "clip"},
     "S2: Optical Flow":     {"ms_per_unit": 20.0,  "units": N_FRAMES, "label": "frame"},
     "S3: Tracking Events":  {"ms_per_unit": 3.0,   "units": N_FRAMES, "label": "frame"},
     "S4: BBox Pose":        {"ms_per_unit": 4.0,   "units": N_FRAMES, "label": "frame"},
-    "S5: Anomaly (Mah.)":   {"ms_per_unit": 180.0, "units": N_FRAMES // 16, "label": "clip"},
-    "S6: TMS":              {"ms_per_unit": 2.0,   "units": 15, "label": "track"},
+    "S5: TMS-12 + RF":      {"ms_per_unit": 2.0,   "units": 15, "label": "track"},
+    "S6: TrajMAE":          {"ms_per_unit": 8.0,   "units": 15, "label": "track"},
+    "S7: SCTE":             {"ms_per_unit": 5.0,   "units": 15, "label": "track"},
+    "S8: Traj. Anomaly":    {"ms_per_unit": 3.0,   "units": 15, "label": "track"},
+    "TCE State Machine":    {"ms_per_unit": 0.2,   "units": 15 * (N_FRAMES // 5), "label": "track×bin"},
+    "EMI Extraction":       {"ms_per_unit": 1.0,   "units": N_FRAMES, "label": "frame"},
+    "AAI-v2 Fusion":        {"ms_per_unit": 0.1,   "units": 200, "label": "event"},
     "Priority Ranking":     {"ms_per_unit": 45.0,  "units": 1, "label": "total"},
     "Timeline Build":       {"ms_per_unit": 12.0,  "units": 1, "label": "total"},
 }
@@ -56,16 +61,21 @@ COLORS = {
     "Video Decode":         "#95a5a6",   # grey — I/O
     "SAR Preprocessing":    "#bdc3c7",   # light grey
     "YOLO11n Detection":    "#e74c3c",   # red — GPU detection
-    "SAHI Tiling + NMS":    "#c0392b",   # dark red — GPU bottleneck
     "ByteTrack":            "#9b59b6",   # purple — tracking
     "S1: MViTv2-S":         "#2980b9",   # blue — GPU action
     "S2: Optical Flow":     "#3498db",   # light blue
     "S3: Tracking Events":  "#1abc9c",   # teal
     "S4: BBox Pose":        "#16a085",   # dark teal
-    "S5: Anomaly (Mah.)":   "#f39c12",   # orange
-    "S6: TMS":              "#27ae60",   # green — novel
-    "Priority Ranking":     "#8e44ad",   # purple
-    "Timeline Build":       "#d35400",   # dark orange
+    "S5: TMS-12 + RF":      "#27ae60",   # green — novel
+    "S6: TrajMAE":          "#2ecc71",   # light green — novel
+    "S7: SCTE":             "#1dd1a1",   # emerald — novel
+    "S8: Traj. Anomaly":    "#10ac84",   # dark emerald — novel
+    "Traj. Extraction":     "#22a6b3",   # cyan
+    "TCE State Machine":    "#8e44ad",   # purple — novel
+    "EMI Extraction":       "#6c5ce7",   # indigo — novel
+    "AAI-v2 Fusion":        "#a29bfe",   # light indigo — novel
+    "Priority Ranking":     "#d35400",   # dark orange
+    "Timeline Build":       "#e17055",   # salmon
 }
 
 
@@ -285,9 +295,12 @@ def main():
     top1_name, top1 = sorted_by_pct[0]
     top2_name, top2 = sorted_by_pct[1]
 
-    gpu_stages = ["YOLO11n Detection", "SAHI Tiling + NMS",
-                  "S1: MViTv2-S", "S5: Anomaly (Mah.)"]
+    gpu_stages = ["YOLO11n Detection", "S1: MViTv2-S"]
     gpu_pct = sum(timings[s]["pct"] for s in gpu_stages if s in timings)
+
+    novel_stages = ["S5: TMS-12 + RF", "S6: TrajMAE", "S7: SCTE", "S8: Traj. Anomaly",
+                    "Traj. Extraction", "TCE State Machine", "EMI Extraction", "AAI-v2 Fusion"]
+    novel_pct = sum(timings[s]["pct"] for s in novel_stages if s in timings)
 
     print(f"\n  Bottleneck analysis:")
     print(f"    {top1_name} accounts for {top1['pct']:.1f}% of processing time.")

@@ -1,0 +1,46 @@
+{
+  "YOLO": {
+    "status": "RAN",
+    "note": "HERIDAL-finetuned, 1280px, conf>0.1"
+  },
+  "ByteTrack": {
+    "status": "SKIPPED",
+    "note": "GT track IDs via IoU>0.3 matching. 337 matched, 1505 unmatched"
+  },
+  "TMS-12": {
+    "status": "RAN",
+    "note": "SMOTE-balanced RF, 200 trees"
+  },
+  "TrajMAE": {
+    "status": "RAN",
+    "note": "Pre-trained encoder, classifier head"
+  },
+  "AnomalyDet": {
+    "status": "RAN",
+    "note": "TrajMAE reconstruction error z-score"
+  },
+  "SCTE": {
+    "status": "SKIPPED",
+    "note": "Requires contrastive training on labelled track pairs; real evaluation pending"
+  },
+  "TCE": {
+    "status": "RAN",
+    "note": "v2 with initial state assessment"
+  },
+  "MViTv2-S": {
+    "status": "RAN",
+    "note": "Pre-computed cache, 12 hits, 0 misses"
+  },
+  "AAI-v2": {
+    "status": "RAN",
+    "note": "MLP meta-classifier"
+  },
+  "EMI": {
+    "status": "RAN",
+    "note": "Phase=TRANSIT, hover=0.00"
+  },
+  "Ranker": {
+    "status": "RAN",
+    "note": "Sort by final_priority descending"
+  }
+}

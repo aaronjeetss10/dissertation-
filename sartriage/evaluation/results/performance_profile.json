@@ -9,7 +9,7 @@
     "Video Decode": {
       "total_ms": 1600.0,
       "total_s": 1.6,
-      "pct": 2.89,
+      "pct": 6.69,
       "ms_per_unit": 8.0,
       "units": 200,
       "unit_label": "frame"
@@ -17,7 +17,7 @@
     "SAR Preprocessing": {
       "total_ms": 3000.0,
       "total_s": 3.0,
-      "pct": 5.41,
+      "pct": 12.54,
       "ms_per_unit": 15.0,
       "units": 200,
       "unit_label": "frame"
@@ -25,31 +25,31 @@
     "YOLO11n Detection": {
       "total_ms": 5800.0,
       "total_s": 5.8,
-      "pct": 10.47,
+      "pct": 24.24,
       "ms_per_unit": 29.0,
       "units": 200,
       "unit_label": "frame"
     },
-    "SAHI Tiling + NMS": {
-      "total_ms": 30000.0,
-      "total_s": 30.0,
-      "pct": 54.14,
-      "ms_per_unit": 750.0,
-      "units": 40,
-      "unit_label": "keyframe"
-    },
     "ByteTrack": {
       "total_ms": 1000.0,
       "total_s": 1.0,
-      "pct": 1.8,
+      "pct": 4.18,
       "ms_per_unit": 5.0,
+      "units": 200,
+      "unit_label": "frame"
+    },
+    "Traj. Extraction": {
+      "total_ms": 100.0,
+      "total_s": 0.1,
+      "pct": 0.42,
+      "ms_per_unit": 0.5,
       "units": 200,
       "unit_label": "frame"
     },
     "S1: MViTv2-S": {
       "total_ms": 6360.0,
       "total_s": 6.36,
-      "pct": 11.48,
+      "pct": 26.58,
       "ms_per_unit": 530.0,
       "units": 12,
       "unit_label": "clip"
@@ -57,7 +57,7 @@
     "S2: Optical Flow": {
       "total_ms": 4000.0,
       "total_s": 4.0,
-      "pct": 7.22,
+      "pct": 16.72,
       "ms_per_unit": 20.0,
       "units": 200,
       "unit_label": "frame"
@@ -65,7 +65,7 @@
     "S3: Tracking Events": {
       "total_ms": 600.0,
       "total_s": 0.6,
-      "pct": 1.08,
+      "pct": 2.51,
       "ms_per_unit": 3.0,
       "units": 200,
       "unit_label": "frame"
@@ -73,31 +73,71 @@
     "S4: BBox Pose": {
       "total_ms": 800.0,
       "total_s": 0.8,
-      "pct": 1.44,
+      "pct": 3.34,
       "ms_per_unit": 4.0,
       "units": 200,
       "unit_label": "frame"
     },
-    "S5: Anomaly (Mah.)": {
-      "total_ms": 2160.0,
-      "total_s": 2.16,
-      "pct": 3.9,
-      "ms_per_unit": 180.0,
-      "units": 12,
-      "unit_label": "clip"
-    },
-    "S6: TMS": {
+    "S5: TMS-12 + RF": {
       "total_ms": 30.0,
       "total_s": 0.03,
-      "pct": 0.05,
+      "pct": 0.13,
       "ms_per_unit": 2.0,
       "units": 15,
       "unit_label": "track"
     },
+    "S6: TrajMAE": {
+      "total_ms": 120.0,
+      "total_s": 0.12,
+      "pct": 0.5,
+      "ms_per_unit": 8.0,
+      "units": 15,
+      "unit_label": "track"
+    },
+    "S7: SCTE": {
+      "total_ms": 75.0,
+      "total_s": 0.075,
+      "pct": 0.31,
+      "ms_per_unit": 5.0,
+      "units": 15,
+      "unit_label": "track"
+    },
+    "S8: Traj. Anomaly": {
+      "total_ms": 45.0,
+      "total_s": 0.045,
+      "pct": 0.19,
+      "ms_per_unit": 3.0,
+      "units": 15,
+      "unit_label": "track"
+    },
+    "TCE State Machine": {
+      "total_ms": 120.0,
+      "total_s": 0.12,
+      "pct": 0.5,
+      "ms_per_unit": 0.2,
+      "units": 600,
+      "unit_label": "track\u00d7bin"
+    },
+    "EMI Extraction": {
+      "total_ms": 200.0,
+      "total_s": 0.2,
+      "pct": 0.84,
+      "ms_per_unit": 1.0,
+      "units": 200,
+      "unit_label": "frame"
+    },
+    "AAI-v2 Fusion": {
+      "total_ms": 20.0,
+      "total_s": 0.02,
+      "pct": 0.08,
+      "ms_per_unit": 0.1,
+      "units": 200,
+      "unit_label": "event"
+    },
     "Priority Ranking": {
       "total_ms": 45.0,
       "total_s": 0.045,
-      "pct": 0.08,
+      "pct": 0.19,
       "ms_per_unit": 45.0,
       "units": 1,
       "unit_label": "total"
@@ -105,12 +145,12 @@
     "Timeline Build": {
       "total_ms": 12.0,
       "total_s": 0.012,
-      "pct": 0.02,
+      "pct": 0.05,
       "ms_per_unit": 12.0,
       "units": 1,
       "unit_label": "total"
     }
   },
-  "bottleneck": "SAHI Tiling + NMS",
-  "gpu_pct": 79.99
+  "bottleneck": "S1: MViTv2-S",
+  "gpu_pct": 50.82
 }

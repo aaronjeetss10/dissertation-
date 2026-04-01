@@ -1,0 +1,591 @@
+{
+  "class_means": {
+    "stationary": 0.2576923076923077,
+    "lying_down": 0.17777777777777778,
+    "walking": 0.21666666666666667
+  },
+  "tracks": [
+    {
+      "id": "seq1.1.1_track0",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track1",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track2",
+      "label": "lying_down",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track3",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track4",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track5",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track6",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track8",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track9",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track10",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track11",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track12",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track13",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track14",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track15",
+      "label": "lying_down",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track16",
+      "label": "lying_down",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track17",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track18",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track19",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track20",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track21",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track23",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track24",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track26",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track27",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track28",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track29",
+      "label": "walking",
+      "final_state": "MOVING",
+      "final_score": 0.1
+    },
+    {
+      "id": "seq1.1.1_track30",
+      "label": "lying_down",
+      "final_state": "MOVING",
+      "final_score": 0.1
+    },
+    {
+      "id": "seq1.1.1_track31",
+      "label": "stationary",
+      "final_state": "MOVING",
+      "final_score": 0.1
+    },
+    {
+      "id": "seq1.1.1_track32",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track33",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track34",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track35",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track36",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track37",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track38",
+      "label": "lying_down",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track39",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track40",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track41",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track42",
+      "label": "stationary",
+      "final_state": "SUSTAINED_STILL",
+      "final_score": 0.5
+    },
+    {
+      "id": "seq1.1.1_track43",
+      "label": "lying_down",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track44",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track45",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track46",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track47",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track48",
+      "label": "walking",
+      "final_state": "STOPPED",
+      "final_score": 0.3
+    },
+    {
+      "id": "seq1.1.1_track49",
+      "label": "walking",
+      "final_state": "STOPPED",
+      "final_score": 0.3
+    },
+    {
+      "id": "seq1.1.1_track50",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track51",
+      "label": "stationary",
+      "final_state": "SUSTAINED_STILL",
+      "final_score": 0.5
+    },
+    {
+      "id": "seq1.1.1_track52",
+      "label": "stationary",
+      "final_state": "SUSTAINED_STILL",
+      "final_score": 0.5
+    },
+    {
+      "id": "seq1.1.1_track53",
+      "label": "stationary",
+      "final_state": "SUSTAINED_STILL",
+      "final_score": 0.5
+    },
+    {
+      "id": "seq1.1.1_track54",
+      "label": "lying_down",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track55",
+      "label": "stationary",
+      "final_state": "MOVING",
+      "final_score": 0.1
+    },
+    {
+      "id": "seq1.1.1_track56",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track57",
+      "label": "walking",
+      "final_state": "STOPPED",
+      "final_score": 0.3
+    },
+    {
+      "id": "seq1.1.1_track58",
+      "label": "stationary",
+      "final_state": "STOPPED",
+      "final_score": 0.3
+    },
+    {
+      "id": "seq1.1.1_track59",
+      "label": "walking",
+      "final_state": "SUSTAINED_STILL",
+      "final_score": 0.5
+    },
+    {
+      "id": "seq1.1.1_track60",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track61",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track62",
+      "label": "stationary",
+      "final_state": "STOPPED",
+      "final_score": 0.3
+    },
+    {
+      "id": "seq1.1.1_track63",
+      "label": "stationary",
+      "final_state": "STOPPED",
+      "final_score": 0.3
+    },
+    {
+      "id": "seq1.1.1_track64",
+      "label": "lying_down",
+      "final_state": "MOVING",
+      "final_score": 0.1
+    },
+    {
+      "id": "seq1.1.1_track65",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track66",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track67",
+      "label": "stationary",
+      "final_state": "MOVING",
+      "final_score": 0.1
+    },
+    {
+      "id": "seq1.1.1_track68",
+      "label": "lying_down",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track69",
+      "label": "stationary",
+      "final_state": "MOVING",
+      "final_score": 0.1
+    },
+    {
+      "id": "seq1.1.1_track70",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track71",
+      "label": "stationary",
+      "final_state": "SUSTAINED_STILL",
+      "final_score": 0.5
+    },
+    {
+      "id": "seq1.1.1_track72",
+      "label": "stationary",
+      "final_state": "STOPPED",
+      "final_score": 0.3
+    },
+    {
+      "id": "seq1.1.1_track73",
+      "label": "stationary",
+      "final_state": "STOPPED",
+      "final_score": 0.3
+    },
+    {
+      "id": "seq1.1.1_track74",
+      "label": "stationary",
+      "final_state": "STOPPED",
+      "final_score": 0.3
+    },
+    {
+      "id": "seq1.1.1_track75",
+      "label": "stationary",
+      "final_state": "STOPPED",
+      "final_score": 0.3
+    },
+    {
+      "id": "seq1.1.1_track76",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track77",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track78",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track79",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track80",
+      "label": "stationary",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track81",
+      "label": "stationary",
+      "final_state": "MOVING",
+      "final_score": 0.1
+    },
+    {
+      "id": "seq1.1.1_track82",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track83",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track84",
+      "label": "walking",
+      "final_state": "MOVING",
+      "final_score": 0.1
+    },
+    {
+      "id": "seq1.1.1_track85",
+      "label": "walking",
+      "final_state": "MOVING",
+      "final_score": 0.1
+    },
+    {
+      "id": "seq1.1.1_track86",
+      "label": "walking",
+      "final_state": "MOVING",
+      "final_score": 0.1
+    },
+    {
+      "id": "seq1.1.1_track87",
+      "label": "walking",
+      "final_state": "STOPPED",
+      "final_score": 0.3
+    },
+    {
+      "id": "seq1.1.1_track88",
+      "label": "stationary",
+      "final_state": "SUSTAINED_STILL",
+      "final_score": 0.5
+    },
+    {
+      "id": "seq1.1.1_track89",
+      "label": "stationary",
+      "final_state": "STOPPED",
+      "final_score": 0.3
+    },
+    {
+      "id": "seq1.1.1_track90",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track91",
+      "label": "walking",
+      "final_state": "STOPPED",
+      "final_score": 0.3
+    },
+    {
+      "id": "seq1.1.1_track92",
+      "label": "stationary",
+      "final_state": "SUSTAINED_STILL",
+      "final_score": 0.5
+    },
+    {
+      "id": "seq1.1.1_track93",
+      "label": "walking",
+      "final_state": "SUSTAINED_STILL",
+      "final_score": 0.5
+    },
+    {
+      "id": "seq1.1.1_track94",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track95",
+      "label": "walking",
+      "final_state": "MOVING",
+      "final_score": 0.1
+    },
+    {
+      "id": "seq1.1.1_track96",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    },
+    {
+      "id": "seq1.1.1_track97",
+      "label": "stationary",
+      "final_state": "SUSTAINED_STILL",
+      "final_score": 0.5
+    },
+    {
+      "id": "seq1.1.1_track98",
+      "label": "stationary",
+      "final_state": "SUSTAINED_STILL",
+      "final_score": 0.5
+    },
+    {
+      "id": "seq1.1.1_track99",
+      "label": "walking",
+      "final_state": "FAST_MOVING",
+      "final_score": 0.2
+    }
+  ]
+}
