@@ -1,0 +1,8 @@
+{
+  "median_size_px": 92.07392363127238,
+  "large_train_n": 992,
+  "small_test_n": 428,
+  "scte_cross_scale_acc": 0.6238317757009346,
+  "tms12_cross_scale_acc": 0.5420560747663551,
+  "delta_pp": 8.177570093457954
+}

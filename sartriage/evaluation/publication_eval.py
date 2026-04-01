@@ -26,7 +26,7 @@ RESULTS_DIR = Path(__file__).parent / "results"
 # ── 1. Synthetic Trajectory Generator ────────────────────────────────────────
 
 SAR_ACTIONS = ["falling", "running", "lying_down", "crawling",
-               "waving", "collapsed", "stumbling"]
+               "waving", "collapsed", "stumbling", "walking"]
 
 def _generate_trajectory(action: str, n_frames: int = 30,
                          noise_std: float = 0.0008,

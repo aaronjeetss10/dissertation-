@@ -1,0 +1,64 @@
+{
+  "loocv_accuracy": 0.6082474226804123,
+  "report": {
+    "lying_down": {
+      "precision": 0.7777777777777778,
+      "recall": 0.7777777777777778,
+      "f1-score": 0.7777777777777778,
+      "support": 9.0
+    },
+    "stationary": {
+      "precision": 0.6176470588235294,
+      "recall": 0.8076923076923077,
+      "f1-score": 0.7,
+      "support": 52.0
+    },
+    "walking": {
+      "precision": 0.5,
+      "recall": 0.2777777777777778,
+      "f1-score": 0.35714285714285715,
+      "support": 36.0
+    },
+    "accuracy": 0.6082474226804123,
+    "macro avg": {
+      "precision": 0.6318082788671023,
+      "recall": 0.6210826210826211,
+      "f1-score": 0.6116402116402117,
+      "support": 97.0
+    },
+    "weighted avg": {
+      "precision": 0.5888417222559127,
+      "recall": 0.6082474226804123,
+      "f1-score": 0.5799705449189985,
+      "support": 97.0
+    }
+  },
+  "gini_importance": {
+    "Net displacement": 0.08572879860090024,
+    "Mean speed": 0.05825740768088828,
+    "Speed CV": 0.06989382641191226,
+    "Max acceleration": 0.05258148899046024,
+    "Vertical dominance": 0.06287954978564327,
+    "Direction change rate": 0.06120735537290593,
+    "Stationarity ratio": 0.09181655046219038,
+    "Aspect ratio change": 0.11972993871206762,
+    "Speed decay": 0.08085221875738112,
+    "Oscillation index": 0.04655007701999851,
+    "Mean aspect ratio": 0.17534932111661747,
+    "Mean normalised size": 0.09515346708903476
+  },
+  "permutation_importance": {
+    "Net displacement": 0.09999999999999998,
+    "Mean speed": 0.05666666666666666,
+    "Speed CV": 0.04333333333333332,
+    "Max acceleration": 0.033333333333333326,
+    "Vertical dominance": 0.05333333333333332,
+    "Direction change rate": 0.04333333333333332,
+    "Stationarity ratio": 0.0,
+    "Aspect ratio change": 0.10333333333333332,
+    "Speed decay": 0.05666666666666666,
+    "Oscillation index": -0.006666666666666665,
+    "Mean aspect ratio": 0.11333333333333331,
+    "Mean normalised size": 0.016666666666666663
+  }
+}

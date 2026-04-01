@@ -46,6 +46,9 @@ COPY --from=builder /install /usr/local
 # Copy application code
 COPY sartriage/ /app/sartriage/
 
+# Copy tests (for in-container testing)
+COPY tests/ /app/tests/
+
 # Create directories for runtime data
 RUN mkdir -p /app/uploads /app/results /app/models
 

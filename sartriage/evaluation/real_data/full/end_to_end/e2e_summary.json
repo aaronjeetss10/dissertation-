@@ -1,0 +1,72 @@
+{
+  "n_sequences": 3,
+  "sequences": [
+    "1.1.8",
+    "1.2.3",
+    "2.2.3"
+  ],
+  "mean_ndcg3": 0.4672412402384359,
+  "mean_ndcg5": 0.5766941844598156,
+  "lying_recall3_scenes": [],
+  "total_tracks": 48,
+  "total_yolo_dets": 4950,
+  "total_matched": 1312,
+  "pipeline_status": {
+    "YOLO": {
+      "status": "RAN",
+      "note": "HERIDAL-finetuned, 1280px, conf>0.1"
+    },
+    "ByteTrack": {
+      "status": "SKIPPED",
+      "note": "GT track IDs via IoU>0.3 matching. 337 matched, 1505 unmatched"
+    },
+    "TMS-12": {
+      "status": "RAN",
+      "note": "SMOTE-balanced RF, 200 trees"
+    },
+    "TrajMAE": {
+      "status": "RAN",
+      "note": "Pre-trained encoder, classifier head"
+    },
+    "AnomalyDet": {
+      "status": "RAN",
+      "note": "TrajMAE reconstruction error z-score"
+    },
+    "SCTE": {
+      "status": "SKIPPED",
+      "note": "Requires contrastive training on labelled track pairs; real evaluation pending"
+    },
+    "TCE": {
+      "status": "RAN",
+      "note": "v2 with initial state assessment"
+    },
+    "MViTv2-S": {
+      "status": "RAN",
+      "note": "Pre-computed cache, 12 hits, 0 misses"
+    },
+    "AAI-v2": {
+      "status": "RAN",
+      "note": "MLP meta-classifier"
+    },
+    "EMI": {
+      "status": "RAN",
+      "note": "Phase=TRANSIT, hover=0.00"
+    },
+    "Ranker": {
+      "status": "RAN",
+      "note": "Sort by final_priority descending"
+    }
+  },
+  "mean_timings_ms": {
+    "yolo_ms": 81.58390967666917,
+    "tracking_ms": 0.0460060294792849,
+    "trajectory_ms": 0.0035011702834109337,
+    "tms12_ms": 12.330655540738787,
+    "trajmae_ms": 3.4521316725110256,
+    "tce_ms": 0.017540322409735784,
+    "mvit_ms": 0.0009995604318285744,
+    "aai_ms": 0.0877872345939515,
+    "emi_ms": 3.28851316733733,
+    "ranker_ms": 0.0050067901611328125
+  }
+}

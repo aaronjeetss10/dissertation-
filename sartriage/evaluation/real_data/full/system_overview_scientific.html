@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SARTriage — System Overview (Scientific Diagram)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    background: #ffffff;
+    color: #1a1a2e;
+    padding: 30px 40px;
+  }
+
+  .diagram-container {
+    max-width: 1050px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* Title */
+  .fig-title {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .fig-title h1 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 4px;
+  }
+  .fig-title .fig-sub {
+    font-size: 11.5px;
+    color: #666;
+    font-weight: 400;
+  }
+
+  /* === MAIN PIPELINE LAYOUT === */
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Stage group */
+  .stage-group {
+    position: relative;
+    margin-bottom: 0;
+  }
+
+  .stage-header {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    color: #999;
+    margin-bottom: 8px;
+    padding-left: 2px;
+  }
+
+  /* Row of boxes */
+  .box-row {
+    display: flex;
+    gap: 14px;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  /* Component box */
+  .box {
+    border: 1.5px solid #d0d0d0;
+    border-radius: 6px;
+    padding: 12px 14px;
+    background: #fafafa;
+    min-width: 130px;
+    text-align: center;
+    position: relative;
+  }
+  .box .box-id {
+    font-size: 9px;
+    font-weight: 700;
+    color: #aaa;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+  }
+  .box .box-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 3px;
+    line-height: 1.3;
+  }
+  .box .box-detail {
+    font-size: 9.5px;
+    color: #777;
+    line-height: 1.35;
+  }
+  .box .box-metric {
+    font-size: 9px;
+    font-weight: 600;
+    color: #0066cc;
+    margin-top: 4px;
+  }
+
+  /* Color-coded border tops */
+  .box-input    { border-top: 3px solid #64748b; }
+  .box-detect   { border-top: 3px solid #dc2626; }
+  .box-traj     { border-top: 3px solid #2563eb; }
+  .box-pixel    { border-top: 3px solid #9333ea; }
+  .box-ensemble { border-top: 3px solid #0d9488; border-style: dashed; border-top-style: solid; background: #f0fdf9; }
+  .box-temporal { border-top: 3px solid #d97706; }
+  .box-fusion   { border-top: 3px solid #16a34a; }
+  .box-output   { border-top: 3px solid #7c3aed; background: #faf5ff; }
+
+  /* Arrow connector (vertical) */
+  .v-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 0;
+    position: relative;
+  }
+  .v-arrow .line {
+    width: 1.5px;
+    height: 18px;
+    background: #bbb;
+  }
+  .v-arrow .head {
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #bbb;
+  }
+  .v-arrow .label {
+    font-size: 8.5px;
+    color: #999;
+    margin-top: 2px;
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* Horizontal arrow between boxes */
+  .h-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 20px;
+    color: #bbb;
+    font-size: 16px;
+  }
+
+  /* Brace grouping */
+  .brace-group {
+    border: 1.5px dashed #aac8e0;
+    border-radius: 8px;
+    padding: 14px 12px 10px;
+    position: relative;
+    background: #f8fbff;
+  }
+  .brace-group .brace-label {
+    position: absolute;
+    top: -9px;
+    left: 14px;
+    background: #f8fbff;
+    padding: 0 8px;
+    font-size: 9px;
+    font-weight: 600;
+    color: #5b8db8;
+    letter-spacing: 0.5px;
+  }
+
+  /* Wide single box */
+  .box-wide {
+    width: 100%;
+  }
+
+  /* Parallel streams container */
+  .parallel-streams {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+  }
+  .stream-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .stream-label {
+    font-size: 8.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 3px 0;
+    border-radius: 3px;
+  }
+  .sl-traj { color: #2563eb; background: #eff6ff; }
+  .sl-pixel { color: #9333ea; background: #faf5ff; }
+
+  /* Annotation/legend */
+  .legend {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid #e5e5e5;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 9.5px;
+    color: #666;
+  }
+  .legend-swatch {
+    width: 12px;
+    height: 3px;
+    border-radius: 2px;
+  }
+
+  /* Figure caption */
+  .fig-caption {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 10.5px;
+    color: #555;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* SVG overlay for curved arrows */
+  .svg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<div class="diagram-container">
+
+  <!-- Figure Title -->
+  <div class="fig-title">
+    <h1>Figure X: SARTriage System Architecture — 11-Component Pipeline</h1>
+    <div class="fig-sub">Post-mission UAV SAR video triage via trajectory-centric behavioural analysis</div>
+  </div>
+
+  <div class="pipeline">
+
+    <!-- ═══ INPUT ═══ -->
+    <div class="stage-group">
+      <div class="box-row" style="justify-content: center;">
+        <div class="box box-input" style="max-width: 500px;">
+          <div class="box-name">UAV SAR Video Input</div>
+          <div class="box-detail">Post-mission drone footage · 1280×720 @ 5 fps · persons typically 15–25 px</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="v-arrow"><div class="line"></div><div class="head"></div><div class="label">video frames</div></div>
+
+    <!-- ═══ STAGE 1: DETECTION & TRACKING ═══ -->
+    <div class="stage-group">
+      <div class="stage-header">Stage 1 — Detection & Tracking</div>
+      <div class="box-row">
+        <div class="box box-detect">
+          <div class="box-id">C1</div>
+          <div class="box-name">YOLOv8n<br>Person Detector</div>
+          <div class="box-detail">HERIDAL fine-tuned<br>conf ≥ 0.1</div>
+          <div class="box-metric">~82 ms/frame</div>
+        </div>
+        <div class="h-arrow">→</div>
+        <div class="box box-detect">
+          <div class="box-id">C2</div>
+          <div class="box-name">ByteTrack<br>MOT Tracker</div>
+          <div class="box-detail">IoU + centroid matching<br>max_lost = 10</div>
+        </div>
+        <div class="h-arrow">→</div>
+        <div class="box box-detect" style="flex: 0.6;">
+          <div class="box-id">Filter</div>
+          <div class="box-name">Track Quality<br>Gate</div>
+          <div class="box-detail">size ≥ 15 px<br>≥ 5 frames</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="v-arrow"><div class="line"></div><div class="head"></div><div class="label">validated person tracks (centroids, bboxes, confidences)</div></div>
+
+    <!-- ═══ STAGE 2: MULTI-STREAM CLASSIFICATION ═══ -->
+    <div class="stage-group">
+      <div class="stage-header">Stage 2 — Multi-Stream Classification</div>
+
+      <div class="parallel-streams">
+        <!-- Trajectory Streams -->
+        <div style="flex: 3;">
+          <div class="brace-group">
+            <div class="brace-label">TRAJECTORY-CENTRIC STREAMS (centroid-only — resolution-independent)</div>
+            <div class="box-row">
+              <div class="stream-col">
+                <div class="stream-label sl-traj">Stream A</div>
+                <div class="box box-traj">
+                  <div class="box-id">C3</div>
+                  <div class="box-name">TMS-16 +<br>Random Forest</div>
+                  <div class="box-detail">16 hand-crafted motion<br>features · SMOTE-balanced<br>200 trees</div>
+                  <div class="box-metric">60.3% accuracy ★</div>
+                </div>
+              </div>
+              <div class="stream-col">
+                <div class="stream-label sl-traj">Stream B</div>
+                <div class="box box-traj">
+                  <div class="box-id">C4</div>
+                  <div class="box-name">TrajMAE</div>
+                  <div class="box-detail">Masked autoencoder<br>on trajectory Δ-tokens</div>
+                  <div class="box-metric">24.6% accuracy</div>
+                </div>
+                <div class="box box-traj" style="opacity: 0.85;">
+                  <div class="box-id">C5</div>
+                  <div class="box-name">Anomaly<br>Detector</div>
+                  <div class="box-detail">Reconstruction error<br>→ anomaly flag</div>
+                </div>
+              </div>
+              <div class="stream-col">
+                <div class="stream-label sl-traj">Stream C</div>
+                <div class="box box-traj">
+                  <div class="box-id">C6</div>
+                  <div class="box-name">SCTE</div>
+                  <div class="box-detail">Self-supervised<br>contrastive encoder<br>+ linear probe</div>
+                  <div class="box-metric">56.5% accuracy</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pixel Stream -->
+        <div style="flex: 1;">
+          <div class="brace-group" style="border-color: #d4b0f0; background: #fdf8ff; height: 100%;">
+            <div class="brace-label" style="color: #9333ea; background: #fdf8ff;">PIXEL STREAM</div>
+            <div class="stream-col" style="height: 100%;">
+              <div class="stream-label sl-pixel">Stream D</div>
+              <div class="box box-pixel" style="flex: 1;">
+                <div class="box-id">C7</div>
+                <div class="box-name">MViTv2-S</div>
+                <div class="box-detail">Video transformer<br>on person crops<br>Kinetics → SAR<br>fine-tuned</div>
+                <div class="box-metric" style="color: #dc2626;">26.5% at &lt;50 px ✗</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ensemble -->
+      <div class="v-arrow" style="padding: 4px 0;"><div class="line" style="height: 12px;"></div><div class="head"></div></div>
+      <div class="box-row" style="justify-content: center;">
+        <div class="box box-ensemble" style="max-width: 600px;">
+          <div class="box-id">C8</div>
+          <div class="box-name">Majority Vote Ensemble</div>
+          <div class="box-detail">Fuses C3 + C4 + C6 class predictions → {lying_down, stationary, walking, running}</div>
+          <div class="box-metric">Trajectory classifiers dominate at &lt;50 px (3 traj vs 1 pixel vote)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="v-arrow"><div class="line"></div><div class="head"></div><div class="label">ensemble class · confidence · anomaly flag</div></div>
+
+    <!-- ═══ STAGE 3: TEMPORAL & CONTEXT ═══ -->
+    <div class="stage-group">
+      <div class="stage-header">Stage 3 — Temporal & Context Analysis</div>
+      <div class="box-row">
+        <div class="box box-temporal">
+          <div class="box-id">C9</div>
+          <div class="box-name">TCE v3 — Temporal<br>Criticality Engine</div>
+          <div class="box-detail">Confidence-aware state machine<br>MOVING → STATIONARY → COLLAPSED → STOPPED<br>score = base × dwell × (0.5 + 0.5 × max_prob)</div>
+        </div>
+        <div class="box box-temporal">
+          <div class="box-id">C10</div>
+          <div class="box-name">EMI — Ego-Motion<br>Intelligence</div>
+          <div class="box-detail">ORB features → homography decomposition<br>Flight phase: TRANSIT / SCANNING / HOVERING<br>Hovering → operator attention boost</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="v-arrow"><div class="line"></div><div class="head"></div><div class="label">TCE score · EMI attention multiplier</div></div>
+
+    <!-- ═══ STAGE 4: FUSION & RANKING ═══ -->
+    <div class="stage-group">
+      <div class="stage-header">Stage 4 — Fusion & Priority Ranking</div>
+      <div class="box-row">
+        <div class="box box-fusion">
+          <div class="box-id">C11</div>
+          <div class="box-name">AAI-v2 Meta-Classifier</div>
+          <div class="box-detail">MLP → softmax(w<sub>traj</sub>, w<sub>pixel</sub>)<br>Input: person_size, det_confidence, motion<br><strong>fused = w<sub>pixel</sub> × MViT + w<sub>traj</sub> × (ensemble × TCE)</strong></div>
+        </div>
+        <div class="h-arrow">→</div>
+        <div class="box box-fusion" style="flex: 0.7;">
+          <div class="box-id">Ranker</div>
+          <div class="box-name">Priority Ranker</div>
+          <div class="box-detail">final_priority =<br>fused × EMI_mult<br>→ sort descending</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="v-arrow"><div class="line"></div><div class="head"></div><div class="label">ranked priority list</div></div>
+
+    <!-- ═══ OUTPUT ═══ -->
+    <div class="stage-group">
+      <div class="box-row" style="justify-content: center;">
+        <div class="box box-output" style="max-width: 550px;">
+          <div class="box-name">Ranked Triage List</div>
+          <div class="box-detail" style="font-family: 'SF Mono', 'Fira Code', monospace; text-align: left; padding: 6px 0;">
+            #1 Track 149 — <span style="color:#dc2626;font-weight:700;">CRITICAL</span> (lying_down) — 0.560<br>
+            #2 Track 28 &nbsp;— <span style="color:#dc2626;font-weight:700;">CRITICAL</span> (lying_down) — 0.550<br>
+            #6 Track 128 — <span style="color:#d97706;font-weight:700;">HIGH</span> (stationary) — 0.408<br>
+            #9 Track 261 — <span style="color:#ca8a04;font-weight:700;">MEDIUM</span> (walking) — 0.120<br>
+            &nbsp; &nbsp;...124 persons ranked by urgency
+          </div>
+          <div class="box-metric" style="font-size: 10px;">NDCG@3 = 0.41 · 124 tracks across 3 test sequences</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch" style="background: #dc2626;"></div> Detection/Tracking</div>
+    <div class="legend-item"><div class="legend-swatch" style="background: #2563eb;"></div> Trajectory Classification</div>
+    <div class="legend-item"><div class="legend-swatch" style="background: #9333ea;"></div> Pixel Classification</div>
+    <div class="legend-item"><div class="legend-swatch" style="background: #d97706;"></div> Temporal Analysis</div>
+    <div class="legend-item"><div class="legend-swatch" style="background: #16a34a;"></div> Fusion/Ranking</div>
+    <div class="legend-item"><div class="legend-swatch" style="background: #7c3aed;"></div> Output</div>
+    <div class="legend-item" style="font-weight: 600; color: #0066cc;">★ = Novel contribution</div>
+  </div>
+
+  <!-- Caption -->
+  <div class="fig-caption">
+    The pipeline processes post-mission UAV footage through 4 stages and 11 components.
+    At sub-50 px person scales, pixel-based methods fail (MViTv2-S: 26.5%) while trajectory-centric
+    streams (TMS-16: 60.3%) operate resolution-independently on centroid geometry alone.
+    The AAI-v2 meta-classifier adaptively weights streams based on person size, routing small persons
+    to trajectory analysis and large persons to pixel analysis.
+  </div>
+
+</div>
+
+</body>
+</html>

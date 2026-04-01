@@ -272,7 +272,23 @@ class TrajectoryFeatures:
             self.accels.append(abs(self.speeds[i] - self.speeds[i-1]) / dt)
 
     def _compute_features(self):
-        """Extract the 12 trajectory signature features."""
+        """Extract the 12 TMS trajectory signature features.
+
+        Given compensated trajectory {(x_t, y_t)}_{t=1}^{T} with boxes {(w_t, h_t)}:
+
+        1.  net_displacement   = ||p_T - p_1|| / (T · diag)
+        2.  mean_speed         = (1/T) Σ ||p_{t+1} - p_t|| / diag
+        3.  speed_cv           = σ(speeds) / μ(speeds)
+        4.  max_acceleration   = max_t |speed_{t+1} - speed_t|
+        5.  vertical_dominance = Σ|Δy_t| / (Σ|Δx_t| + Σ|Δy_t|)
+        6.  direction_change   = (1/T) Σ 𝟙[sign(dx_t) ≠ sign(dx_{t+1})]
+        7.  stationarity       = (1/T) Σ 𝟙[speed_t < ε]
+        8.  aspect_change      = max(a_t) - min(a_t)
+        9.  speed_decay        = μ(speed_{1:T/2}) / μ(speed_{T/2:T})
+        10. oscillation        = path_length / net_displacement - 1
+        11. mean_aspect        = μ(w_t / h_t)
+        12. mean_size_norm     = μ(w_t · h_t) / (W · H)
+        """
         if self.n < 3 or not self.speeds:
             self.features = self._zero_features()
             return
@@ -315,19 +331,19 @@ class TrajectoryFeatures:
         stationary_frames = sum(1 for s in self.speeds if s < speed_threshold)
         stationarity = stationary_frames / max(len(self.speeds), 1)
 
-        # 8. Aspect ratio trend — is bbox getting wider over time?
-        if len(self.aspects) >= 4:
-            first_half = float(np.mean(self.aspects[:len(self.aspects)//2]))
-            second_half = float(np.mean(self.aspects[len(self.aspects)//2:]))
-            aspect_change = first_half - second_half  # positive = went from tall to wide
+        # 8. Aspect change — range of aspect ratio over trajectory
+        #    Spec: aspect_change = max(a_t) - min(a_t)
+        if len(self.aspects) >= 2:
+            aspect_change = float(np.max(self.aspects) - np.min(self.aspects))
         else:
             aspect_change = 0.0
 
-        # 9. Speed decay — ratio of speed in last quarter vs first quarter
-        q = max(len(self.speeds) // 4, 1)
-        first_q_speed = float(np.mean(self.speeds[:q]))
-        last_q_speed = float(np.mean(self.speeds[-q:]))
-        speed_decay = (first_q_speed - last_q_speed) / max(first_q_speed, 1e-6)
+        # 9. Speed decay — ratio of first-half to second-half speed
+        #    Spec: speed_decay = μ(speed_{1:T/2}) / μ(speed_{T/2:T})
+        mid = max(len(self.speeds) // 2, 1)
+        first_half_speed = float(np.mean(self.speeds[:mid])) if mid > 0 else 0.0
+        second_half_speed = float(np.mean(self.speeds[mid:])) if mid < len(self.speeds) else 0.0
+        speed_decay = first_half_speed / max(second_half_speed, 1e-6)
 
         # 10. Oscillation index — how much position reverses
         #     High for waving (back-and-forth), low for linear movement
@@ -339,8 +355,15 @@ class TrajectoryFeatures:
         # 11. Mean aspect ratio
         mean_aspect = float(np.mean(self.aspects)) if self.aspects else 1.0
 
-        # 12. Mean bbox size (normalised)
-        mean_size = float(np.mean(self.bbox_sizes)) / max(self.frame_w, 1) if self.bbox_sizes else 0.0
+        # 12. Mean bbox size (normalised by frame area)
+        #     Spec: mean_size_norm = μ(w_t · h_t) / (W · H)
+        if self.bbox_sizes and self.aspects:
+            # bbox_sizes = widths, aspects = w/h ratios → area = w * (w/aspect)
+            # But bbox_sizes is typically a single dimension — normalise by frame area
+            frame_area = max(self.frame_w * self.frame_h, 1)
+            mean_size = float(np.mean(self.bbox_sizes)) ** 2 / frame_area
+        else:
+            mean_size = 0.0
 
         self.features = {
             "net_displacement": round(net_disp, 6),
@@ -453,21 +476,23 @@ TMS_RULES = [
         ("mean_speed", "<", 0.015, 1.5),               # but not fast
     ]),
     TMSRule("collapsed", [
-        # Data: speed_decay=0.57, stationarity=0.43, aspect_change=0.56, mean_aspect=0.68
-        # KEY: BOTH high speed_decay AND high aspect_change AND moderate stationarity
-        ("speed_decay", ">", 0.4, 3.5),                # dramatic slowdown: 0.57
-        ("aspect_change", ">", 0.4, 3.0),              # went from tall to wide: 0.56
-        ("stationarity", ">", 0.35, 2.5),              # became still: 0.43
-        ("mean_aspect", "<", 0.8, 1.5),                 # ended up prone: 0.68
-        ("mean_speed", "<", 0.01, 1.0),                 # overall slow: 0.007
+        # With new formulas:
+        # aspect_change = max-min range (typically 0.6-1.5 for collapsing)
+        # speed_decay = first_half_speed / second_half_speed (>1 = slowing, ~2-5 = dramatic)
+        ("speed_decay", ">", 1.5, 3.5),                # dramatic slowdown (ratio > 1.5)
+        ("aspect_change", ">", 0.6, 3.0),              # large aspect range (tall→wide)
+        ("stationarity", ">", 0.35, 2.5),              # became still
+        ("mean_aspect", "<", 0.8, 1.5),                 # ended up prone
+        ("mean_speed", "<", 0.01, 1.0),                 # overall slow
     ]),
     TMSRule("stumbling", [
-        # Data: speed_cv=0.53, dir_change=0.72, aspect_change=0.32, speed_decay=0.36
-        # KEY: lower aspect_change (0.32 vs collapsed 0.56), higher mean_speed
-        ("direction_change_rate", ">", 0.6, 3.0),      # erratic: 0.72
-        ("aspect_change", ">", 0.15, 2.0),              # goes from upright to not: 0.32
-        ("aspect_change", "<", 0.45, 2.0),              # but not as much as collapsed (0.56)
-        ("speed_decay", ">", 0.15, 2.0),               # slowing down: 0.36
+        # With new formulas:
+        # aspect_change = max-min range (0.3-0.8 for stumbling — less than collapsed)
+        # speed_decay = ratio (1.2-2.0 for stumbling — moderate slowdown)
+        ("direction_change_rate", ">", 0.6, 3.0),      # erratic
+        ("aspect_change", ">", 0.3, 2.0),              # some posture variation
+        ("aspect_change", "<", 0.8, 2.0),              # but less than collapsed
+        ("speed_decay", ">", 1.2, 2.0),                # moderate slowdown (ratio > 1.2)
         ("mean_speed", ">", 0.008, 1.5),               # was moving: 0.014 (collapsed=0.007)
     ]),
 ]

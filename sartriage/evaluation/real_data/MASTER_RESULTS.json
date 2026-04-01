@@ -1,0 +1,379 @@
+{
+  "compiled_at": "2026-03-25T17:39:06.701454",
+  "experiments": {
+    "E1: TMS-12 RF Baseline": {
+      "accuracy": 0.6298472385428907,
+      "ci_95": [
+        0.5968900451180651,
+        0.6616373826533489
+      ],
+      "n_train": 1983,
+      "n_test": 851,
+      "dataset": "Okutama-Action",
+      "data_type": "REAL",
+      "script": "evaluation/real_data/full_evaluation.py"
+    },
+    "E2: TMS-12 Balanced": {
+      "accuracy": 0.6321974148061105,
+      "kappa": 0.26988630133982416,
+      "lying_recall": 0.07407407407407407,
+      "running_recall": 0.0,
+      "n": 851,
+      "dataset": "Okutama-Action",
+      "data_type": "REAL",
+      "script": "evaluation/real_data/balanced_evaluation_tms12.py"
+    },
+    "E2: TMS-12 SMOTE+Balanced": {
+      "accuracy": 0.6122209165687427,
+      "kappa": 0.31751902868641313,
+      "lying_recall": 0.48148148148148145,
+      "running_recall": 0.23529411764705882,
+      "n": 851,
+      "dataset": "Okutama-Action",
+      "data_type": "REAL",
+      "script": "evaluation/real_data/balanced_evaluation_tms12.py"
+    },
+    "E3: TCE v2 Priority": {
+      "scores": {
+        "lying_down": [
+          0.5857142857142856,
+          0.14263719331505895
+        ],
+        "running": [
+          0.5053571428571428,
+          0.05644100224742539
+        ],
+        "walking": [
+          0.5081708449396471,
+          0.06412105951614988
+        ],
+        "stationary": [
+          0.5045688545688546,
+          0.06055067510100399
+        ],
+        "standing": [
+          0.5022433132010354,
+          0.05928949018138326
+        ],
+        "sitting": [
+          0.5113924050632911,
+          0.06361940188926107
+        ]
+      },
+      "ndcg": {
+        "FLAT": {
+          "3": 0.4136490867100827,
+          "5": 0.4440599404324469,
+          "10": 0.5110695391929027
+        },
+        "RANDOM": {
+          "3": 0.43861949340849354,
+          "5": 0.4743546128380695,
+          "10": 0.55186685433281
+        },
+        "TCE": {
+          "3": 0.4670995020859838,
+          "5": 0.4867766026998156,
+          "10": 0.5543724676077475
+        }
+      },
+      "recall_lying_topk": {
+        "FLAT": 0.2962962962962963,
+        "RANDOM": 0.1111111111111111,
+        "TCE": 0.5555555555555556
+      },
+      "n": 2834,
+      "dataset": "Okutama-Action",
+      "data_type": "REAL",
+      "script": "evaluation/real_data/tce_v2_full.py"
+    },
+    "E4: Feature Stability (VisDrone)": {
+      "failure_rate": "0.0% at all bins including <20px",
+      "ks_test": {
+        "Net displacement": {
+          "stat": 0.139969646799117,
+          "pval": 0.06992939530006015
+        },
+        "Mean speed": {
+          "stat": 0.11051324503311258,
+          "pval": 0.24335795071673935
+        },
+        "Speed CV": {
+          "stat": 0.2534492273730684,
+          "pval": 3.5474577393118146e-05
+        },
+        "Max acceleration": {
+          "stat": 0.22661423841059603,
+          "pval": 0.0003198405862981465
+        },
+        "Vertical dominance": {
+          "stat": 0.14873068432671083,
+          "pval": 0.04558884803599399
+        },
+        "Direction change rate": {
+          "stat": 0.26793598233995586,
+          "pval": 9.726501935005039e-06
+        },
+        "Stationarity ratio": {
+          "stat": 0.45536699779249445,
+          "pval": 3.974197050177541e-16
+        },
+        "Aspect ratio change": {
+          "stat": 0.1521109271523179,
+          "pval": 0.03838728264427416
+        },
+        "Speed decay": {
+          "stat": 0.298841059602649,
+          "pval": 4.774526358207144e-07
+        },
+        "Oscillation index": {
+          "stat": 0.1892246136865342,
+          "pval": 0.004492004799407508
+        },
+        "Mean aspect ratio": {
+          "stat": 0.4624034216335541,
+          "pval": 1.234813621192236e-16
+        },
+        "Mean normalised size": {
+          "stat": 0.48992825607064017,
+          "pval": 9.916684612786327e-19
+        }
+      },
+      "n": 887,
+      "dataset": "VisDrone2019-MOT",
+      "data_type": "REAL",
+      "script": "evaluation/real_data/visdrone_tms12_eval.py"
+    },
+    "E5: YOLO Detection": {
+      "standard": {
+        "precision": 0.15413533834586465,
+        "recall": 0.08055009823182711,
+        "f1": 0.10580645161290322,
+        "time_ms": 81.20547192437309,
+        "bins": {
+          "<50px": 0.08779443254817987,
+          "50-75px": 0.0,
+          "75-100px": 0.0,
+          ">100px": 0
+        },
+        "bin_counts": {
+          "<50px": 1401,
+          "50-75px": 104,
+          "75-100px": 22,
+          ">100px": 0
+        }
+      },
+      "sahi": {
+        "precision": 0.1521472392638037,
+        "recall": 0.08120497707924033,
+        "f1": 0.10589239965841162,
+        "time_ms": 188.24794803346907,
+        "bins": {
+          "<50px": 0.08850820842255532,
+          "50-75px": 0.0,
+          "75-100px": 0.0,
+          ">100px": 0
+        },
+        "bin_counts": {
+          "<50px": 1401,
+          "50-75px": 104,
+          "75-100px": 22,
+          ">100px": 0
+        }
+      },
+      "frames": 280,
+      "dataset": "Okutama-Action TestSet",
+      "data_type": "REAL",
+      "script": "evaluation/real_data/exp1_yolo_sahi.py",
+      "note": "HERIDAL-finetuned weights on Okutama domain (cross-domain)"
+    },
+    "E6: MViTv2-S Pixel Classifier": {
+      "accuracy": 0.265,
+      "kappa": -0.012675668228162351,
+      "report": {
+        "lying_down": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 9.0
+        },
+        "stationary": {
+          "precision": 0.7,
+          "recall": 0.11382113821138211,
+          "f1-score": 0.1958041958041958,
+          "support": 123.0
+        },
+        "walking": {
+          "precision": 0.3170731707317073,
+          "recall": 0.6,
+          "f1-score": 0.4148936170212766,
+          "support": 65.0
+        },
+        "running": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 3.0
+        },
+        "accuracy": 0.265,
+        "macro avg": {
+          "precision": 0.25426829268292683,
+          "recall": 0.1784552845528455,
+          "f1-score": 0.1526744532063681,
+          "support": 200.0
+        },
+        "weighted avg": {
+          "precision": 0.5335487804878049,
+          "recall": 0.265,
+          "f1-score": 0.25526000595149534,
+          "support": 200.0
+        }
+      },
+      "size_bins": {
+        "<50px": {
+          "n": 192,
+          "accuracy": 0.2604166666666667
+        },
+        "50-75px": {
+          "n": 7,
+          "accuracy": 0.42857142857142855
+        },
+        "75-100px": {
+          "n": 1,
+          "accuracy": 0.0
+        }
+      },
+      "n": 200,
+      "failures": 0,
+      "dataset": "Okutama-Action TestSet",
+      "data_type": "REAL",
+      "script": "evaluation/real_data/exp2_mvit2s.py"
+    },
+    "E7: Killer Figure (Pixel vs Trajectory)": {
+      "note": "MViTv2-S tested on 200 tracks from Okutama TestSet; TMS-12 tested on 851 tracks (70/30 split). Not directly comparable per-sample, but per-bin comparison is valid.",
+      "mvit_accuracy": 0.265,
+      "tms12_accuracy": 0.6298472385428907,
+      "lstm_accuracy": 0.5053956834532374,
+      "mvit_by_bin": {
+        "<50px": {
+          "acc": 0.2604166666666667,
+          "n": 192
+        },
+        "50-75px": {
+          "acc": 0.42857142857142855,
+          "n": 7
+        },
+        "75-100px": {
+          "acc": 0.0,
+          "n": 1
+        },
+        ">100px": {
+          "acc": 0,
+          "n": 0
+        }
+      },
+      "tms12_by_bin": {
+        "<50px": {
+          "acc": 1.0,
+          "n": 2
+        },
+        "50-75px": {
+          "acc": 0.5824175824175825,
+          "n": 91
+        },
+        "75-100px": {
+          "acc": 0.5869565217391305,
+          "n": 230
+        },
+        ">100px": {
+          "acc": 0.3905579399141631,
+          "n": 233
+        }
+      }
+    },
+    "E8: SAR Preprocessing Impact": {
+      "raw": {
+        "mean_recall": 0.06324244751664107,
+        "bins": {
+          "<50px": 0.08152173913043478,
+          "50-75px": 0.0,
+          "75-100px": 0.0,
+          ">100px": 0
+        },
+        "bin_counts": {
+          "<50px": 920,
+          "50-75px": 71,
+          "75-100px": 17,
+          ">100px": 0
+        }
+      },
+      "preprocessed": {
+        "mean_recall": 0.016020225294418843,
+        "bins": {
+          "<50px": 0.017391304347826087,
+          "50-75px": 0.0,
+          "75-100px": 0.0,
+          ">100px": 0
+        },
+        "bin_counts": {
+          "<50px": 920,
+          "50-75px": 71,
+          "75-100px": 17,
+          ">100px": 0
+        }
+      },
+      "paired_ttest": {
+        "t_stat": 6.30022224306542,
+        "p_value": 2.1152748960417735e-09
+      },
+      "n_frames": 186,
+      "dataset": "Okutama-Action TestSet",
+      "data_type": "REAL",
+      "script": "evaluation/real_data/exp4_preprocessing.py"
+    },
+    "E9: Trajectory Sequence Classifier": {
+      "accuracy": 0.5053956834532374,
+      "kappa": 0.01925568626444807,
+      "size_bins": {
+        "<50px": {
+          "n": 2,
+          "accuracy": 1.0
+        },
+        "50-75px": {
+          "n": 91,
+          "accuracy": 0.5824175824175825
+        },
+        "75-100px": {
+          "n": 230,
+          "accuracy": 0.5869565217391305
+        },
+        ">100px": {
+          "n": 233,
+          "accuracy": 0.3905579399141631
+        }
+      },
+      "n_train": 2278,
+      "n_test": 556,
+      "dataset": "Okutama-Action",
+      "data_type": "REAL",
+      "script": "evaluation/real_data/exp5_trajmae.py"
+    },
+    "E10: Pipeline Timing": {
+      "components": {
+        "yolo_detection_ms": 86.96302572886148,
+        "track_extraction_ms": 0.00133514404296875,
+        "tms12_extraction_ms": 9.5367431640625e-05,
+        "tce_scoring_ms": 0.0,
+        "ranking_ms": 2.384185791015625e-05,
+        "total_ms": 86.964480082194
+      },
+      "realtime_factor": 2.60893440246582,
+      "video_duration_s": 1.0,
+      "n_frames": 30,
+      "n_tracks": 21,
+      "hardware": "arm64 / arm / macOS 14.5",
+      "data_type": "REAL",
+      "script": "evaluation/real_data/exp6_timing.py"
+    }
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "accuracy": 0.5053956834532374,
+  "kappa": 0.01925568626444807,
+  "report": {
+    "lying_down": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 22.0
+    },
+    "stationary": {
+      "precision": 0.6073446327683616,
+      "recall": 0.6456456456456456,
+      "f1-score": 0.6259097525473072,
+      "support": 333.0
+    },
+    "walking": {
+      "precision": 0.34574468085106386,
+      "recall": 0.34759358288770054,
+      "f1-score": 0.3466666666666667,
+      "support": 187.0
+    },
+    "running": {
+      "precision": 0.07142857142857142,
+      "recall": 0.07142857142857142,
+      "f1-score": 0.07142857142857142,
+      "support": 14.0
+    },
+    "accuracy": 0.5053956834532374,
+    "macro avg": {
+      "precision": 0.2561294712619992,
+      "recall": 0.2661669499904794,
+      "f1-score": 0.2610012476606363,
+      "support": 556.0
+    },
+    "weighted avg": {
+      "precision": 0.48183456480398085,
+      "recall": 0.5053956834532374,
+      "f1-score": 0.49326369472107906,
+      "support": 556.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      0,
+      18,
+      4,
+      0
+    ],
+    [
+      0,
+      215,
+      114,
+      4
+    ],
+    [
+      0,
+      113,
+      65,
+      9
+    ],
+    [
+      0,
+      8,
+      5,
+      1
+    ]
+  ],
+  "size_bins": {
+    "<50px": {
+      "n": 2,
+      "accuracy": 1.0
+    },
+    "50-75px": {
+      "n": 91,
+      "accuracy": 0.5824175824175825
+    },
+    "75-100px": {
+      "n": 230,
+      "accuracy": 0.5869565217391305
+    },
+    ">100px": {
+      "n": 233,
+      "accuracy": 0.3905579399141631
+    }
+  },
+  "n_train": 2278,
+  "n_test": 556,
+  "architecture": "BiLSTM(4\u219264\u00d72, 2-layer) + MLP head",
+  "note": "Operates on (dx,dy,dw,dh) trajectory tokens, same as TrajMAE tokenization"
+}

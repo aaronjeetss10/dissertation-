@@ -49,7 +49,6 @@ Thumbs.db
 *~
 
 # ── IDE ──────────────────────────────────────────────────────────────────────
-.vscode/
 .idea/
 *.code-workspace
 
@@ -62,3 +61,6 @@ sartriage/evaluation/results/
 evaluation/results/
 sartriage/evaluation/test_videos/
 sartriage/evaluation/datasets/
+temp_auto_push.bat
+temp_interactive_push.bat
+branch_structure.json

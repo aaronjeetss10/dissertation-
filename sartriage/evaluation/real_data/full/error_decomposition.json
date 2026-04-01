@@ -1,0 +1,1455 @@
+{
+  "experiment": "error_decomposition_v3",
+  "description": "Stage-by-stage error decomposition of SARTriage v3 on 3 Okutama test sequences",
+  "n_gt_tracks": 110,
+  "n_matched": 35,
+  "n_successes": 7,
+  "n_failures": 103,
+  "match_rate": 0.3182,
+  "success_rate_overall": 0.0636,
+  "success_rate_matched": 0.2,
+  "overall_counts": {
+    "Full Success": 7,
+    "Detection/Tracking Gap": 75,
+    "Classification Error": 22,
+    "Ranking Failure": 6
+  },
+  "error_attribution": {
+    "Detection/Tracking Gap": {
+      "count": 75,
+      "pct_of_total": 68.2,
+      "pct_of_failures": 72.8
+    },
+    "Classification Error": {
+      "count": 22,
+      "pct_of_total": 20.0,
+      "pct_of_failures": 21.4
+    },
+    "Ranking Failure": {
+      "count": 6,
+      "pct_of_total": 5.5,
+      "pct_of_failures": 5.8
+    }
+  },
+  "by_action_class": {
+    "lying_down": {
+      "total_gt": 2,
+      "matched": 0,
+      "match_rate": 0.0,
+      "Full Success": 0,
+      "Detection/Tracking Gap": 2,
+      "Classification Error": 0,
+      "Ranking Failure": 0
+    },
+    "stationary": {
+      "total_gt": 52,
+      "matched": 22,
+      "match_rate": 0.4231,
+      "Full Success": 5,
+      "Detection/Tracking Gap": 30,
+      "Classification Error": 17,
+      "Ranking Failure": 0
+    },
+    "walking": {
+      "total_gt": 41,
+      "matched": 8,
+      "match_rate": 0.1951,
+      "Full Success": 2,
+      "Detection/Tracking Gap": 33,
+      "Classification Error": 0,
+      "Ranking Failure": 6
+    },
+    "running": {
+      "total_gt": 15,
+      "matched": 5,
+      "match_rate": 0.3333,
+      "Full Success": 0,
+      "Detection/Tracking Gap": 10,
+      "Classification Error": 5,
+      "Ranking Failure": 0
+    }
+  },
+  "by_sequence": {
+    "1.1.8": {
+      "total_gt": 41,
+      "v3_tracks": 42,
+      "v3_before_filter": 84,
+      "yolo_dets": 1788,
+      "median_priority": 0.17325000000000002,
+      "Full Success": 5,
+      "Detection/Tracking Gap": 22,
+      "Classification Error": 11,
+      "Ranking Failure": 3
+    },
+    "1.2.3": {
+      "total_gt": 39,
+      "v3_tracks": 42,
+      "v3_before_filter": 68,
+      "yolo_dets": 1320,
+      "median_priority": 0.13045,
+      "Full Success": 1,
+      "Detection/Tracking Gap": 33,
+      "Classification Error": 5,
+      "Ranking Failure": 0
+    },
+    "2.2.3": {
+      "total_gt": 30,
+      "v3_tracks": 40,
+      "v3_before_filter": 65,
+      "yolo_dets": 1842,
+      "median_priority": 0.11299999999999999,
+      "Full Success": 1,
+      "Detection/Tracking Gap": 20,
+      "Classification Error": 6,
+      "Ranking Failure": 3
+    }
+  },
+  "per_track_results": [
+    {
+      "gt_tid": "seq1.1.8_track0",
+      "sequence": "1.1.8",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 74.37,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track1",
+      "sequence": "1.1.8",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 74.73,
+      "gt_n_frames": 181,
+      "category": "Ranking Failure",
+      "v3_match": {
+        "track_id": 8,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1366,
+        "n_frames": 7,
+        "person_size_px": 17.4
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track2",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 78.5,
+      "gt_n_frames": 171,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 13,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1532,
+        "n_frames": 20,
+        "person_size_px": 17.0
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track3",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 67.67,
+      "gt_n_frames": 161,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 14,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1598,
+        "n_frames": 14,
+        "person_size_px": 15.9
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track4",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 75.57,
+      "gt_n_frames": 161,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track5",
+      "sequence": "1.1.8",
+      "gt_action": "Sitting",
+      "sar_class": "stationary",
+      "mean_size_px": 106.83,
+      "gt_n_frames": 81,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track6",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 80.5,
+      "gt_n_frames": 41,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 33,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.0966,
+        "n_frames": 9,
+        "person_size_px": 18.6
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track7",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 85.63,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 30,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1138,
+        "n_frames": 46,
+        "person_size_px": 20.6
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track8",
+      "sequence": "1.1.8",
+      "gt_action": "Sitting",
+      "sar_class": "stationary",
+      "mean_size_px": 117.29,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track9",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 79.38,
+      "gt_n_frames": 71,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track10",
+      "sequence": "1.1.8",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 71.5,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track11",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 78.19,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 2,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.2025,
+        "n_frames": 60,
+        "person_size_px": 17.2
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track12",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 75.0,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 4,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.222,
+        "n_frames": 60,
+        "person_size_px": 17.0
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track13",
+      "sequence": "1.1.8",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 111.3,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track14",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 80.59,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 7,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1761,
+        "n_frames": 51,
+        "person_size_px": 17.1
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track15",
+      "sequence": "1.1.8",
+      "gt_action": "Reading",
+      "sar_class": "stationary",
+      "mean_size_px": 85.03,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 83,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.0919,
+        "n_frames": 10,
+        "person_size_px": 18.0
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track16",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 89.04,
+      "gt_n_frames": 30,
+      "category": "Full Success",
+      "v3_match": {
+        "track_id": 77,
+        "ensemble_class": "stationary",
+        "tms16_class": "stationary",
+        "priority": 0.282,
+        "n_frames": 11,
+        "person_size_px": 16.6
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track17",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 104.46,
+      "gt_n_frames": 10,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track18",
+      "sequence": "1.1.8",
+      "gt_action": "Carrying",
+      "sar_class": "walking",
+      "mean_size_px": 128.66,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track19",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 101.59,
+      "gt_n_frames": 31,
+      "category": "Full Success",
+      "v3_match": {
+        "track_id": 128,
+        "ensemble_class": "stationary",
+        "tms16_class": "stationary",
+        "priority": 0.4077,
+        "n_frames": 10,
+        "person_size_px": 20.6
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track20",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 73.7,
+      "gt_n_frames": 181,
+      "category": "Full Success",
+      "v3_match": {
+        "track_id": 127,
+        "ensemble_class": "stationary",
+        "tms16_class": "stationary",
+        "priority": 0.3059,
+        "n_frames": 80,
+        "person_size_px": 20.0
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track21",
+      "sequence": "1.1.8",
+      "gt_action": "Lying",
+      "sar_class": "lying_down",
+      "mean_size_px": 117.93,
+      "gt_n_frames": 61,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track22",
+      "sequence": "1.1.8",
+      "gt_action": "Lying",
+      "sar_class": "lying_down",
+      "mean_size_px": 119.62,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track23",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 83.15,
+      "gt_n_frames": 181,
+      "category": "Full Success",
+      "v3_match": {
+        "track_id": 141,
+        "ensemble_class": "stationary",
+        "tms16_class": "stationary",
+        "priority": 0.3385,
+        "n_frames": 7,
+        "person_size_px": 18.9
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track24",
+      "sequence": "1.1.8",
+      "gt_action": "Drinking",
+      "sar_class": "stationary",
+      "mean_size_px": 88.27,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track25",
+      "sequence": "1.1.8",
+      "gt_action": "Sitting",
+      "sar_class": "stationary",
+      "mean_size_px": 109.39,
+      "gt_n_frames": 11,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track26",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 144.12,
+      "gt_n_frames": 31,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track27",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 78.46,
+      "gt_n_frames": 1,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track28",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 104.03,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track29",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 64.86,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 234,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1037,
+        "n_frames": 29,
+        "person_size_px": 18.7
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track30",
+      "sequence": "1.1.8",
+      "gt_action": "Sitting",
+      "sar_class": "stationary",
+      "mean_size_px": 93.91,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track31",
+      "sequence": "1.1.8",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 87.66,
+      "gt_n_frames": 151,
+      "category": "Ranking Failure",
+      "v3_match": {
+        "track_id": 260,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1543,
+        "n_frames": 34,
+        "person_size_px": 15.6
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track32",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 67.7,
+      "gt_n_frames": 151,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 266,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1382,
+        "n_frames": 10,
+        "person_size_px": 16.8
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track33",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 72.34,
+      "gt_n_frames": 141,
+      "category": "Full Success",
+      "v3_match": {
+        "track_id": 256,
+        "ensemble_class": "stationary",
+        "tms16_class": "stationary",
+        "priority": 0.3831,
+        "n_frames": 36,
+        "person_size_px": 16.5
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track34",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 71.67,
+      "gt_n_frames": 141,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 259,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1895,
+        "n_frames": 36,
+        "person_size_px": 16.6
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track35",
+      "sequence": "1.1.8",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 70.16,
+      "gt_n_frames": 121,
+      "category": "Ranking Failure",
+      "v3_match": {
+        "track_id": 268,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1516,
+        "n_frames": 20,
+        "person_size_px": 15.2
+      }
+    },
+    {
+      "gt_tid": "seq1.1.8_track36",
+      "sequence": "1.1.8",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 74.09,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track37",
+      "sequence": "1.1.8",
+      "gt_action": "Carrying",
+      "sar_class": "walking",
+      "mean_size_px": 82.57,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track38",
+      "sequence": "1.1.8",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 61.91,
+      "gt_n_frames": 50,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track39",
+      "sequence": "1.1.8",
+      "gt_action": "Carrying",
+      "sar_class": "walking",
+      "mean_size_px": 75.9,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.1.8_track40",
+      "sequence": "1.1.8",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 62.02,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track0",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 106.08,
+      "gt_n_frames": 101,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track1",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 118.63,
+      "gt_n_frames": 101,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track2",
+      "sequence": "2.2.3",
+      "gt_action": "Sitting",
+      "sar_class": "stationary",
+      "mean_size_px": 96.67,
+      "gt_n_frames": 71,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track3",
+      "sequence": "2.2.3",
+      "gt_action": "Sitting",
+      "sar_class": "stationary",
+      "mean_size_px": 88.73,
+      "gt_n_frames": 71,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track4",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 105.49,
+      "gt_n_frames": 1,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track5",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 120.21,
+      "gt_n_frames": 181,
+      "category": "Ranking Failure",
+      "v3_match": {
+        "track_id": 66,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.0695,
+        "n_frames": 6,
+        "person_size_px": 17.7
+      }
+    },
+    {
+      "gt_tid": "seq2.2.3_track6",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 127.69,
+      "gt_n_frames": 181,
+      "category": "Ranking Failure",
+      "v3_match": {
+        "track_id": 30,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.0931,
+        "n_frames": 26,
+        "person_size_px": 16.1
+      }
+    },
+    {
+      "gt_tid": "seq2.2.3_track7",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 119.08,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track8",
+      "sequence": "2.2.3",
+      "gt_action": "Sitting",
+      "sar_class": "stationary",
+      "mean_size_px": 88.88,
+      "gt_n_frames": 71,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 93,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1707,
+        "n_frames": 17,
+        "person_size_px": 16.5
+      }
+    },
+    {
+      "gt_tid": "seq2.2.3_track9",
+      "sequence": "2.2.3",
+      "gt_action": "Sitting",
+      "sar_class": "stationary",
+      "mean_size_px": 97.78,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 70,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1474,
+        "n_frames": 13,
+        "person_size_px": 16.4
+      }
+    },
+    {
+      "gt_tid": "seq2.2.3_track10",
+      "sequence": "2.2.3",
+      "gt_action": "Sitting",
+      "sar_class": "stationary",
+      "mean_size_px": 108.29,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track11",
+      "sequence": "2.2.3",
+      "gt_action": "Running",
+      "sar_class": "running",
+      "mean_size_px": 112.91,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 96,
+        "ensemble_class": "stationary",
+        "tms16_class": "stationary",
+        "priority": 0.3304,
+        "n_frames": 7,
+        "person_size_px": 18.8
+      }
+    },
+    {
+      "gt_tid": "seq2.2.3_track12",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 72.67,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track13",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 61.2,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track14",
+      "sequence": "2.2.3",
+      "gt_action": "Running",
+      "sar_class": "running",
+      "mean_size_px": 149.56,
+      "gt_n_frames": 1,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track15",
+      "sequence": "2.2.3",
+      "gt_action": "Running",
+      "sar_class": "running",
+      "mean_size_px": 90.96,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 111,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1475,
+        "n_frames": 5,
+        "person_size_px": 18.4
+      }
+    },
+    {
+      "gt_tid": "seq2.2.3_track16",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 160.06,
+      "gt_n_frames": 71,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track17",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 184.89,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track18",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 94.65,
+      "gt_n_frames": 111,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track19",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 143.98,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track20",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 114.39,
+      "gt_n_frames": 181,
+      "category": "Full Success",
+      "v3_match": {
+        "track_id": 175,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1345,
+        "n_frames": 9,
+        "person_size_px": 19.2
+      }
+    },
+    {
+      "gt_tid": "seq2.2.3_track21",
+      "sequence": "2.2.3",
+      "gt_action": "Running",
+      "sar_class": "running",
+      "mean_size_px": 115.68,
+      "gt_n_frames": 21,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track22",
+      "sequence": "2.2.3",
+      "gt_action": "Running",
+      "sar_class": "running",
+      "mean_size_px": 119.8,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 191,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1271,
+        "n_frames": 38,
+        "person_size_px": 19.4
+      }
+    },
+    {
+      "gt_tid": "seq2.2.3_track23",
+      "sequence": "2.2.3",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 109.41,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 173,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.168,
+        "n_frames": 40,
+        "person_size_px": 19.8
+      }
+    },
+    {
+      "gt_tid": "seq2.2.3_track24",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 170.34,
+      "gt_n_frames": 1,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track27",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 116.35,
+      "gt_n_frames": 122,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track28",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 159.79,
+      "gt_n_frames": 122,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track29",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 128.91,
+      "gt_n_frames": 120,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq2.2.3_track30",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 113.35,
+      "gt_n_frames": 102,
+      "category": "Ranking Failure",
+      "v3_match": {
+        "track_id": 230,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.0681,
+        "n_frames": 5,
+        "person_size_px": 17.8
+      }
+    },
+    {
+      "gt_tid": "seq2.2.3_track31",
+      "sequence": "2.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 127.77,
+      "gt_n_frames": 102,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track0",
+      "sequence": "1.2.3",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 84.4,
+      "gt_n_frames": 171,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track1",
+      "sequence": "1.2.3",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 92.21,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 15,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1686,
+        "n_frames": 27,
+        "person_size_px": 18.9
+      }
+    },
+    {
+      "gt_tid": "seq1.2.3_track2",
+      "sequence": "1.2.3",
+      "gt_action": "Sitting",
+      "sar_class": "stationary",
+      "mean_size_px": 113.28,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track3",
+      "sequence": "1.2.3",
+      "gt_action": "Sitting",
+      "sar_class": "stationary",
+      "mean_size_px": 69.1,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track4",
+      "sequence": "1.2.3",
+      "gt_action": "Sitting",
+      "sar_class": "stationary",
+      "mean_size_px": 95.01,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 17,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.0956,
+        "n_frames": 19,
+        "person_size_px": 23.4
+      }
+    },
+    {
+      "gt_tid": "seq1.2.3_track5",
+      "sequence": "1.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 122.11,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track6",
+      "sequence": "1.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 129.66,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track7",
+      "sequence": "1.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 149.52,
+      "gt_n_frames": 121,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track8",
+      "sequence": "1.2.3",
+      "gt_action": "Sitting",
+      "sar_class": "stationary",
+      "mean_size_px": 111.39,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track9",
+      "sequence": "1.2.3",
+      "gt_action": "Sitting",
+      "sar_class": "stationary",
+      "mean_size_px": 112.42,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track10",
+      "sequence": "1.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 107.38,
+      "gt_n_frames": 181,
+      "category": "Full Success",
+      "v3_match": {
+        "track_id": 78,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1597,
+        "n_frames": 19,
+        "person_size_px": 17.1
+      }
+    },
+    {
+      "gt_tid": "seq1.2.3_track11",
+      "sequence": "1.2.3",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 118.44,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track12",
+      "sequence": "1.2.3",
+      "gt_action": "Sitting",
+      "sar_class": "stationary",
+      "mean_size_px": 120.33,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 62,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.0852,
+        "n_frames": 18,
+        "person_size_px": 15.8
+      }
+    },
+    {
+      "gt_tid": "seq1.2.3_track13",
+      "sequence": "1.2.3",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 101.85,
+      "gt_n_frames": 121,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track14",
+      "sequence": "1.2.3",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 100.7,
+      "gt_n_frames": 121,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track15",
+      "sequence": "1.2.3",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 98.4,
+      "gt_n_frames": 121,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track16",
+      "sequence": "1.2.3",
+      "gt_action": "Running",
+      "sar_class": "running",
+      "mean_size_px": 108.77,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 96,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1267,
+        "n_frames": 28,
+        "person_size_px": 19.7
+      }
+    },
+    {
+      "gt_tid": "seq1.2.3_track17",
+      "sequence": "1.2.3",
+      "gt_action": "Running",
+      "sar_class": "running",
+      "mean_size_px": 126.41,
+      "gt_n_frames": 181,
+      "category": "Classification Error",
+      "v3_match": {
+        "track_id": 135,
+        "ensemble_class": "walking",
+        "tms16_class": "walking",
+        "priority": 0.1136,
+        "n_frames": 12,
+        "person_size_px": 18.9
+      }
+    },
+    {
+      "gt_tid": "seq1.2.3_track18",
+      "sequence": "1.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 81.81,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track19",
+      "sequence": "1.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 101.01,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track20",
+      "sequence": "1.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 100.39,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track21",
+      "sequence": "1.2.3",
+      "gt_action": "Running",
+      "sar_class": "running",
+      "mean_size_px": 143.44,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track22",
+      "sequence": "1.2.3",
+      "gt_action": "Running",
+      "sar_class": "running",
+      "mean_size_px": 160.24,
+      "gt_n_frames": 171,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track23",
+      "sequence": "1.2.3",
+      "gt_action": "Running",
+      "sar_class": "running",
+      "mean_size_px": 126.2,
+      "gt_n_frames": 171,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track24",
+      "sequence": "1.2.3",
+      "gt_action": "Running",
+      "sar_class": "running",
+      "mean_size_px": 139.24,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track25",
+      "sequence": "1.2.3",
+      "gt_action": "Running",
+      "sar_class": "running",
+      "mean_size_px": 135.83,
+      "gt_n_frames": 181,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track26",
+      "sequence": "1.2.3",
+      "gt_action": "Running",
+      "sar_class": "running",
+      "mean_size_px": 124.65,
+      "gt_n_frames": 151,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track27",
+      "sequence": "1.2.3",
+      "gt_action": "Running",
+      "sar_class": "running",
+      "mean_size_px": 134.61,
+      "gt_n_frames": 151,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track28",
+      "sequence": "1.2.3",
+      "gt_action": "Running",
+      "sar_class": "running",
+      "mean_size_px": 145.73,
+      "gt_n_frames": 30,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track29",
+      "sequence": "1.2.3",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 110.55,
+      "gt_n_frames": 40,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track30",
+      "sequence": "1.2.3",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 91.29,
+      "gt_n_frames": 131,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track31",
+      "sequence": "1.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 106.63,
+      "gt_n_frames": 110,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track32",
+      "sequence": "1.2.3",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 104.36,
+      "gt_n_frames": 110,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track33",
+      "sequence": "1.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 105.39,
+      "gt_n_frames": 110,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track34",
+      "sequence": "1.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 113.08,
+      "gt_n_frames": 110,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track35",
+      "sequence": "1.2.3",
+      "gt_action": "Walking",
+      "sar_class": "walking",
+      "mean_size_px": 126.84,
+      "gt_n_frames": 90,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track36",
+      "sequence": "1.2.3",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 102.99,
+      "gt_n_frames": 107,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track37",
+      "sequence": "1.2.3",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 109.31,
+      "gt_n_frames": 107,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    },
+    {
+      "gt_tid": "seq1.2.3_track38",
+      "sequence": "1.2.3",
+      "gt_action": "Standing",
+      "sar_class": "stationary",
+      "mean_size_px": 77.97,
+      "gt_n_frames": 107,
+      "category": "Detection/Tracking Gap",
+      "v3_match": null
+    }
+  ],
+  "finding": "Of 110 GT persons, 35 (32%) were successfully matched by the pipeline. Of 103 total failures: detection/tracking gaps account for 73%, classification errors for 21%, and ranking failures for 6%. The primary bottleneck is the detection-to-tracking pipeline (IoU matching at drone resolution), not the TMS-16 classifier itself."
+}

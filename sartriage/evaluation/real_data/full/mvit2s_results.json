@@ -1,0 +1,86 @@
+{
+  "accuracy": 0.265,
+  "kappa": -0.012675668228162351,
+  "failures": 0,
+  "report": {
+    "lying_down": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 9.0
+    },
+    "stationary": {
+      "precision": 0.7,
+      "recall": 0.11382113821138211,
+      "f1-score": 0.1958041958041958,
+      "support": 123.0
+    },
+    "walking": {
+      "precision": 0.3170731707317073,
+      "recall": 0.6,
+      "f1-score": 0.4148936170212766,
+      "support": 65.0
+    },
+    "running": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 3.0
+    },
+    "accuracy": 0.265,
+    "macro avg": {
+      "precision": 0.25426829268292683,
+      "recall": 0.1784552845528455,
+      "f1-score": 0.1526744532063681,
+      "support": 200.0
+    },
+    "weighted avg": {
+      "precision": 0.5335487804878049,
+      "recall": 0.265,
+      "f1-score": 0.25526000595149534,
+      "support": 200.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      0,
+      0,
+      9,
+      0
+    ],
+    [
+      36,
+      14,
+      73,
+      0
+    ],
+    [
+      20,
+      6,
+      39,
+      0
+    ],
+    [
+      1,
+      0,
+      2,
+      0
+    ]
+  ],
+  "size_bins": {
+    "<50px": {
+      "n": 192,
+      "accuracy": 0.2604166666666667
+    },
+    "50-75px": {
+      "n": 7,
+      "accuracy": 0.42857142857142855
+    },
+    "75-100px": {
+      "n": 1,
+      "accuracy": 0.0
+    }
+  },
+  "n_tested": 200,
+  "note": "Person crops from GT bounding boxes on Okutama TestSet"
+}
